@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:app_creator/core/extensions.dart';
+import 'package:app_creator/samples/extensions.dart';
 
 import '../samples/page_sample.dart';
 import 'creator_util.dart';

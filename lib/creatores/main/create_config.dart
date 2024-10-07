@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:app_creator/samples/app_config_sample.dart';
 
+import '../../samples/app_config_sample.dart';
 import '../creator_util.dart';
 
 void main(){

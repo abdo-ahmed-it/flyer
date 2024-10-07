@@ -1,6 +1,4 @@
-
-import 'package:app_creator/core/extensions.dart';
-
+import 'extensions.dart';
 String pageSample(String featureName) {
   return '''
   import 'package:flutter/material.dart';
