@@ -1,5 +1,5 @@
 
-import 'extensions.dart';
+import '../core/extensions.dart';
 
 String stateSample(String featureName) {
   return '''

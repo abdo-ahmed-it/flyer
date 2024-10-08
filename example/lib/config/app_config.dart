@@ -1,5 +1,3 @@
-String appConfigSample(){
-  return '''
 import 'package:api_request/api_request.dart';
 import 'package:app_features/app_features.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +42,4 @@ class AppConfig {
       },
     );
   }
-}
-''';
 }

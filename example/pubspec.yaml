@@ -28,6 +28,8 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  flutter_localizations:
+    sdk: flutter
   flutter:
     sdk: flutter
   app_creator:
@@ -36,6 +38,15 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  hive_flutter: ^1.1.0
+  get_it: ^8.0.0
+  app_features: ^1.0.1
+  api_request: ^1.0.9
+  flutter_bloc: ^8.1.6
+  equatable: ^2.0.5
+  flutter_easyloading: ^3.0.5
+  toastification: ^2.3.0
+  responsive_framework: ^0.2.0
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +63,7 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
+#app_creator:
 flutter:
 
   # The following line ensures that the Material Icons font is
@@ -89,3 +101,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+  generate: true

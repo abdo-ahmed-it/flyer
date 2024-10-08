@@ -1,12 +1,15 @@
 import 'dart:io';
 
+import 'package:app_creator/core/colors_text.dart';
+
 class CreatorUtil {
   // Function to create Directory
   static void createDirectory(String path) {
     final directory = Directory(path);
     if (!directory.existsSync()) {
       directory.createSync(recursive: true);
-      print('Created directory: $path');
+      stdout.write(
+          '${ColorsText.yellow}Success Created directory: $path${ColorsText.reset}\n');
     }
   }
 
@@ -15,7 +18,8 @@ class CreatorUtil {
     final file = File(path);
     if (!file.existsSync()) {
       file.writeAsStringSync(content);
-      print('Created file: $path');
+      stdout.write(
+          '${ColorsText.yellow}Success Created File: $path${ColorsText.reset}\n');
     }
   }
 
@@ -24,9 +28,10 @@ class CreatorUtil {
     final file = File(path);
     if (file.existsSync()) {
       final content = await file.readAsString();
-      print('Content File: $content');
       return content;
     }
+    stdout.write(
+        '${ColorsText.red}File does not exist: $path${ColorsText.reset}\n');
     return 'File not exists';
   }
 
@@ -35,9 +40,11 @@ class CreatorUtil {
     final file = File(path);
     if (file.existsSync()) {
       file.writeAsStringSync(newContent);
-      print('Updated content written to file $path.');
+      stdout.write(
+          '${ColorsText.yellow}Updated content written to file: $path${ColorsText.reset}\n');
     } else {
-      print('File does not exist: $path');
+      stdout.write(
+          '${ColorsText.red}File does not exist: $path${ColorsText.reset}\n');
     }
   }
 }
