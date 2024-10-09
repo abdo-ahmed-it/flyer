@@ -9,6 +9,7 @@ import 'samples/app_storage_sample.dart';
 import 'samples/app_theme_sample.dart';
 import 'samples/cubit_samples.dart';
 import 'samples/feature_sample.dart';
+import 'samples/form_sample.dart';
 import 'samples/main_sample.dart';
 import 'samples/page_sample.dart';
 import 'samples/state_samples.dart';
@@ -161,4 +162,19 @@ output-localization-file: app_localizations.dart
     CreatorUtil.editFileContent('$path/main.dart', mainSample());
     _addLang();
   }
+ static void addForm(){
+   stdout.write(
+       "${ColorsText.blue}Enter Your Name Feature : ${ColorsText.reset}");
+  String? featureName = stdin.readLineSync();
+   stdout.write(
+       "${ColorsText.blue}Enter Your Name Form : ${ColorsText.reset}");
+   String? formName = stdin.readLineSync();
+   stdout.write(
+       "${ColorsText.blue}Enter Your Form Fields : ${ColorsText.reset}");
+   List<String>? fields = stdin.readLineSync()?.split(',');
+   CreatorUtil.createDirectory('$path/features/$featureName/forms');
+   CreatorUtil.createFileWithContent('$path/features/$featureName/forms/${formName}_form.dart',formSample(formName??'A',fields??[]));
+
+
+ }
 }

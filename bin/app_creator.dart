@@ -7,6 +7,7 @@ void main() async {
   stdout.write("${ColorsText.green}1. Create Infra Structure\n");
   stdout.write("${ColorsText.green}2. Create Feature\n");
   stdout.write("${ColorsText.green}3. Add Page in Feature\n");
+  stdout.write("${ColorsText.green}4. Add form in Feature${ColorsText.reset}\n");
 
   String? option = stdin.readLineSync();
 
@@ -19,6 +20,8 @@ void main() async {
       break;
       case '3':
       Creators.addPage();
+      break;case '4':
+      Creators.addForm();
       break;
     default:
       stdout.write("${ColorsText.red}Invalid selection.\n!DONE${ColorsText.reset}\n");
