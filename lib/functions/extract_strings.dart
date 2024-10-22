@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
+
+import 'package:app_creator/core/colors_text.dart';
 
 void extractArabicText() {
   Directory libDirectory = Directory('lib');
@@ -48,7 +51,7 @@ void extractTextFromTextWidgets() {
     return;
   }
 
-  List<String> texts = [];
+  List<Data> texts = [];
 
   libDirectory.listSync(recursive: true).forEach((fileSystemEntity) {
     if (fileSystemEntity is File && fileSystemEntity.path.endsWith('.dart')) {
@@ -61,21 +64,36 @@ void extractTextFromTextWidgets() {
 
       for (var match in textMatches) {
         if (match.group(1) != null && match.group(1)!.isNotEmpty) {
-          texts.add(match.group(1)!);
+          texts.add(Data(text: match.group(1)!, path: fileSystemEntity.path.split('/').last));
         }
         if (match.group(2) != null && match.group(2)!.isNotEmpty) {
-          texts.add(match.group(2)!);
+          texts.add(Data(text: match.group(2)!, path: fileSystemEntity.path.split('/').last));
+
         }
       }
     }
   });
 
   if (texts.isNotEmpty) {
-    print('Extracted texts from Text widgets and titles:');
-    texts.forEach((text) {
-      print(text);
-    });
+   List unDuplicatedTexts =texts.toSet().toList();
+   stdout.write('${ColorsText.orange} Extracted texts from Text widgets and titles: ${ColorsText.reset}\n');
+
+   for (int i = 0; i < texts.length; i++) {
+      stdout.write('${ColorsText.yellow}${texts[i].text} ${ColorsText.reset}-${texts[i].path}\n');
+    }
+   stdout.write('${ColorsText.orange} Extracted texts JSON Format: ${ColorsText.reset}\n');
+
+   for(int i = 0; i < unDuplicatedTexts.length; i++){
+      print('''"key$i":"${unDuplicatedTexts[i].text}",''');
+    }
   } else {
     print('No texts found in Text widgets or titles.');
   }
+}
+
+class Data {
+  String text;
+  String path;
+
+  Data({required this.text, required this.path});
 }
