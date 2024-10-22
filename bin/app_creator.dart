@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:app_creator/core/colors_text.dart';
 import 'package:app_creator/creatores.dart';
+import 'package:app_creator/functions/extract_strings.dart';
 import 'package:app_creator/functions/fined_unused_file.dart';
 import 'package:app_creator/functions/fiend_unused_package.dart';
 
@@ -11,7 +12,10 @@ void main() async {
   stdout.write("${ColorsText.green}3. Add Page in Feature\n");
   stdout.write("${ColorsText.green}4. Add form in Feature \n");
   stdout.write("${ColorsText.green}5. Fiend Unused Package \n");
-  stdout.write("${ColorsText.green}6. Fiend Unused File ${ColorsText.reset}\n");
+  stdout.write("${ColorsText.green}6. Fiend Unused File \n");
+  stdout.write(
+      "${ColorsText.green}7. Fiend Text In Text Widget ${ColorsText.reset}\n");
+  stdout.write("${ColorsText.green}8. Fiend Arabic Text ${ColorsText.reset}\n");
 
   String? option = stdin.readLineSync();
 
@@ -34,6 +38,12 @@ void main() async {
       break;
     case '6':
       findUnusedFiles();
+      break;
+    case '7':
+      extractTextFromTextWidgets();
+      break;
+      case '8':
+      extractArabicText();
       break;
     default:
       stdout.write(
