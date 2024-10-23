@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:app_creator/core/colors_text.dart';
 
-
 void extractArabicText() {
   Directory libDirectory = Directory('lib');
 
@@ -51,12 +50,13 @@ void extractTextFromTextWidgets() {
     return;
   }
 
-  List<Data> texts = [];
+  Map<String, String> texts = {};
 
   libDirectory.listSync(recursive: true).forEach((fileSystemEntity) {
     if (fileSystemEntity is File && fileSystemEntity.path.endsWith('.dart')) {
       String content = fileSystemEntity.readAsStringSync();
-      String importStatement = "import 'package:example/core/app_extinsions.dart';";
+      String importStatement =
+          "import 'package:example/core/app_extinsions.dart';";
       if (!content.contains(importStatement)) {
         content = '$importStatement\n$content';
       }
@@ -73,11 +73,11 @@ void extractTextFromTextWidgets() {
           if (match.group(i) != null && match.group(i)!.isNotEmpty) {
             String extractedText = match.group(i)!;
 
-            texts.add(Data(
-              text: extractedText,
-              path: fileSystemEntity.path.split('/').last,
-            ));
             String key = _generateKey(extractedText);
+            if (!texts.containsKey(key)) {
+              texts[key] = extractedText;
+            }
+
             String replacement = 'context.loc.$key';
 
             if (content.contains('"$extractedText"')) {
@@ -97,28 +97,22 @@ void extractTextFromTextWidgets() {
   });
 
   if (texts.isNotEmpty) {
-    List unDuplicatedTexts = texts.toSet().toList();
-    stdout.write(
-        '${ColorsText.orange} Extracted texts from Text widgets and titles: ${ColorsText.reset}\n');
-
-    for (int i = 0; i < texts.length; i++) {
-      stdout.write(
-          '${ColorsText.yellow}${texts[i].text} ${ColorsText.reset}-${texts[i].path}\n');
-    }
     stdout.write(
         '${ColorsText.orange} Extracted texts JSON Format: ${ColorsText.reset}\n');
-
-    for (int i = 0; i < unDuplicatedTexts.length; i++) {
-      print(
-          '''"${_generateKey(unDuplicatedTexts[i].text.toString())}":"${unDuplicatedTexts[i].text}",''');
-    }
+    texts.forEach((key,value){
+      print('''"$key":"$value",''');
+    });
   } else {
     print('No texts found');
   }
 }
 
 String _generateKey(String text) {
-  return text.toLowerCase().trimLeft().trimRight().replaceAll(' ', '_');
+  String newText= text.toLowerCase().trimLeft().trimRight().replaceAll(' ', '_').replaceAll(',', '').replaceAll('?', '');
+  if(newText.contains('\$')){
+    newText.split('\$').first;
+  }
+  return newText;
 }
 
 class Data {
@@ -127,4 +121,3 @@ class Data {
 
   Data({required this.text, required this.path});
 }
-
