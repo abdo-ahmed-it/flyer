@@ -72,15 +72,18 @@ void extractTextFromTextWidgets() {
           texts.add(Data(
               text: match.group(2)!,
               path: fileSystemEntity.path.split('/').last));
-        }if (match.group(3) != null && match.group(3)!.isNotEmpty) {
+        }
+        if (match.group(3) != null && match.group(3)!.isNotEmpty) {
           texts.add(Data(
               text: match.group(3)!,
               path: fileSystemEntity.path.split('/').last));
-        }if (match.group(4) != null && match.group(4)!.isNotEmpty) {
+        }
+        if (match.group(4) != null && match.group(4)!.isNotEmpty) {
           texts.add(Data(
               text: match.group(4)!,
               path: fileSystemEntity.path.split('/').last));
-        }if (match.group(5) != null && match.group(5)!.isNotEmpty) {
+        }
+        if (match.group(5) != null && match.group(5)!.isNotEmpty) {
           texts.add(Data(
               text: match.group(5)!,
               path: fileSystemEntity.path.split('/').last));
@@ -102,14 +105,15 @@ void extractTextFromTextWidgets() {
         '${ColorsText.orange} Extracted texts JSON Format: ${ColorsText.reset}\n');
 
     for (int i = 0; i < unDuplicatedTexts.length; i++) {
-      print('''"${_generateKey(unDuplicatedTexts[i].text.toString())}":"${unDuplicatedTexts[i].text}",''');
+      print(
+          '''"${_generateKey(unDuplicatedTexts[i].text.toString())}":"${unDuplicatedTexts[i].text}",''');
     }
   } else {
     print('No texts found in Text widgets or titles.');
   }
-
 }
-String _generateKey(String text){
+
+String _generateKey(String text) {
   return text.toLowerCase().trimLeft().trimLeft().replaceAll(' ', '_');
 }
 
