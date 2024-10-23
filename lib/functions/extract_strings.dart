@@ -99,7 +99,7 @@ void extractTextFromTextWidgets() {
   if (texts.isNotEmpty) {
     stdout.write(
         '${ColorsText.orange} Extracted texts JSON Format: ${ColorsText.reset}\n');
-    texts.forEach((key,value){
+    texts.forEach((key, value) {
       print('''"$key":"$value",''');
     });
   } else {
@@ -108,11 +108,21 @@ void extractTextFromTextWidgets() {
 }
 
 String _generateKey(String text) {
-  String newText= text.toLowerCase().trimLeft().trimRight().replaceAll(' ', '_').replaceAll(',', '').replaceAll('?', '');
-  if(newText.contains('\$')){
-    newText.split('\$').first;
+  String key = text
+      .toLowerCase()
+      .trim()
+      .replaceAll(RegExp(r'[^\w\s]'), '')  // Remove non-alphanumeric characters (punctuation, etc.)
+      .replaceAll(' ', '_');               // Replace spaces with underscores
+
+  // Handle '$' in text, only keep part before '$'
+  if (key.contains('\$')) {
+    key = key.split('\$').first;
   }
-  return newText;
+  if (RegExp(r'^\d').hasMatch(key)) {
+    key = '_$key'; // Prepend an underscore if the key starts with a digit
+  }
+
+  return key;
 }
 
 class Data {

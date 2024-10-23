@@ -1,4 +1,3 @@
-import 'package:example/core/app_extinsions.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatelessWidget {
@@ -8,16 +7,16 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _item(
-          title: context.loc.hello_title,
-          label: context.loc.label_text,
-          hint: context.loc.hint_text,
-          textLabel: context.loc.text_label_text),
+          title: ' !Hello title&',
+          label: 'Label Text',
+          hint: '+hint Text',
+          textLabel: '0767765'),
     );
   }
 }
 
 _item({required String title, label, textLabel, hint}) {
   return Column(
-    children: [Text(title), Text(context.loc.hello_text), Text(context.loc.hello_text)],
+    children: [Text(title), Text('Hello Text $label'), Text('Hello Text')],
   );
 }
