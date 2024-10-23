@@ -1,7 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:app_creator/core/colors_text.dart';
+
 
 void extractArabicText() {
   Directory libDirectory = Directory('lib');
@@ -56,38 +56,42 @@ void extractTextFromTextWidgets() {
   libDirectory.listSync(recursive: true).forEach((fileSystemEntity) {
     if (fileSystemEntity is File && fileSystemEntity.path.endsWith('.dart')) {
       String content = fileSystemEntity.readAsStringSync();
+      String importStatement = "import 'package:example/core/app_extinsions.dart';";
+      if (!content.contains(importStatement)) {
+        content = '$importStatement\n$content';
+      }
 
       RegExp textRegex = RegExp(
           r'''Text\s*\(\s*["\']([^"\']*)["\']|title:\s*["\']([^"\']*)["\']|label:\s*["\']([^"\']*)["\']|textLabel:\s*["\']([^"\']*)["\']|hint:\s*["\']([^"\']*)["\']''',
           dotAll: true);
       Iterable<RegExpMatch> textMatches = textRegex.allMatches(content);
 
+      bool hasReplacements = false;
+
       for (var match in textMatches) {
-        if (match.group(1) != null && match.group(1)!.isNotEmpty) {
-          texts.add(Data(
-              text: match.group(1)!,
-              path: fileSystemEntity.path.split('/').last));
+        for (int i = 1; i <= 5; i++) {
+          if (match.group(i) != null && match.group(i)!.isNotEmpty) {
+            String extractedText = match.group(i)!;
+
+            texts.add(Data(
+              text: extractedText,
+              path: fileSystemEntity.path.split('/').last,
+            ));
+            String key = _generateKey(extractedText);
+            String replacement = 'context.loc.$key';
+
+            if (content.contains('"$extractedText"')) {
+              content = content.replaceFirst('"$extractedText"', replacement);
+              hasReplacements = true;
+            } else if (content.contains("'$extractedText'")) {
+              content = content.replaceFirst("'$extractedText'", replacement);
+              hasReplacements = true;
+            }
+          }
         }
-        if (match.group(2) != null && match.group(2)!.isNotEmpty) {
-          texts.add(Data(
-              text: match.group(2)!,
-              path: fileSystemEntity.path.split('/').last));
-        }
-        if (match.group(3) != null && match.group(3)!.isNotEmpty) {
-          texts.add(Data(
-              text: match.group(3)!,
-              path: fileSystemEntity.path.split('/').last));
-        }
-        if (match.group(4) != null && match.group(4)!.isNotEmpty) {
-          texts.add(Data(
-              text: match.group(4)!,
-              path: fileSystemEntity.path.split('/').last));
-        }
-        if (match.group(5) != null && match.group(5)!.isNotEmpty) {
-          texts.add(Data(
-              text: match.group(5)!,
-              path: fileSystemEntity.path.split('/').last));
-        }
+      }
+      if (hasReplacements) {
+        fileSystemEntity.writeAsStringSync(content);
       }
     }
   });
@@ -109,12 +113,12 @@ void extractTextFromTextWidgets() {
           '''"${_generateKey(unDuplicatedTexts[i].text.toString())}":"${unDuplicatedTexts[i].text}",''');
     }
   } else {
-    print('No texts found in Text widgets or titles.');
+    print('No texts found');
   }
 }
 
 String _generateKey(String text) {
-  return text.toLowerCase().trimLeft().trimLeft().replaceAll(' ', '_');
+  return text.toLowerCase().trimLeft().trimRight().replaceAll(' ', '_');
 }
 
 class Data {
@@ -123,3 +127,4 @@ class Data {
 
   Data({required this.text, required this.path});
 }
+
