@@ -58,37 +58,59 @@ void extractTextFromTextWidgets() {
       String content = fileSystemEntity.readAsStringSync();
 
       RegExp textRegex = RegExp(
-          r'''Text\s*\(\s*["\']([^"\']*)["\']|title:\s*["\']([^"\']*)["\']''',
+          r'''Text\s*\(\s*["\']([^"\']*)["\']|title:\s*["\']([^"\']*)["\']|label:\s*["\']([^"\']*)["\']|textLabel:\s*["\']([^"\']*)["\']|hint:\s*["\']([^"\']*)["\']''',
           dotAll: true);
       Iterable<RegExpMatch> textMatches = textRegex.allMatches(content);
 
       for (var match in textMatches) {
         if (match.group(1) != null && match.group(1)!.isNotEmpty) {
-          texts.add(Data(text: match.group(1)!, path: fileSystemEntity.path.split('/').last));
+          texts.add(Data(
+              text: match.group(1)!,
+              path: fileSystemEntity.path.split('/').last));
         }
         if (match.group(2) != null && match.group(2)!.isNotEmpty) {
-          texts.add(Data(text: match.group(2)!, path: fileSystemEntity.path.split('/').last));
-
+          texts.add(Data(
+              text: match.group(2)!,
+              path: fileSystemEntity.path.split('/').last));
+        }if (match.group(3) != null && match.group(3)!.isNotEmpty) {
+          texts.add(Data(
+              text: match.group(3)!,
+              path: fileSystemEntity.path.split('/').last));
+        }if (match.group(4) != null && match.group(4)!.isNotEmpty) {
+          texts.add(Data(
+              text: match.group(4)!,
+              path: fileSystemEntity.path.split('/').last));
+        }if (match.group(5) != null && match.group(5)!.isNotEmpty) {
+          texts.add(Data(
+              text: match.group(5)!,
+              path: fileSystemEntity.path.split('/').last));
         }
       }
     }
   });
 
   if (texts.isNotEmpty) {
-   List unDuplicatedTexts =texts.toSet().toList();
-   stdout.write('${ColorsText.orange} Extracted texts from Text widgets and titles: ${ColorsText.reset}\n');
+    List unDuplicatedTexts = texts.toSet().toList();
+    stdout.write(
+        '${ColorsText.orange} Extracted texts from Text widgets and titles: ${ColorsText.reset}\n');
 
-   for (int i = 0; i < texts.length; i++) {
-      stdout.write('${ColorsText.yellow}${texts[i].text} ${ColorsText.reset}-${texts[i].path}\n');
+    for (int i = 0; i < texts.length; i++) {
+      stdout.write(
+          '${ColorsText.yellow}${texts[i].text} ${ColorsText.reset}-${texts[i].path}\n');
     }
-   stdout.write('${ColorsText.orange} Extracted texts JSON Format: ${ColorsText.reset}\n');
+    stdout.write(
+        '${ColorsText.orange} Extracted texts JSON Format: ${ColorsText.reset}\n');
 
-   for(int i = 0; i < unDuplicatedTexts.length; i++){
-      print('''"key$i":"${unDuplicatedTexts[i].text}",''');
+    for (int i = 0; i < unDuplicatedTexts.length; i++) {
+      print('''"${_generateKey(unDuplicatedTexts[i].text.toString())}":"${unDuplicatedTexts[i].text}",''');
     }
   } else {
     print('No texts found in Text widgets or titles.');
   }
+
+}
+String _generateKey(String text){
+  return text.toLowerCase().trimLeft().trimLeft().replaceAll(' ', '_');
 }
 
 class Data {
