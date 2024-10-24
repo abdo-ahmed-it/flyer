@@ -1,7 +1,4 @@
 {
-  "hello_title": " Hello title",
-  "label_text": "Label Text",
-  "hint_text": "hint Text",
-  "text_label_text": "Text Label text",
-  "hello_text": "Hello Text"
+  "hello": " Hello title"
+
 }

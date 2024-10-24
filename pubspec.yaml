@@ -13,6 +13,8 @@ dependencies:
     sdk: flutter
   flutter:
     sdk: flutter
+  dart_style: ^2.3.7
+  json_ast: ^1.0.6
 
 dev_dependencies:
 
