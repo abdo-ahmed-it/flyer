@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:app_creator/functions/delete_file.dart';
+
 void findUnusedFiles() {
   Directory libDirectory = Directory('lib');
 
@@ -17,28 +19,29 @@ void findUnusedFiles() {
     }
   });
 
-  dartFiles.forEach((file) {
+  for (var file in dartFiles) {
     bool isUsed = false;
 
-    dartFiles.forEach((otherFile) {
+    for (var otherFile in dartFiles) {
       if (otherFile != file) {
         String content = otherFile.readAsStringSync();
         if (content.contains(file.path.split('/').last)) {
           isUsed = true;
         }
       }
-    });
+    }
 
     if (!isUsed) {
       unusedFiles.add(file.path);
     }
-  });
+  }
 
   if (unusedFiles.isNotEmpty) {
     print('Unused files (${unusedFiles.length}):');
-    unusedFiles.forEach((filePath) {
+    for (var filePath in unusedFiles) {
       print('- $filePath');
-    });
+    }
+    deleteFiles(unusedFiles);
   } else {
     print('All files are used.');
   }

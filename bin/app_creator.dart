@@ -2,10 +2,11 @@ import 'dart:io';
 import 'package:app_creator/core/colors_text.dart';
 import 'package:app_creator/creatores.dart';
 import 'package:app_creator/functions/extract_strings.dart';
+import 'package:app_creator/functions/fiend_unused_var.dart';
+import 'package:app_creator/functions/fined_unused_assets.dart';
 import 'package:app_creator/functions/fined_unused_file.dart';
 import 'package:app_creator/functions/fiend_unused_package.dart';
 import 'package:app_creator/functions/generate_dart_class_from_json.dart';
-import 'package:app_creator/jsonToDart/model_generator.dart';
 
 void main() async {
   stdout.write("${ColorsText.blue}Select an option:${ColorsText.reset}\n");
@@ -15,12 +16,12 @@ void main() async {
   stdout.write("${ColorsText.green}4. Add form in Feature \n");
   stdout.write("${ColorsText.green}5. Fiend Unused Package \n");
   stdout.write("${ColorsText.green}6. Fiend Unused File \n");
-  stdout.write("${ColorsText.green}7. Fiend Text In Text Widget\n");
-  stdout.write("${ColorsText.green}8. Fiend Arabic Text \n");
-  stdout.write(
-      "${ColorsText.green}9. Create Model Class From Json ${ColorsText.reset}\n");
- stdout.write(
-      "${ColorsText.green}10. Init App Language ${ColorsText.reset}\n");
+  stdout.write("${ColorsText.green}7. Fiend Unused Assets File \n");
+  stdout.write("${ColorsText.green}8. Fiend Text In Text Widget\n");
+  stdout.write("${ColorsText.green}9. Fiend Arabic Text \n");
+  stdout.write("${ColorsText.green}10. Create Model Class From Json\n");
+  stdout
+      .write("${ColorsText.green}11. Init App Language ${ColorsText.reset}\n");
 
   String? option = stdin.readLineSync();
 
@@ -45,20 +46,22 @@ void main() async {
       findUnusedFiles();
       break;
     case '7':
-      extractTextFromTextWidgets();
+      fiendUnusedAssets();
       break;
     case '8':
-      extractArabicText();
+      extractTextFromTextWidgets();
       break;
     case '9':
+      extractArabicText();
+      break;
+    case '10':
       generateModelClassFromJson();
-      case '10':
+    case '11':
       Creators.addLang();
       break;
+
     default:
       stdout.write(
           "${ColorsText.red}Invalid selection.\n!DONE${ColorsText.reset}\n");
   }
 }
-
-
