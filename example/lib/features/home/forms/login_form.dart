@@ -1,10 +1,10 @@
 import 'package:app_forms/app_forms.dart';
 
 class LoginForm extends AppForm {
-
   final email = AppFormField(
     name: 'email',
-  );final password = AppFormField(
+  );
+  final password = AppFormField(
     name: 'password',
   );
 
@@ -15,5 +15,3 @@ class LoginForm extends AppForm {
   @override
   Future onSubmit(Map<String, dynamic>? values) async {}
 }
-
-  

@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'app_storage.dart';
-
 class AppStorage {
   static const _appBoxName = 'appBox';
   static const _themeMode = 'theme_mode';
@@ -71,4 +69,3 @@ class AppStorage {
     return _appBox.get(_password);
   }
 }
-  

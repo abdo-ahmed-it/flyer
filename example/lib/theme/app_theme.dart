@@ -5,5 +5,3 @@ class AppTheme {
 
   static ThemeData dark = ThemeData.dark();
 }
-
-  

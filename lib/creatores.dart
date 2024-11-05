@@ -1,8 +1,11 @@
 import 'dart:io';
+
 import 'package:app_creator/core/colors_text.dart';
+import 'package:app_creator/core/helpers/updated_features_in_config.dart';
 import 'package:app_creator/samples/utils/notification_util_sample.dart';
 
 import 'core/creator_util.dart';
+import 'core/extensions.dart';
 import 'samples/app_colors_sample.dart';
 import 'samples/app_config_sample.dart';
 import 'samples/app_storage_sample.dart';
@@ -13,7 +16,6 @@ import 'samples/form_sample.dart';
 import 'samples/main_sample.dart';
 import 'samples/page_sample.dart';
 import 'samples/state_samples.dart';
-import 'core/extensions.dart';
 
 class Creators {
   static var path = '${Directory.current.path}/lib';
@@ -27,6 +29,7 @@ class Creators {
           "${ColorsText.blue}Enter Your Name Feature : ${ColorsText.reset}");
       featureName = stdin.readLineSync();
     }
+    updateFeaturesInConfigFile(featureName ?? '');
 
     CreatorUtil.createDirectory('$path/features');
     CreatorUtil.createDirectory('$path/features/$featureName');

@@ -15,10 +15,12 @@ class CreatorUtil {
   }
 
 // Function to create a file with content
-  static void createFileWithContent(String path, String content,{bool canFormated=true}) {
+  static void createFileWithContent(String path, String content,
+      {bool canFormated = true}) {
     final file = File(path);
     if (!file.existsSync()) {
-      file.writeAsStringSync(canFormated?DartFormatter().format(content):content);
+      file.writeAsStringSync(
+          canFormated ? DartFormatter().format(content) : content);
       stdout.write(
           '${ColorsText.yellow}Success Created File: $path${ColorsText.reset}\n');
     }
@@ -37,12 +39,16 @@ class CreatorUtil {
   }
 
   // Function to edit file content
-  static void editFileContent(String path, String newContent,{bool canFormated=true}) {
+  static void editFileContent(String path, String newContent,
+      {bool canFormated = true, bool showLog = true}) {
     final file = File(path);
     if (file.existsSync()) {
-      file.writeAsStringSync(canFormated?DartFormatter().format(newContent):newContent);
-      stdout.write(
-          '${ColorsText.yellow}Updated content written to file: $path${ColorsText.reset}\n');
+      file.writeAsStringSync(
+          canFormated ? DartFormatter().format(newContent) : newContent);
+      if (showLog) {
+        stdout.write(
+            '${ColorsText.yellow}Updated content written to file: $path${ColorsText.reset}\n');
+      }
     } else {
       stdout.write(
           '${ColorsText.red}File does not exist: $path${ColorsText.reset}\n');

@@ -9,6 +9,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 import '../config/app_config.dart';
 import '../core/app_storage.dart';
 import 'theme/app_theme.dart';
+
 void main() async {
   await AppConfig.init();
   runApp(const MyApp());
@@ -65,4 +66,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-  

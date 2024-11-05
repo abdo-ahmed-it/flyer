@@ -1,11 +1,12 @@
 import 'dart:io';
+
 import 'package:app_creator/core/colors_text.dart';
 import 'package:app_creator/creatores.dart';
 import 'package:app_creator/functions/extract_strings.dart';
-import 'package:app_creator/functions/fiend_unused_var.dart';
+import 'package:app_creator/functions/fiend_unused_package.dart';
 import 'package:app_creator/functions/fined_unused_assets.dart';
 import 'package:app_creator/functions/fined_unused_file.dart';
-import 'package:app_creator/functions/fiend_unused_package.dart';
+import 'package:app_creator/functions/formate_code.dart';
 import 'package:app_creator/functions/generate_dart_class_from_json.dart';
 
 void main() async {
@@ -20,8 +21,8 @@ void main() async {
   stdout.write("${ColorsText.green}8. Fiend Text In Text Widget\n");
   stdout.write("${ColorsText.green}9. Fiend Arabic Text \n");
   stdout.write("${ColorsText.green}10. Create Model Class From Json\n");
-  stdout
-      .write("${ColorsText.green}11. Init App Language ${ColorsText.reset}\n");
+  stdout.write("${ColorsText.green}11. Init App Language \n");
+  stdout.write("${ColorsText.green}12. Format Dart Code ${ColorsText.reset}\n");
 
   String? option = stdin.readLineSync();
 
@@ -58,6 +59,8 @@ void main() async {
       generateModelClassFromJson();
     case '11':
       Creators.addLang();
+    case '12':
+      formatCode();
       break;
 
     default:
