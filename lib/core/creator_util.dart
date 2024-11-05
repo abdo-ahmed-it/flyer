@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app_creator/core/colors_text.dart';
+import 'package:dart_style/dart_style.dart';
 
 class CreatorUtil {
   // Function to create Directory
@@ -14,10 +15,10 @@ class CreatorUtil {
   }
 
 // Function to create a file with content
-  static void createFileWithContent(String path, String content) {
+  static void createFileWithContent(String path, String content,{bool canFormated=true}) {
     final file = File(path);
     if (!file.existsSync()) {
-      file.writeAsStringSync(content);
+      file.writeAsStringSync(canFormated?DartFormatter().format(content):content);
       stdout.write(
           '${ColorsText.yellow}Success Created File: $path${ColorsText.reset}\n');
     }
@@ -36,10 +37,10 @@ class CreatorUtil {
   }
 
   // Function to edit file content
-  static void editFileContent(String path, String newContent) {
+  static void editFileContent(String path, String newContent,{bool canFormated=true}) {
     final file = File(path);
     if (file.existsSync()) {
-      file.writeAsStringSync(newContent);
+      file.writeAsStringSync(canFormated?DartFormatter().format(newContent):newContent);
       stdout.write(
           '${ColorsText.yellow}Updated content written to file: $path${ColorsText.reset}\n');
     } else {

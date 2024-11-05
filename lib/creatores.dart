@@ -88,28 +88,36 @@ $content''';
     }
   }
 
-  static void _addLang() async {
+  static void addLang() async {
     stdout.write(
         "${ColorsText.blue} Enter Your App Languages as Like This ar,en,... : ${ColorsText.reset}");
     List<String> languages = stdin.readLineSync()?.split(',') ?? ['ar'];
 
     String content = await CreatorUtil.readFileContent(
         '${Directory.current.path}/pubspec.yaml');
-    content = content.replaceFirst(
-        'dependencies:', '''dependencies:\n  flutter_localizations:
+    if (!content.contains('flutter_localizations')) {
+      content = content.replaceFirst(
+          'dependencies:', '''dependencies:\n  flutter_localizations:
     sdk: flutter''');
-    CreatorUtil.editFileContent(
-        '${Directory.current.path}/pubspec.yaml', '$content  generate: true');
+      CreatorUtil.editFileContent(
+          '${Directory.current.path}/pubspec.yaml', '$content  generate: true',
+          canFormated: false);
+    }
+
     CreatorUtil.createDirectory('$path/l10n');
     for (String code in languages) {
       CreatorUtil.createFileWithContent(
-          '$path/l10n/app_$code.arb', '{"home":"$code"}');
+          '$path/l10n/app_$code.arb', '{"home":"$code"}',
+          canFormated: false);
     }
-    CreatorUtil.createFileWithContent('${Directory.current.path}/l10n.yaml', '''
+    CreatorUtil.createFileWithContent(
+        '${Directory.current.path}/l10n.yaml',
+        '''
 arb-dir: lib/l10n
 template-arb-file: app_ar.arb
 output-localization-file: app_localizations.dart
-  ''');
+  ''',
+        canFormated: false);
   }
 
   static void _createAppFolder() {
@@ -160,21 +168,21 @@ output-localization-file: app_localizations.dart
     _createCoreFolder();
     _createInitFeature();
     CreatorUtil.editFileContent('$path/main.dart', mainSample());
-    _addLang();
   }
- static void addForm(){
-   stdout.write(
-       "${ColorsText.blue}Enter Your Name Feature : ${ColorsText.reset}");
-  String? featureName = stdin.readLineSync();
-   stdout.write(
-       "${ColorsText.blue}Enter Your Name Form : ${ColorsText.reset}");
-   String? formName = stdin.readLineSync();
-   stdout.write(
-       "${ColorsText.blue}Enter Your Form Fields : ${ColorsText.reset}");
-   List<String>? fields = stdin.readLineSync()?.split(',');
-   CreatorUtil.createDirectory('$path/features/$featureName/forms');
-   CreatorUtil.createFileWithContent('$path/features/$featureName/forms/${formName}_form.dart',formSample(formName??'A',fields??[]));
 
-
- }
+  static void addForm() {
+    stdout.write(
+        "${ColorsText.blue}Enter Your Name Feature : ${ColorsText.reset}");
+    String? featureName = stdin.readLineSync();
+    stdout
+        .write("${ColorsText.blue}Enter Your Name Form : ${ColorsText.reset}");
+    String? formName = stdin.readLineSync();
+    stdout.write(
+        "${ColorsText.blue}Enter Your Form Fields : ${ColorsText.reset}");
+    List<String>? fields = stdin.readLineSync()?.split(',');
+    CreatorUtil.createDirectory('$path/features/$featureName/forms');
+    CreatorUtil.createFileWithContent(
+        '$path/features/$featureName/forms/${formName}_form.dart',
+        formSample(formName ?? 'A', fields ?? []));
+  }
 }

@@ -56,15 +56,15 @@ class ModelGenerator {
       final Map<dynamic, dynamic> jsonRawData = jsonRawDynamicData;
       final keys = jsonRawData.keys;
       ClassDefinition classDefinition =
-      new ClassDefinition(className, _privateFields);
-      keys.forEach((key) {
+       ClassDefinition(className, _privateFields);
+      for (var key in keys) {
         TypeDefinition typeDef;
         final hint = _hintForPath('$path/$key');
         final node = navigateNode(astNode, key);
         if (hint != null) {
-          typeDef = new TypeDefinition(hint.type, astNode: node);
+          typeDef =  TypeDefinition(hint.type, astNode: node);
         } else {
-          typeDef = new TypeDefinition.fromDynamic(jsonRawData[key], node);
+          typeDef =  TypeDefinition.fromDynamic(jsonRawData[key], node);
         }
         if (typeDef.name == 'Class') {
           typeDef.name = camelCase(key);
@@ -79,7 +79,7 @@ class ModelGenerator {
           warnings.add(newAmbiguousListWarn('$path/$key'));
         }
         classDefinition.addField(key, typeDef);
-      });
+      }
       final similarClass = allClasses.firstWhere((cd) => cd == classDefinition,
           orElse: () => ClassDefinition(""));
       if (similarClass.name != "") {
@@ -90,7 +90,7 @@ class ModelGenerator {
         allClasses.add(classDefinition);
       }
       final dependencies = classDefinition.dependencies;
-      dependencies.forEach((dependency) {
+      for (var dependency in dependencies) {
         List<Warning> warns = <Warning>[];
         if (dependency.typeDef.name == 'List') {
           // only generate dependency class if the array is not empty
@@ -116,7 +116,7 @@ class ModelGenerator {
               jsonRawData[dependency.name], '$path/${dependency.name}', node);
         }
         warnings.addAll(warns);
-      });
+      }
     }
     return warnings;
   }
@@ -131,18 +131,18 @@ class ModelGenerator {
     List<Warning> warnings =
     _generateClassDefinition(_rootClassName, jsonRawData, "", astNode);
     // after generating all classes, replace the omited similar classes.
-    allClasses.forEach((c) {
+    for (var c in allClasses) {
       final fieldsKeys = c.fields.keys;
-      fieldsKeys.forEach((f) {
+      for (var f in fieldsKeys) {
         final typeForField = c.fields[f];
         if (typeForField != null) {
           if (sameClassMapping.containsKey(typeForField.name)) {
             c.fields[f]!.name = sameClassMapping[typeForField.name]!;
           }
         }
-      });
-    });
-    return new DartCode(
+      }
+    }
+    return  DartCode(
         allClasses.map((c) => c.toString()).join('\n'), warnings);
   }
 

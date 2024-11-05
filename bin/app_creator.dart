@@ -19,6 +19,8 @@ void main() async {
   stdout.write("${ColorsText.green}8. Fiend Arabic Text \n");
   stdout.write(
       "${ColorsText.green}9. Create Model Class From Json ${ColorsText.reset}\n");
+ stdout.write(
+      "${ColorsText.green}10. Init App Language ${ColorsText.reset}\n");
 
   String? option = stdin.readLineSync();
 
@@ -50,6 +52,8 @@ void main() async {
       break;
     case '9':
       generateModelClassFromJson();
+      case '10':
+      Creators.addLang();
       break;
     default:
       stdout.write(

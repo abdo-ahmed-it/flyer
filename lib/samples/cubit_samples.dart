@@ -1,4 +1,5 @@
 
+import '../core/app_helper.dart';
 import '../core/extensions.dart';
 
 String cubitSample(String featureName) {
@@ -7,8 +8,8 @@ String cubitSample(String featureName) {
  
  import '${featureName}_state.dart';
 
-  class ${featureName.toCapitalized}Bloc extends Cubit<${featureName.toCapitalized}State>{
-  ${featureName.toCapitalized}Bloc(): super(const ${featureName.toCapitalized}State());
+  class ${AppHelper.toClassName(featureName)}Bloc extends Cubit<${AppHelper.toClassName(featureName)}State>{
+  ${AppHelper.toClassName(featureName)}Bloc(): super(const ${AppHelper.toClassName(featureName)}State());
   }
   ''';
 }

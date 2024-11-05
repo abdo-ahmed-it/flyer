@@ -1,4 +1,5 @@
 
+import 'package:app_creator/core/app_helper.dart';
 import 'package:app_creator/core/extensions.dart';
 
 String formSample(String name,List<String>fields){
@@ -11,11 +12,11 @@ String formSample(String name,List<String>fields){
   return '''
 import 'package:app_forms/app_forms.dart';
 
-class ${name.toCapitalized}Form extends AppForm {
+class ${AppHelper.toClassName(name)}Form extends AppForm {
 
   $a
 
-  ${name.toCapitalized}Form() {
+  ${AppHelper.toClassName(name)}Form() {
     setFields($fields);
   }
 

@@ -57,7 +57,7 @@ String camelCase(String text) {
   String capitalize(Match m) =>
       m[0]!.substring(0, 1).toUpperCase() + m[0]!.substring(1);
   String skip(String s) => "";
-  return text.splitMapJoin(new RegExp(r'[a-zA-Z0-9]+'),
+  return text.splitMapJoin( RegExp(r'[a-zA-Z0-9]+'),
       onMatch: capitalize, onNonMatch: skip);
 }
 
@@ -191,7 +191,7 @@ isPrimitiveType(String typeName) {
 String fixFieldName(String name,
     {required TypeDefinition typeDef, bool privateField = false}) {
   var properName = name;
-  if (name.startsWith('_') || name.startsWith(new RegExp(r'[0-9]'))) {
+  if (name.startsWith('_') || name.startsWith( RegExp(r'[0-9]'))) {
     final firstCharType = typeDef.name.substring(0, 1).toLowerCase();
     properName = '$firstCharType$name';
   }

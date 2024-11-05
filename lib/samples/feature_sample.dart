@@ -1,4 +1,6 @@
 
+
+import '../core/app_helper.dart';
 import '../core/extensions.dart';
 
 String featureSample(String featureName) {
@@ -9,18 +11,18 @@ String featureSample(String featureName) {
   import '${featureName}_page.dart';
 
   
-  class ${featureName.toCapitalized}Feature extends Feature {
+  class ${AppHelper.toClassName(featureName)}Feature extends Feature {
   
   @override
   void get dependencies => {
-        getIt.registerLazySingleton(() => ${featureName.toCapitalized}Bloc()),
+        getIt.registerLazySingleton(() => ${AppHelper.toClassName(featureName)}Bloc()),
       };
     @override
     String get name => '/$featureName';
   
     @override
     List<GoRoute> get routes => [
-          GoRoute(path: name, name: name, builder: (_, state) => const ${featureName.toCapitalized}Page())
+          GoRoute(path: name, name: name, builder: (_, state) => const ${AppHelper.toClassName(featureName)}Page())
         ];
   }
   ''';
