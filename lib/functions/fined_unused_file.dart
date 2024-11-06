@@ -11,6 +11,14 @@ void findUnusedFiles() {
   }
 
   List<String> unusedFiles = [];
+  List<String> excludedFiles = [
+    'main.dart',
+    'main_dev.dart',
+    'main_test.dart',
+    'main_prod.dart',
+    'main_staging.dart',
+    'main_stage.dart',
+  ];
 
   List<File> dartFiles = [];
   libDirectory.listSync(recursive: true).forEach((fileSystemEntity) {
@@ -31,7 +39,7 @@ void findUnusedFiles() {
       }
     }
 
-    if (!isUsed) {
+    if (!isUsed && !excludedFiles.contains(file.path.split('/').last)) {
       unusedFiles.add(file.path);
     }
   }
