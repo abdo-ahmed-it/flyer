@@ -1,5 +1,3 @@
-import '../features/orders2/orders2_feature.dart';
-import '../features/orders/orders_feature.dart';
 import 'package:api_request/api_request.dart';
 import 'package:app_features/app_features.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +18,6 @@ class AppConfig {
     AppFeatures.config(features: [
       SplashFeature(),
       HomeFeature(),
-      OrdersFeature(),
-      Orders2Feature()
     ]);
     initApiActions();
   }

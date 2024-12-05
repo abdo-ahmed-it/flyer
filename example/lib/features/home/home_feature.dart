@@ -1,3 +1,11 @@
+import 'pages/fff_page.dart';
+
+import 'pages/ff_page.dart';
+
+import 'pages/dd_page.dart';
+
+import 'pages/dd_page.dart';
+
 import 'package:app_features/app_features.dart';
 
 import '../../config/app_config.dart';
@@ -26,6 +34,14 @@ class HomeFeature extends Feature {
         GoRoute(
             path: '/also',
             name: '/also',
-            builder: (_, state) => const AlsoPage())
+            builder: (_, state) => const AlsoPage()),
+        GoRoute(
+            path: '/dd', name: '/dd', builder: (_, state) => const DdPage()),
+        GoRoute(
+            path: '/dd', name: '/dd', builder: (_, state) => const DdPage()),
+        GoRoute(
+            path: '/ff', name: '/ff', builder: (_, state) => const FfPage()),
+        GoRoute(
+            path: '/fff', name: '/fff', builder: (_, state) => const FffPage())
       ];
 }

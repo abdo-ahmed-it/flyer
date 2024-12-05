@@ -1,39 +1,95 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# app_creator 🛠️
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+A powerful CLI package to speed up Flutter app development by automating repetitive tasks like
+creating features, pages, forms, and generating Dart model classes from JSON.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+With `app_creator`, you can streamline your development process, reduce boilerplate code, and focus
+on building your app's core features.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+---
 
-## Features
+## Features 🚀
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- **Feature Creation**: Generate fully-structured Flutter features.
+- **Language Support**: Add multiple languages to your app with ease.
+- **Model Generation**: Create Dart classes directly from JSON data.
+- **Page Creation**: Add pages to specific features.
+- **Form Generation**: Generate forms with custom fields.
+- **Customizable Paths**: Control where generated files are stored.
 
-## Getting started
+---
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+## Installation 📦
 
-## Usage
+Add the following dependency to your `pubspec.yaml`:
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+```yaml
+dev_dependencies:
+  app_creator: ^1.0.0
+Run the following command to install:
 
-```dart
-const like = 'sample';
-```
+bash
+Copy code
+dart pub get
+Usage 📝
+To use the package, run the following command:
 
-## Additional information
+bash
+Copy code
+dart run app_creator make [OPTIONS]
+Available Options
+Option	Description	Example Usage
+--feature, -f	Create a new feature.	dart run app_creator make --feature=myFeature
+--lang	Add multiple languages to the app.	dart run app_creator make --lang=en,ar
+--model, -m	Generate a Dart class from JSON.	dart run app_creator make --model=UserModel --json='{"name": "ahmed"}'
+--page	Create a page within a feature.	dart run app_creator make --page=homePage --feature=myFeature
+--form	Create a form with fields in a feature.	dart run app_creator make --form=loginForm --fields=username,password,email
+--fields	Specify fields for forms (comma-separated).	--fields=username,password,email
+--json	Provide JSON data for model generation.	--json='{"name": "John", "age": 30}'
+--path	Specify a path for the generated model file.	--path=lib/models/
+Examples
+Create a New Feature
+bash
+Copy code
+dart run app_creator make --feature=authentication
+Add Multiple Languages
+bash
+Copy code
+dart run app_creator make --lang=en,fr,es
+Generate a Dart Model from JSON
+bash
+Copy code
+dart run app_creator make --model=User --json='{"name": "John", "age": 30}'
+Create a Page
+bash
+Copy code
+dart run app_creator make --page=dashboard --feature=analytics
+Generate a Form
+bash
+Copy code
+dart run app_creator make --form=registration --feature=users --fields=name,email,password
+Getting Started 🛠️
+Install the package (see the Installation section).
+Use the make command with appropriate options to generate features, pages, models, or forms.
+Check the generated files in your Flutter project directory.
+Contributing 🤝
+Contributions are welcome! Here's how you can get involved:
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+Fork the repository.
+Create a new branch (feature/my-feature).
+Commit your changes.
+Push to your branch.
+Open a pull request.
+Feel free to file issues or feature requests on the GitHub repository.
+
+License 📄
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+Additional Information 📚
+For more details, visit the official Dart documentation and Flutter CLI documentation.
+
+Why Use app_creator?
+Saves time by automating repetitive tasks.
+Provides consistent structure across your Flutter projects.
+Makes collaboration easier with standardized generated code.
+Lightweight and easy to use.

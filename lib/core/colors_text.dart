@@ -5,4 +5,5 @@ class ColorsText {
   static const red = '\x1B[31m';
   static const yellow = '\x1B[33m';
   static const orange = '\x1B[38;5;214m';
+  static const gray = '\x1B[90m';
 }
