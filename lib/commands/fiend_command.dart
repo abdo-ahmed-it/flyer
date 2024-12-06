@@ -40,10 +40,12 @@ class FiendCommand extends Command {
       }
 
       if (argResults!.arguments.isEmpty) {
-        print('No valid options provided. Use --help for usage information.');
+        print('No arguments found.\nUse: flyer fiend [options]');
+        print(argParser.usage);
       }
     } else {
-      print('No arguments found. Use --help for usage information.');
+      print('No arguments found.\n Use: flyer fiend [options]');
+      print(argParser.usage);
     }
   }
 }

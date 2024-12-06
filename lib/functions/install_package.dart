@@ -12,7 +12,8 @@ Future<void> installPackage(String name) async {
     print(response.body);
   } else if (response.statusCode == 200) {
     Map<String, dynamic> data = json.decode(response.body);
-    String latestVersion = data['latest']['version'];
+    String latestVersion =
+        name == 'responsive_framework' ? '0.2.0' : data['latest']['version'];
     final pubspec = File('pubspec.yaml').readAsStringSync();
     if (!pubspec.contains(name)) {
       final updatedPubspec = pubspec.replaceFirst(

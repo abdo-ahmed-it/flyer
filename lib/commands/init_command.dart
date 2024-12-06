@@ -1,8 +1,9 @@
+import 'package:args/command_runner.dart';
 import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/core/constants/packages_name.dart';
 import 'package:flyer/creatores.dart';
 import 'package:flyer/functions/install_package.dart';
-import 'package:args/command_runner.dart';
+import 'package:flyer/functions/run_pub_get.dart';
 
 class InitCommand extends Command {
   InitCommand() {
@@ -34,5 +35,6 @@ class InitCommand extends Command {
     }
     print(
         '${ColorsText.green}Infra Structure created successfully${ColorsText.reset}');
+    runPubGet();
   }
 }

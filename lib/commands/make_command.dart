@@ -75,7 +75,7 @@ class MakeCommand extends Command {
       } else if (model != null && json != null) {
         generateModelClassFromJson(className: model, json: json, path: path);
       } else {
-        print('Not Found');
+        print('Usage: flyer make [options]');
         print(argParser.usage);
       }
     }
