@@ -84,13 +84,13 @@ dart run app_creator make [OPTIONS]
 
 #### Available Options
 
-| Option          | Description                             | Example Usage                                       |
-|-----------------|-----------------------------------------|-----------------------------------------------------|
-| `--feature, -f` | Create a new feature.                   | `--feature=myFeature`                               |
-| `--lang`        | Add multiple languages to the app.      | `--lang=en,ar`                                      |
-| `--model, -m`   | Generate a Dart class from JSON.        | `--model=UserModel --json='{"name": "ahmed"}'`      |
-| `--page`        | Create a page within a feature.         | `--page=homePage --feature=myFeature`               |
-| `--form`        | Create a form with fields in a feature. | `--form=loginForm --fields=username,password,email` |
+| Option          | Description                             | Example Usage                                  |
+|-----------------|-----------------------------------------|------------------------------------------------|
+| `--feature, -f` | Create a new feature.                   | `--feature=myFeature`                          |
+| `--lang`        | Add multiple languages to the app.      | `--lang=en,ar`                                 |
+| `--model, -m`   | Generate a Dart class from JSON.        | `--model=UserModel --json='{"name": "ahmed"}'` |
+| `--page`        | Create a page within a feature.         | `--page=homePage --feature=myFeature`          |
+| `--form`        | Create a form with fields in a feature. | `--form=login --fields=password,email`         |
 
 ---
 
