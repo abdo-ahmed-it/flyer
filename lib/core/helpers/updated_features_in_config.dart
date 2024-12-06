@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:app_creator/core/app_helper.dart';
-import 'package:app_creator/core/creator_util.dart';
+import 'package:flyer/core/app_helper.dart';
+import 'package:flyer/core/creator_util.dart';
 
 void updateFeaturesInConfigFile(String featureName) {
   final file = File('lib/config/app_config.dart');

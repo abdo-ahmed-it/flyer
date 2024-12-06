@@ -1,6 +1,6 @@
-import 'package:app_creator/functions/fiend_unused_package.dart';
-import 'package:app_creator/functions/fined_unused_assets.dart';
-import 'package:app_creator/functions/fined_unused_file.dart';
+import 'package:flyer/functions/fiend_unused_package.dart';
+import 'package:flyer/functions/fined_unused_assets.dart';
+import 'package:flyer/functions/fined_unused_file.dart';
 import 'package:args/command_runner.dart';
 
 class FiendCommand extends Command {

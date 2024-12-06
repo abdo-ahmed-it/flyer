@@ -1,6 +1,6 @@
 
-import 'package:app_creator/core/app_helper.dart';
-import 'package:app_creator/core/extensions.dart';
+import 'package:flyer/core/app_helper.dart';
+import 'package:flyer/core/extensions.dart';
 
 String formSample(String name,List<String>fields){
   String a='';

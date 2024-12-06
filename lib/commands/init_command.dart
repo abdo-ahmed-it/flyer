@@ -1,7 +1,7 @@
-import 'package:app_creator/core/colors_text.dart';
-import 'package:app_creator/core/constants/packages_name.dart';
-import 'package:app_creator/creatores.dart';
-import 'package:app_creator/functions/install_package.dart';
+import 'package:flyer/core/colors_text.dart';
+import 'package:flyer/core/constants/packages_name.dart';
+import 'package:flyer/creatores.dart';
+import 'package:flyer/functions/install_package.dart';
 import 'package:args/command_runner.dart';
 
 class InitCommand extends Command {

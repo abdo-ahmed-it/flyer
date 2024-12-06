@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:app_creator/core/colors_text.dart';
-import 'package:app_creator/core/creator_util.dart';
-import 'package:app_creator/jsonToDart/model_generator.dart';
+import 'package:flyer/core/colors_text.dart';
+import 'package:flyer/core/creator_util.dart';
+import 'package:flyer/jsonToDart/model_generator.dart';
 
 void generateModelClassFromJsonInFeature() {
   stdout.write(

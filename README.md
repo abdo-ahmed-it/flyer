@@ -1,12 +1,12 @@
 ```markdown
-# app_creator 🛠️
+# flyer 🛠️
 
 A powerful CLI package to speed up Flutter app development by automating repetitive tasks like
 creating features, pages, forms, and generating Dart model classes from JSON and and reformatting
 code and more. Additionally, it initializes your Flutter project's infrastructure and installs
 essential packages.
 
-With `app_creator`, you can streamline your development process, reduce boilerplate code, and focus
+With `flyer`, you can streamline your development process, reduce boilerplate code, and focus
 on building your app's core features.
 
 ---
@@ -31,7 +31,7 @@ Add the following dependency to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  app_creator: <latest version>
+  flyer: <latest version>
 ```
 
 Run the following command to install:
@@ -50,7 +50,7 @@ The `init` command sets up the basic infrastructure for your Flutter project and
 packages.
 
 ```bash
-dart run app_creator init [OPTIONS]
+dart run flyer init [OPTIONS]
 ```
 
 #### Available Options
@@ -62,7 +62,7 @@ dart run app_creator init [OPTIONS]
 #### Example
 
 ```bash
-dart run app_creator init --lang=en,ar
+dart run flyer init --lang=en,ar
 ```
 
 This command:
@@ -79,7 +79,7 @@ The `make` command allows you to create features, pages, models, forms, and mana
 your Flutter project.
 
 ```bash
-dart run app_creator make [OPTIONS]
+dart run flyer make [OPTIONS]
 ```
 
 #### Available Options
@@ -97,37 +97,37 @@ dart run app_creator make [OPTIONS]
 #### Create a New Feature
 
 ```bash
-dart run app_creator make --feature=account
+dart run flyer make --feature=account
 ```
 
 #### Add Multiple Languages
 
 ```bash
-dart run app_creator make --lang=en,fr,es
+dart run flyer make --lang=en,fr,es
 ```
 
 #### Generate a Dart Model from JSON Default Path app/models
 
 ```bash
-dart run app_creator make --model=User --json='{"name": "John", "age": 30}'
+dart run flyer make --model=User --json='{"name": "John", "age": 30}'
 ```
 
 #### Generate a Dart Model from JSON With Custom Path
 
 ```bash
-dart run app_creator make --model=User --json='{"name": "John", "age": 30}' --path=custom_path
+dart run flyer make --model=User --json='{"name": "John", "age": 30}' --path=custom_path
 ```
 
 #### Generate a Page
 
 ```bash
-dart run app_creator make --page=login --feature=account
+dart run flyer make --page=login --feature=account
 ```
 
 #### Generate a Form
 
 ```bash
-dart run app_creator make --form=login --feature=account --fields=email,password
+dart run flyer make --form=login --feature=account --fields=email,password
 ```
 
 ---
@@ -137,7 +137,7 @@ dart run app_creator make --form=login --feature=account --fields=email,password
 The `run` command provides utility tasks like reformatting your project's code.
 
 ```bash
-dart run app_creator run [OPTIONS]
+dart run flyer run [OPTIONS]
 ```
 
 #### Available Options
@@ -151,7 +151,7 @@ dart run app_creator run [OPTIONS]
 To format your project's code:
 
 ```bash
-dart run app_creator run --format
+dart run flyer run --format
 ```
 
 ---
@@ -162,7 +162,7 @@ The `fiend` command helps you identify and optionally delete unused assets, pack
 your Flutter project.
 
 ```bash
-dart run app_creator fiend [OPTIONS]
+dart run flyer fiend [OPTIONS]
 ```
 
 #### Available Options
@@ -178,19 +178,19 @@ dart run app_creator fiend [OPTIONS]
 #### Find Unused Assets
 
 ```bash
-dart run app_creator fiend --unusedAssets
+dart run flyer fiend --unusedAssets
 ```
 
 #### Find Unused Packages
 
 ```bash
-dart run app_creator fiend --unusedPackages
+dart run flyer fiend --unusedPackages
 ```
 
 #### Find Unused Files
 
 ```bash
-dart run app_creator fiend --unusedFiles
+dart run flyer fiend --unusedFiles
 ```
 
 ## Contributing 🤝

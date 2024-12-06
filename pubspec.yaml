@@ -1,13 +1,13 @@
-name: app_creator
+name: flyer
 description: "A new Flutter project."
 version: 0.0.1
-homepage:
+homepage: https://github.com/abdo-ahmed-it/flyer
 
 environment:
   sdk: ^3.5.1
   flutter: ">=1.17.0"
 executables:
-  fly: app_creator
+  flyer: flyer.dart
 
 dependencies:
   yaml: ^3.1.0

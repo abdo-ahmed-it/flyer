@@ -1,4 +1,4 @@
-import 'package:app_creator/core/app_helper.dart';
+import 'package:flyer/core/app_helper.dart';
 
 import '../core/extensions.dart';
 String pageSample(String featureName) {

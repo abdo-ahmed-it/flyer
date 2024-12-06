@@ -1,4 +1,4 @@
-library app_creator;
+library flyer;
 
 /// A Calculator.
 class Calculator {

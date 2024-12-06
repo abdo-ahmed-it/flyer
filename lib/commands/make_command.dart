@@ -1,7 +1,6 @@
-import 'package:app_creator/core/colors_text.dart';
-import 'package:app_creator/creatores.dart';
-import 'package:app_creator/functions/generate_dart_class_from_json.dart';
 import 'package:args/command_runner.dart';
+import 'package:flyer/creatores.dart';
+import 'package:flyer/functions/generate_dart_class_from_json.dart';
 
 class MakeCommand extends Command {
   MakeCommand() {
@@ -47,8 +46,7 @@ class MakeCommand extends Command {
   }
 
   @override
-  String get description =>
-      '${ColorsText.gray}Create Useful Files${ColorsText.reset}';
+  String get description => 'Create Useful Files';
 
   @override
   String get name => 'make';
@@ -78,6 +76,7 @@ class MakeCommand extends Command {
         generateModelClassFromJson(className: model, json: json, path: path);
       } else {
         print('Not Found');
+        print(argParser.usage);
       }
     }
   }

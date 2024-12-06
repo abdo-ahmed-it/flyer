@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:app_creator/core/colors_text.dart';
-import 'package:app_creator/core/helpers/updated_features_in_config.dart';
-import 'package:app_creator/samples/app_feature_sample.dart';
-import 'package:app_creator/samples/utils/notification_util_sample.dart';
+import 'package:flyer/core/colors_text.dart';
+import 'package:flyer/core/helpers/updated_features_in_config.dart';
+import 'package:flyer/samples/app_feature_sample.dart';
+import 'package:flyer/samples/utils/notification_util_sample.dart';
 
 import 'core/creator_util.dart';
 import 'core/extensions.dart';

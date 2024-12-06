@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:app_creator/core/colors_text.dart';
+import 'package:flyer/core/colors_text.dart';
 import 'package:dart_style/dart_style.dart';
 
 class CreatorUtil {

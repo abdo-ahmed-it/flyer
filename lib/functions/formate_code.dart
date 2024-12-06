@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:app_creator/core/colors_text.dart';
-import 'package:app_creator/core/creator_util.dart';
+import 'package:flyer/core/colors_text.dart';
+import 'package:flyer/core/creator_util.dart';
 import 'package:dart_style/dart_style.dart';
 
 void formatCode() async {

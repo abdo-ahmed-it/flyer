@@ -1,7 +1,7 @@
 import 'dart:collection';
 
-import 'package:app_creator/jsonToDart/helpers.dart';
-import 'package:app_creator/jsonToDart/syntax.dart';
+import 'package:flyer/jsonToDart/helpers.dart';
+import 'package:flyer/jsonToDart/syntax.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:json_ast/json_ast.dart' show parse, Settings, Node;
 

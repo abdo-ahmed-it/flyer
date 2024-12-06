@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:app_creator/core/creator_util.dart';
+import 'package:flyer/core/creator_util.dart';
 void findUnusedVariablesInApp(){
   Directory libDirectory = Directory('lib');
 

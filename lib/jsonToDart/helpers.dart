@@ -1,6 +1,6 @@
 import 'dart:convert' as Convert;
 import 'dart:math';
-import 'package:app_creator/jsonToDart/syntax.dart';
+import 'package:flyer/jsonToDart/syntax.dart';
 import 'package:json_ast/json_ast.dart'
     show Node, ObjectNode, ArrayNode, LiteralNode, PropertyNode;
 

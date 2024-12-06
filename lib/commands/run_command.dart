@@ -1,4 +1,4 @@
-import 'package:app_creator/functions/formate_code.dart';
+import 'package:flyer/functions/formate_code.dart';
 import 'package:args/command_runner.dart';
 
 class RunCommand extends Command {

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:app_creator/functions/delete_file.dart';
+import 'package:flyer/functions/delete_file.dart';
 
 void findUnusedFiles() {
   Directory libDirectory = Directory('lib');
