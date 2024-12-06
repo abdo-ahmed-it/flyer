@@ -2,7 +2,9 @@
 # app_creator 🛠️
 
 A powerful CLI package to speed up Flutter app development by automating repetitive tasks like
-creating features, pages, forms, and generating Dart model classes from JSON.
+creating features, pages, forms, and generating Dart model classes from JSON and and reformatting
+code and more. Additionally, it initializes your Flutter project's infrastructure and installs
+essential packages.
 
 With `app_creator`, you can streamline your development process, reduce boilerplate code, and focus
 on building your app's core features.
@@ -11,12 +13,15 @@ on building your app's core features.
 
 ## Features 🚀
 
-- **Feature Creation**: Generate fully-structured Flutter features.
+- **Project Initialization**: Set up the infrastructure of your Flutter project and install
+  essential packages.
+- **Feature Generation**: Generate fully-structured Flutter features.
 - **Language Support**: Add multiple languages to your app with ease.
-- **Model Generation**: Create Dart classes directly from JSON data.
-- **Page Creation**: Add pages to specific features.
+- **Model Generation**: Generate Dart classes directly from JSON data.
+- **Page Generation**: Add pages to specific features.
 - **Form Generation**: Generate forms with custom fields.
-- **Customizable Paths**: Control where generated files are stored.
+- **Code Formatting**: Reformat your code for consistency.
+- **Unused Resources Finder**: Identify and optionally delete unused assets, packages, and files.
 
 ---
 
@@ -39,24 +44,53 @@ dart pub get
 
 ## Usage 📝
 
-To use the package, run the following command:
+### Init Command
+
+The `init` command sets up the basic infrastructure for your Flutter project and installs essential
+packages.
+
+```bash
+dart run app_creator init [OPTIONS]
+```
+
+#### Available Options
+
+| Option   | Description                          | Example Usage     |
+|----------|--------------------------------------|-------------------|
+| `--lang` | Add languages during initialization. | `--lang=en,ar,fr` |
+
+#### Example
+
+```bash
+dart run app_creator init --lang=en,ar
+```
+
+This command:
+
+- Sets up the basic infrastructure for your Flutter project.
+- Installs essential packages (e.g., `app_features`, `flutter_bloc`, etc.).
+- Adds the specified languages (`en` and `ar`) to the project.
+
+---
+
+### Make Command
+
+The `make` command allows you to create features, pages, models, forms, and manage languages for
+your Flutter project.
 
 ```bash
 dart run app_creator make [OPTIONS]
 ```
 
-### Available Options
+#### Available Options
 
-| Option          | Description                                  | Example Usage                                                                 |
-|-----------------|----------------------------------------------|-------------------------------------------------------------------------------|
-| `--feature, -f` | Create a new feature.                        | `dart run app_creator make --feature=myFeature`                               |
-| `--lang`        | Add multiple languages to the app.           | `dart run app_creator make --lang=en,ar`                                      |
-| `--model, -m`   | Generate a Dart class from JSON.             | `dart run app_creator make --model=UserModel --json='{"name": "ahmed"}'`      |
-| `--page`        | Create a page within a feature.              | `dart run app_creator make --page=homePage --feature=myFeature`               |
-| `--form`        | Create a form with fields in a feature.      | `dart run app_creator make --form=loginForm --fields=username,password,email` |
-| `--fields`      | Specify fields for forms (comma-separated).  | `--fields=username,password,email`                                            |
-| `--json`        | Provide JSON data for model generation.      | `--json='{"name": "John", "age": 30}'`                                        |
-| `--path`        | Specify a path for the generated model file. | `--path=lib/models/`                                                          |
+| Option          | Description                             | Example Usage                                       |
+|-----------------|-----------------------------------------|-----------------------------------------------------|
+| `--feature, -f` | Create a new feature.                   | `--feature=myFeature`                               |
+| `--lang`        | Add multiple languages to the app.      | `--lang=en,ar`                                      |
+| `--model, -m`   | Generate a Dart class from JSON.        | `--model=UserModel --json='{"name": "ahmed"}'`      |
+| `--page`        | Create a page within a feature.         | `--page=homePage --feature=myFeature`               |
+| `--form`        | Create a form with fields in a feature. | `--form=loginForm --fields=username,password,email` |
 
 ---
 
@@ -65,7 +99,7 @@ dart run app_creator make [OPTIONS]
 #### Create a New Feature
 
 ```bash
-dart run app_creator make --feature=authentication
+dart run app_creator make --feature=account
 ```
 
 #### Add Multiple Languages
@@ -74,33 +108,94 @@ dart run app_creator make --feature=authentication
 dart run app_creator make --lang=en,fr,es
 ```
 
-#### Generate a Dart Model from JSON
+#### Generate a Dart Model from JSON Default Path app/models
 
 ```bash
 dart run app_creator make --model=User --json='{"name": "John", "age": 30}'
 ```
 
+#### Generate a Dart Model from JSON With Custom Path
+
+```bash
+dart run app_creator make --model=User --json='{"name": "John", "age": 30}' --path=custom_path
+```
+
 #### Create a Page
 
 ```bash
-dart run app_creator make --page=dashboard --feature=analytics
+dart run app_creator make --page=login --feature=account
 ```
 
 #### Generate a Form
 
 ```bash
-dart run app_creator make --form=registration --feature=users --fields=name,email,password
+dart run app_creator make --form=login --feature=account --fields=email,password
 ```
 
 ---
 
-## Getting Started 🛠️
+### Run Utility Tasks
 
-1. Install the package (see the **Installation** section).
-2. Use the `make` command with appropriate options to generate features, pages, models, or forms.
-3. Check the generated files in your Flutter project directory.
+The `run` command provides utility tasks like reformatting your project's code.
+
+```bash
+dart run app_creator run [OPTIONS]
+```
+
+#### Available Options
+
+| Option     | Description                  | Example Usage |
+|------------|------------------------------|---------------|
+| `--format` | Reformat the project's code. | `--format`    |
+
+#### Example
+
+To format your project's code:
+
+```bash
+dart run app_creator run --format
+```
 
 ---
+
+### Find Unused Resources
+
+The `fiend` command helps you identify and optionally delete unused assets, packages, and files in
+your Flutter project.
+
+```bash
+dart run app_creator fiend [OPTIONS]
+```
+
+#### Available Options
+
+| Option             | Description                           | Example Usage       |
+|--------------------|---------------------------------------|---------------------|
+| `--unusedAssets`   | Find unused assets in your project.   | ` --unusedAssets`   |
+| `--unusedPackages` | Find unused packages in your project. | ` --unusedPackages` |
+| `--unusedFiles`    | Find unused files in your project.    | ` --unusedPackages` |
+
+---
+
+### Example Usage
+
+#### Find Unused Assets
+
+```bash
+dart run app_creator fiend --unusedAssets
+```
+
+#### Find Unused Packages
+
+```bash
+dart run app_creator fiend --unusedPackages
+```
+
+#### Find Unused Files
+
+```bash
+dart run app_creator fiend --unusedFiles
+```
 
 ## Contributing 🤝
 
@@ -126,15 +221,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 For more details, visit the [official Dart documentation](https://dart.dev/guides)
 and [Flutter CLI documentation](https://flutter.dev/docs).
-
----
-
-### Why Use app_creator?
-
-- Saves time by automating repetitive tasks.
-- Provides consistent structure across your Flutter projects.
-- Makes collaboration easier with standardized generated code.
-- Lightweight and easy to use.
 
 ---
 
