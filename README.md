@@ -31,7 +31,7 @@ Add the following dependency to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  app_creator: ^1.0.0
+  app_creator: <latest version>
 ```
 
 Run the following command to install:
@@ -92,8 +92,6 @@ dart run app_creator make [OPTIONS]
 | `--page`        | Create a page within a feature.         | `--page=homePage --feature=myFeature`          |
 | `--form`        | Create a form with fields in a feature. | `--form=login --fields=password,email`         |
 
----
-
 ### Examples
 
 #### Create a New Feature
@@ -120,7 +118,7 @@ dart run app_creator make --model=User --json='{"name": "John", "age": 30}'
 dart run app_creator make --model=User --json='{"name": "John", "age": 30}' --path=custom_path
 ```
 
-#### Create a Page
+#### Generate a Page
 
 ```bash
 dart run app_creator make --page=login --feature=account
@@ -174,8 +172,6 @@ dart run app_creator fiend [OPTIONS]
 | `--unusedAssets`   | Find unused assets in your project.   | ` --unusedAssets`   |
 | `--unusedPackages` | Find unused packages in your project. | ` --unusedPackages` |
 | `--unusedFiles`    | Find unused files in your project.    | ` --unusedPackages` |
-
----
 
 ### Example Usage
 
