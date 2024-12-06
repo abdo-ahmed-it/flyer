@@ -1,21 +1,26 @@
 import 'package:app_creator/functions/fiend_unused_package.dart';
 import 'package:app_creator/functions/fined_unused_assets.dart';
+import 'package:app_creator/functions/fined_unused_file.dart';
 import 'package:args/command_runner.dart';
 
 class FiendCommand extends Command {
   FiendCommand() {
     argParser.addOption(
       'unusedAssets',
-      help: 'Remove unused assets',
+      help: 'Fiend unused assets and can be deleted',
     );
     argParser.addOption(
       'unusedPackages',
-      help: 'Remove unused packages',
+      help: 'Fiend unused packages and can be deleted',
+    );
+    argParser.addOption(
+      'unusedFiles',
+      help: 'Fiend unused files and can be deleted',
     );
   }
 
   @override
-  String get description => 'Run various utility tasks';
+  String get description => 'Fiend unused assets and packages in the project.';
 
   @override
   String get name => 'fiend';
@@ -29,6 +34,9 @@ class FiendCommand extends Command {
 
       if (argResults!['unusedPackages'] != null) {
         fiendUnusedPackages();
+      }
+      if (argResults!['unusedFiles'] != null) {
+        findUnusedFiles();
       }
 
       if (argResults!.arguments.isEmpty) {

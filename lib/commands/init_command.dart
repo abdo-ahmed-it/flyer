@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:app_creator/core/colors_text.dart';
 import 'package:app_creator/core/constants/packages_name.dart';
 import 'package:app_creator/creatores.dart';
@@ -36,6 +34,5 @@ class InitCommand extends Command {
     }
     print(
         '${ColorsText.green}Infra Structure created successfully${ColorsText.reset}');
-    Process.runSync('pub', ['get']);
   }
 }
