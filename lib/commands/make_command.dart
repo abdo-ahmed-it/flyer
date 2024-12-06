@@ -73,7 +73,7 @@ class MakeCommand extends Command {
         Creators.createFeature(name: featureName);
       } else if (languages?.isNotEmpty == true) {
         print('lang: $languages');
-        Creators.addLang(lang: languages);
+        Creators.addLang(languages: languages);
       } else if (model != null && json != null) {
         generateModelClassFromJson(className: model, json: json, path: path);
       } else {

@@ -5,18 +5,6 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _item(
-          title: ' !Hello title&',
-          label: 'Label Text',
-          hint: '+hint Text',
-          textLabel: '0767765'),
-    );
+    return Scaffold();
   }
-}
-
-_item({required String title, label, textLabel, hint}) {
-  return Column(
-    children: [Text(title), Text('Hello Text $label'), Text('Hello Text')],
-  );
 }

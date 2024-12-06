@@ -28,6 +28,16 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  app_forms: ^0.5.0
+  responsive_framework: ^1.5.1
+  toastification: ^2.3.0
+  flutter_easyloading: ^3.0.5
+  flutter_bloc: ^8.1.6
+  get_it: ^8.0.2
+  hive_flutter: ^1.1.0
+  equatable: ^2.0.7
+  api_request: ^1.0.9
+  app_features: ^1.0.1
   flutter_localizations:
     sdk: flutter
   flutter:
@@ -38,16 +48,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  hive_flutter: ^1.1.0
-  get_it: ^8.0.0
-  app_features: ^1.0.1
-  api_request: ^1.0.9
-  flutter_bloc: ^8.1.6
-  equatable: ^2.0.5
-  flutter_easyloading: ^3.0.5
-  toastification: ^2.3.0
-  responsive_framework: ^0.2.0
-  app_forms: ^0.5.0
+
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,5 @@
+String appFeatureSample() {
+  return '''
 import 'package:app_features/app_features.dart';
 import '../config/app_config.dart';
 import '../core/app_storage.dart';
@@ -15,4 +17,7 @@ class AppFeature extends Feature {
 
   @override
   List<GoRoute> get routes => [];
+}
+
+  ''';
 }

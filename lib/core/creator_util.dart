@@ -50,8 +50,9 @@ class CreatorUtil {
             '${ColorsText.yellow}Updated content written to file: $path${ColorsText.reset}\n');
       }
     } else {
-      stdout.write(
-          '${ColorsText.red}File does not exist: $path${ColorsText.reset}\n');
+      createFileWithContent(path, newContent);
+      // stdout.write(
+      //     '${ColorsText.red}File does not exist: $path${ColorsText.reset}\n');
     }
   }
 }

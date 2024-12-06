@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:app_creator/core/colors_text.dart';
 import 'package:app_creator/core/helpers/updated_features_in_config.dart';
+import 'package:app_creator/samples/app_feature_sample.dart';
 import 'package:app_creator/samples/utils/notification_util_sample.dart';
 
 import 'core/creator_util.dart';
@@ -95,16 +96,12 @@ $content''';
     }
   }
 
-  static Future<void> addLang({List<String>? lang}) async {
-    List<String>? languages;
-    if (lang == null) {
+  static Future<void> addLang({List<String>? languages}) async {
+    if (languages == null) {
       stdout.write(
           "${ColorsText.blue} Enter Your App Languages as Like This ar,en,... : ${ColorsText.reset}");
       languages = stdin.readLineSync()?.split(',') ?? ['ar'];
-    } else if (lang.isNotEmpty) {
-      languages = lang;
     }
-    print('abdo ${languages}');
     String content = await CreatorUtil.readFileContent(
         '${Directory.current.path}/pubspec.yaml');
     if (!content.contains('flutter_localizations')) {
@@ -141,7 +138,7 @@ output-localization-file: app_localizations.dart
     CreatorUtil.createDirectory('$path/app/models');
     CreatorUtil.createDirectory('$path/app/bloc');
     CreatorUtil.createFileWithContent(
-        '$path/app/app_feature.dart', featureSample('app'));
+        '$path/app/app_feature.dart', appFeatureSample());
     CreatorUtil.createFileWithContent(
         '$path/app/bloc/app_bloc.dart', cubitSample('app'));
     CreatorUtil.createFileWithContent(
