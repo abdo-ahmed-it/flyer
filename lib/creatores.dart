@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/core/helpers/updated_features_in_config.dart';
 import 'package:flyer/samples/app_feature_sample.dart';
+import 'package:flyer/samples/splash_feature_sample.dart';
+import 'package:flyer/samples/splash_page_sample.dart';
 import 'package:flyer/samples/utils/notification_util_sample.dart';
 
 import 'core/creator_util.dart';
@@ -42,6 +44,29 @@ class Creators {
     CreatorUtil.createFileWithContent(
         '$path/features/$featureName/${featureName}_page.dart',
         pageSample(featureName));
+    CreatorUtil.createFileWithContent(
+        '$path/features/$featureName/bloc/${featureName}_state.dart',
+        stateSample(featureName));
+    CreatorUtil.createFileWithContent(
+        '$path/features/$featureName/bloc/${featureName}_bloc.dart',
+        cubitSample(featureName));
+  }
+
+  static void _createSplashFeature() {
+    String? featureName = 'splash';
+
+    updateFeaturesInConfigFile(featureName);
+
+    CreatorUtil.createDirectory('$path/features');
+    CreatorUtil.createDirectory('$path/features/$featureName');
+    CreatorUtil.createDirectory('$path/features/$featureName/actions');
+    CreatorUtil.createDirectory('$path/features/$featureName/bloc');
+    CreatorUtil.createFileWithContent(
+        '$path/features/$featureName/${featureName}_feature.dart',
+        splashFeatureSample());
+    CreatorUtil.createFileWithContent(
+        '$path/features/$featureName/${featureName}_page.dart',
+        splashPageSample());
     CreatorUtil.createFileWithContent(
         '$path/features/$featureName/bloc/${featureName}_state.dart',
         stateSample(featureName));
@@ -166,7 +191,7 @@ output-localization-file: app_localizations.dart
   }
 
   static void _createInitFeature() {
-    createFeature(name: 'splash');
+    _createSplashFeature();
     createFeature(name: 'home');
   }
 

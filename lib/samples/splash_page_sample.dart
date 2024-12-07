@@ -1,3 +1,5 @@
+String splashPageSample() {
+  return '''
 import 'package:app_features/app_features.dart';
 import 'package:flutter/material.dart';
 
@@ -28,4 +30,7 @@ class _SplashPageState extends State<SplashPage> {
       ),
     );
   }
+}
+
+  ''';
 }

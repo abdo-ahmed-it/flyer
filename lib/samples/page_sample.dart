@@ -1,6 +1,5 @@
 import 'package:flyer/core/app_helper.dart';
 
-import '../core/extensions.dart';
 String pageSample(String featureName) {
   return '''
   import 'package:flutter/material.dart';
@@ -10,7 +9,11 @@ String pageSample(String featureName) {
   
     @override
     Widget build(BuildContext context) {
-      return Scaffold();
+      return Scaffold(
+        body: Center(
+          child: Text('${AppHelper.toClassName(featureName)}'),
+        ),
+      );
     }
   }
   

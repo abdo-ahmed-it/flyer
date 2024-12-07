@@ -9,7 +9,7 @@ class SplashFeature extends Feature {
         getIt.registerLazySingleton(() => SplashBloc()),
       };
   @override
-  String get name => '/splash';
+  String get name => '/';
 
   @override
   List<GoRoute> get routes => [
