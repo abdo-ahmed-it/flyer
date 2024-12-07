@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flyer/functions/delete_file.dart';
 
 void fiendUnusedAssets() {
@@ -26,10 +27,9 @@ void fiendUnusedAssets() {
   }
 
   final unusedAssets = assetFiles.toSet().difference(usedAssets);
-  print('Unused assets:');
+  debugPrint('Unused assets:');
   for (var asset in unusedAssets) {
-    print(asset);
+    debugPrint(asset);
   }
   deleteFiles(unusedAssets.toList());
-
 }

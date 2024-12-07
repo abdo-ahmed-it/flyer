@@ -1,6 +1,4 @@
-
 import '../core/app_helper.dart';
-import '../core/extensions.dart';
 
 String cubitSample(String featureName) {
   return '''

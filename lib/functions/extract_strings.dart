@@ -1,12 +1,13 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flyer/core/colors_text.dart';
 
 void extractArabicText() {
   Directory libDirectory = Directory('lib');
 
   if (!libDirectory.existsSync()) {
-    print('lib directory not found!');
+    debugPrint('lib directory not found!');
     return;
   }
 
@@ -26,19 +27,19 @@ void extractArabicText() {
 
         if (extractedText != null && extractedText.isNotEmpty) {
           arabicTextsForTranslation.add(extractedText);
-          print('path ${fileSystemEntity.path}');
+          debugPrint('path ${fileSystemEntity.path}');
         }
       }
     }
   });
 
   if (arabicTextsForTranslation.isNotEmpty) {
-    print('Extracted Arabic texts for translation:');
+    debugPrint('Extracted Arabic texts for translation:');
     arabicTextsForTranslation.forEach((text) {
-      print(text);
+      debugPrint(text);
     });
   } else {
-    print('No Arabic texts found for translation.');
+    debugPrint('No Arabic texts found for translation.');
   }
 }
 
@@ -46,7 +47,7 @@ void extractTextFromTextWidgets() {
   Directory libDirectory = Directory('lib');
 
   if (!libDirectory.existsSync()) {
-    print('lib directory not found!');
+    debugPrint('lib directory not found!');
     return;
   }
 
@@ -100,10 +101,10 @@ void extractTextFromTextWidgets() {
     stdout.write(
         '${ColorsText.orange} Extracted texts JSON Format: ${ColorsText.reset}\n');
     texts.forEach((key, value) {
-      print('''"$key":"$value",''');
+      debugPrint('''"$key":"$value",''');
     });
   } else {
-    print('No texts found');
+    debugPrint('No texts found');
   }
 }
 
@@ -111,8 +112,9 @@ String _generateKey(String text) {
   String key = text
       .toLowerCase()
       .trim()
-      .replaceAll(RegExp(r'[^\w\s]'), '')  // Remove non-alphanumeric characters (punctuation, etc.)
-      .replaceAll(' ', '_');               // Replace spaces with underscores
+      .replaceAll(RegExp(r'[^\w\s]'),
+          '') // Remove non-alphanumeric characters (punctuation, etc.)
+      .replaceAll(' ', '_'); // Replace spaces with underscores
 
   // Handle '$' in text, only keep part before '$'
   if (key.contains('\$')) {

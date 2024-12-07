@@ -1,5 +1,8 @@
 name: flyer
-description: "A new Flutter project."
+description: "A powerful CLI package to speed up Flutter app development by automating repetitive tasks like
+creating features, pages, forms, and generating Dart model classes from JSON and and reformatting
+code and more. Additionally, it initializes your Flutter project's infrastructure and installs
+essential packages."
 version: 0.0.1
 homepage: https://github.com/abdo-ahmed-it/flyer
 
@@ -7,12 +10,10 @@ environment:
   sdk: ^3.5.1
   flutter: ">=1.17.0"
 executables:
-  flyer: flyer.dart
+  flyer: flyer
 
 dependencies:
   yaml: ^3.1.0
-  flutter_localizations:
-    sdk: flutter
   flutter:
     sdk: flutter
   dart_style: ^2.3.7
@@ -30,8 +31,6 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
-flutter:
-  generate: true
 
 # To add assets to your package, add an assets section, like this:
 # assets:

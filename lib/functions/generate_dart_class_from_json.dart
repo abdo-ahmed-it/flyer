@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flyer/core/app_helper.dart';
 import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/core/creator_util.dart';
@@ -13,9 +14,9 @@ void generateModelClassFromJson(
     final inputPath = path ?? 'app/models';
 
     // if (className == null || jsonInput == null) {
-    //   print(
+    //   debugPrint(
     //       '${ColorsText.red}Error: Missing required options for model generation.${ColorsText.reset}');
-    //   // print(parser.usage);
+    //   // debugPrint(parser.usage);
     //   return;
     // }
 
@@ -28,9 +29,9 @@ void generateModelClassFromJson(
     CreatorUtil.createFileWithContent(
         '$filePath/${AppHelper.toFileName(className)}.dart', code.code);
 
-    print(
+    debugPrint(
         '${ColorsText.green}Model class generated successfully at $filePath!${ColorsText.reset}');
   } catch (e) {
-    print("${ColorsText.red}Error: $e${ColorsText.reset}");
+    debugPrint("${ColorsText.red}Error: $e${ColorsText.reset}");
   }
 }

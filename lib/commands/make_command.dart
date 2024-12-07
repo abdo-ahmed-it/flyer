@@ -1,4 +1,5 @@
 import 'package:args/command_runner.dart';
+import 'package:flutter/material.dart';
 import 'package:flyer/creatores.dart';
 import 'package:flyer/functions/generate_dart_class_from_json.dart';
 
@@ -70,13 +71,13 @@ class MakeCommand extends Command {
       } else if (featureName != null) {
         Creators.createFeature(name: featureName);
       } else if (languages?.isNotEmpty == true) {
-        print('lang: $languages');
+        debugPrint('lang: $languages');
         Creators.addLang(languages: languages);
       } else if (model != null && json != null) {
         generateModelClassFromJson(className: model, json: json, path: path);
       } else {
-        print('Usage: flyer make [options]');
-        print(argParser.usage);
+        debugPrint('Usage: flyer make [options]');
+        debugPrint(argParser.usage);
       }
     }
   }

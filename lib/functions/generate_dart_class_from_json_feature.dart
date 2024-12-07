@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/core/creator_util.dart';
 import 'package:flyer/jsonToDart/model_generator.dart';
@@ -21,7 +22,7 @@ void generateModelClassFromJsonInFeature() {
     }
     json.writeln(line);
   }
-  print(json.toString());
+  debugPrint(json.toString());
   if (className != null && json.isNotEmpty) {
     ModelGenerator model = ModelGenerator(className);
     try {

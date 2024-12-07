@@ -1,13 +1,12 @@
 import 'dart:collection';
 
+import 'package:dart_style/dart_style.dart';
 import 'package:flyer/jsonToDart/helpers.dart';
 import 'package:flyer/jsonToDart/syntax.dart';
-import 'package:dart_style/dart_style.dart';
 import 'package:json_ast/json_ast.dart' show parse, Settings, Node;
 
-
 class DartCode extends WithWarning<String> {
-  DartCode(String result, List<Warning> warnings) : super(result, warnings);
+  DartCode(super.result, super.warnings);
 
   String get code => result;
 }
@@ -24,7 +23,7 @@ class ModelGenerator {
   final String _rootClassName;
   final bool _privateFields;
   List<ClassDefinition> allClasses = <ClassDefinition>[];
-  final Map<String, String> sameClassMapping =  HashMap<String, String>();
+  final Map<String, String> sameClassMapping = HashMap<String, String>();
   late List<Hint> hints;
 
   ModelGenerator(this._rootClassName, [this._privateFields = false, hints]) {
@@ -37,8 +36,7 @@ class ModelGenerator {
 
   Hint? _hintForPath(String path) {
     final hint =
-        hints
-        .firstWhere((h) => h.path == path, orElse: () => Hint("", ""));
+        hints.firstWhere((h) => h.path == path, orElse: () => Hint("", ""));
     if (hint.path == "") {
       return null;
     }
@@ -56,15 +54,15 @@ class ModelGenerator {
       final Map<dynamic, dynamic> jsonRawData = jsonRawDynamicData;
       final keys = jsonRawData.keys;
       ClassDefinition classDefinition =
-       ClassDefinition(className, _privateFields);
+          ClassDefinition(className, _privateFields);
       for (var key in keys) {
         TypeDefinition typeDef;
         final hint = _hintForPath('$path/$key');
         final node = navigateNode(astNode, key);
         if (hint != null) {
-          typeDef =  TypeDefinition(hint.type, astNode: node);
+          typeDef = TypeDefinition(hint.type, astNode: node);
         } else {
-          typeDef =  TypeDefinition.fromDynamic(jsonRawData[key], node);
+          typeDef = TypeDefinition.fromDynamic(jsonRawData[key], node);
         }
         if (typeDef.name == 'Class') {
           typeDef.name = camelCase(key);
@@ -129,7 +127,7 @@ class ModelGenerator {
     final jsonRawData = decodeJSON(rawJson);
     final astNode = parse(rawJson, Settings());
     List<Warning> warnings =
-    _generateClassDefinition(_rootClassName, jsonRawData, "", astNode);
+        _generateClassDefinition(_rootClassName, jsonRawData, "", astNode);
     // after generating all classes, replace the omited similar classes.
     for (var c in allClasses) {
       final fieldsKeys = c.fields.keys;
@@ -142,8 +140,7 @@ class ModelGenerator {
         }
       }
     }
-    return  DartCode(
-        allClasses.map((c) => c.toString()).join('\n'), warnings);
+    return DartCode(allClasses.map((c) => c.toString()).join('\n'), warnings);
   }
 
   /// generateDartClasses will generate all classes and append one after another
@@ -151,8 +148,8 @@ class ModelGenerator {
   /// formatted JSON string. If the generated dart is invalid it will throw an error.
   DartCode generateDartClasses(String rawJson) {
     final unsafeDartCode = generateUnsafeDart(rawJson);
-    final formatter =  DartFormatter();
-    return  DartCode(
+    final formatter = DartFormatter();
+    return DartCode(
         formatter.format(unsafeDartCode.code), unsafeDartCode.warnings);
   }
 }

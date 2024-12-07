@@ -1,7 +1,4 @@
-
 import 'package:flyer/core/app_helper.dart';
-
-import '../core/extensions.dart';
 
 String stateSample(String featureName) {
   return '''

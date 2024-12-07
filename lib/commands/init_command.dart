@@ -1,4 +1,5 @@
 import 'package:args/command_runner.dart';
+import 'package:flutter/material.dart';
 import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/core/constants/packages_name.dart';
 import 'package:flyer/creatores.dart';
@@ -29,11 +30,11 @@ class InitCommand extends Command {
         await Creators.addLang(languages: lang);
       }
     }
-    print('Install Packages\n Loading... ');
+    debugPrint('Install Packages\n Loading... ');
     for (var package in PackagesName().initPackages) {
       await installPackage(package);
     }
-    print(
+    debugPrint(
         '${ColorsText.green}Infra Structure created successfully${ColorsText.reset}');
     runPubGet();
   }

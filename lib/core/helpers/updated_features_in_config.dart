@@ -1,12 +1,13 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flyer/core/app_helper.dart';
 import 'package:flyer/core/creator_util.dart';
 
 void updateFeaturesInConfigFile(String featureName) {
   final file = File('lib/config/app_config.dart');
   if (!file.existsSync()) {
-    print('File not found');
+    debugPrint('File not found');
     return;
   }
 
@@ -34,7 +35,7 @@ void updateFeaturesInConfigFile(String featureName) {
       if (!features.contains(featureName)) {
         features.add(featureName);
       } else {
-        print('Feature already exists.');
+        debugPrint('Feature already exists.');
         return;
       }
 
@@ -49,11 +50,11 @@ void updateFeaturesInConfigFile(String featureName) {
 
       // Write the updated content back to the file
       CreatorUtil.editFileContent(file.path, content);
-      print('Feature added successfully.');
+      debugPrint('Feature added successfully.');
     } else {
-      print('No features found.');
+      debugPrint('No features found.');
     }
   } else {
-    print('No AppFeatures.config block found.');
+    debugPrint('No AppFeatures.config block found.');
   }
 }

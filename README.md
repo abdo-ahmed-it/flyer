@@ -1,4 +1,3 @@
-```markdown
 # flyer 🛠️
 
 A powerful CLI package to speed up Flutter app development by automating repetitive tasks like

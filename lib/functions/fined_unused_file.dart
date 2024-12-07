@@ -1,12 +1,13 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flyer/functions/delete_file.dart';
 
 void findUnusedFiles() {
   Directory libDirectory = Directory('lib');
 
   if (!libDirectory.existsSync()) {
-    print('lib directory not found!');
+    debugPrint('lib directory not found!');
     return;
   }
 
@@ -45,12 +46,12 @@ void findUnusedFiles() {
   }
 
   if (unusedFiles.isNotEmpty) {
-    print('Unused files (${unusedFiles.length}):');
+    debugPrint('Unused files (${unusedFiles.length}):');
     for (var filePath in unusedFiles) {
-      print('- $filePath');
+      debugPrint('- $filePath');
     }
     deleteFiles(unusedFiles);
   } else {
-    print('All files are used.');
+    debugPrint('All files are used.');
   }
 }

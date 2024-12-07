@@ -1,4 +1,6 @@
 import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:yaml/yaml.dart';
 
 void fiendUnusedPackages() {
@@ -6,7 +8,7 @@ void fiendUnusedPackages() {
 
   File pubspecFile = File(pubspecPath);
   if (!pubspecFile.existsSync()) {
-    print('pubspec.yaml not found!');
+    debugPrint('pubspec.yaml not found!');
     return;
   }
 
@@ -26,9 +28,9 @@ void fiendUnusedPackages() {
   ];
 
   void checkUnusedPackages(Map packages) {
-    packages.keys.forEach((package) {
+    for (var package in packages.keys) {
       if (excludedPackages.contains(package)) {
-        return;
+        continue;
       }
 
       bool isUsed = false;
@@ -36,7 +38,8 @@ void fiendUnusedPackages() {
 
       if (directory.existsSync()) {
         directory.listSync(recursive: true).forEach((fileSystemEntity) {
-          if (fileSystemEntity is File && fileSystemEntity.path.endsWith('.dart')) {
+          if (fileSystemEntity is File &&
+              fileSystemEntity.path.endsWith('.dart')) {
             String content = fileSystemEntity.readAsStringSync();
 
             if (content.contains("import 'package:$package")) {
@@ -49,22 +52,21 @@ void fiendUnusedPackages() {
       if (!isUsed) {
         unusedPackages.add(package);
       }
-    });
+    }
   }
 
-  print('Checking dependencies...');
+  debugPrint('Checking dependencies...');
   checkUnusedPackages(dependencies);
 
-  print('Checking dev_dependencies...');
+  debugPrint('Checking dev_dependencies...');
   checkUnusedPackages(devDependencies);
 
   if (unusedPackages.isNotEmpty) {
-    print('Unused packages:');
-    unusedPackages.forEach((package) {
-      print('- $package');
-    });
+    debugPrint('Unused packages:');
+    for (var package in unusedPackages) {
+      debugPrint('- $package');
+    }
   } else {
-    print('All packages are used.');
+    debugPrint('All packages are used.');
   }
 }
-

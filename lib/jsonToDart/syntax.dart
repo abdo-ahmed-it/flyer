@@ -65,22 +65,22 @@ class TypeDefinition {
   TypeDefinition(this.name,
       {this.subtype, this.isAmbiguous = false, Node? astNode}) {
     if (subtype == null) {
-      _isPrimitive = isPrimitiveType(this.name);
-      if (this.name == 'int' && isASTLiteralDouble(astNode)) {
-        this.name = 'double';
+      _isPrimitive = isPrimitiveType(name);
+      if (name == 'int' && isASTLiteralDouble(astNode)) {
+        name = 'double';
       }
     } else {
       _isPrimitive = isPrimitiveType('$name<$subtype>');
     }
   }
 
-  bool operator ==(other) {
+  bool operator(other) {
     if (other is TypeDefinition) {
       TypeDefinition otherTypeDef = other;
-      return this.name == otherTypeDef.name &&
-          this.subtype == otherTypeDef.subtype &&
-          this.isAmbiguous == otherTypeDef.isAmbiguous &&
-          this._isPrimitive == otherTypeDef._isPrimitive;
+      return name == otherTypeDef.name &&
+          subtype == otherTypeDef.subtype &&
+          isAmbiguous == otherTypeDef.isAmbiguous &&
+          _isPrimitive == otherTypeDef._isPrimitive;
     }
     return false;
   }
@@ -90,7 +90,7 @@ class TypeDefinition {
   bool get isPrimitiveList => _isPrimitive && name == 'List';
 
   String _buildParseClass(String expression) {
-    final properType = subtype != null ? subtype : name;
+    final properType = subtype ?? name;
     return ' $properType.fromJson($expression)';
   }
 
@@ -155,7 +155,7 @@ class Dependency {
 class ClassDefinition {
   final String _name;
   final bool _privateFields;
-  final Map<String, TypeDefinition> fields = Map<String, TypeDefinition>();
+  final Map<String, TypeDefinition> fields = <String, TypeDefinition>{};
 
   String get name => _name;
 
@@ -175,21 +175,21 @@ class ClassDefinition {
 
   ClassDefinition(this._name, [this._privateFields = false]);
 
-  bool operator ==(other) {
+  bool operator(other) {
     if (other is ClassDefinition) {
       ClassDefinition otherClassDef = other;
-      return this.isSubsetOf(otherClassDef) && otherClassDef.isSubsetOf(this);
+      return isSubsetOf(otherClassDef) && otherClassDef.isSubsetOf(this);
     }
     return false;
   }
 
   bool isSubsetOf(ClassDefinition other) {
-    final List<String> keys = this.fields.keys.toList();
+    final List<String> keys = fields.keys.toList();
     final int len = keys.length;
     for (int i = 0; i < len; i++) {
       TypeDefinition? otherTypeDef = other.fields[keys[i]];
       if (otherTypeDef != null) {
-        TypeDefinition? typeDef = this.fields[keys[i]];
+        TypeDefinition? typeDef = fields[keys[i]];
         if (typeDef != otherTypeDef) {
           return false;
         }
@@ -330,4 +330,3 @@ class ClassDefinition {
     }
   }
 }
-

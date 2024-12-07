@@ -1,5 +1,6 @@
-import 'package:flyer/functions/formate_code.dart';
 import 'package:args/command_runner.dart';
+import 'package:flutter/material.dart';
+import 'package:flyer/functions/formate_code.dart';
 
 class RunCommand extends Command {
   RunCommand() {
@@ -23,10 +24,11 @@ class RunCommand extends Command {
       }
 
       if (argResults!.arguments.isEmpty) {
-        print('No valid options provided. Use --help for usage information.');
+        debugPrint(
+            'No valid options provided. Use --help for usage information.');
       }
     } else {
-      print('No arguments found. Use --help for usage information.');
+      debugPrint('No arguments found. Use --help for usage information.');
     }
   }
 }

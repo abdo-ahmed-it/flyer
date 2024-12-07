@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/core/helpers/updated_features_in_config.dart';
 import 'package:flyer/samples/app_feature_sample.dart';
@@ -117,7 +118,7 @@ $content''';
       CreatorUtil.editFileContent(
           '$path/features/$featureName/${featureName}_feature.dart', content);
     } else {
-      print('No brackets found');
+      debugPrint('No brackets found');
     }
   }
 
@@ -139,7 +140,7 @@ $content''';
     }
 
     CreatorUtil.createDirectory('$path/l10n');
-    for (String code in languages ?? []) {
+    for (String code in languages) {
       CreatorUtil.createFileWithContent(
           '$path/l10n/app_$code.arb', '{"home":"$code"}',
           canFormated: false);

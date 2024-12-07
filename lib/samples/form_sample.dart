@@ -1,11 +1,9 @@
-
 import 'package:flyer/core/app_helper.dart';
-import 'package:flyer/core/extensions.dart';
 
-String formSample(String name,List<String>fields){
-  String a='';
-  for(var field in fields){
-    a+='''final $field = AppFormField(
+String formSample(String name, List<String> fields) {
+  String a = '';
+  for (var field in fields) {
+    a += '''final $field = AppFormField(
     name: '$field',
   );''';
   }

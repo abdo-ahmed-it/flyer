@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flyer/core/colors_text.dart';
 
 void deleteFiles(List<String> paths) {
@@ -23,11 +24,11 @@ void _deleteFile(String filePath) {
   if (file.existsSync()) {
     try {
       file.deleteSync();
-      print('File deleted successfully: $filePath');
+      debugPrint('File deleted successfully: $filePath');
     } catch (e) {
-      print('Error deleting file: $e');
+      debugPrint('Error deleting file: $e');
     }
   } else {
-    print('File not found: $filePath');
+    debugPrint('File not found: $filePath');
   }
 }

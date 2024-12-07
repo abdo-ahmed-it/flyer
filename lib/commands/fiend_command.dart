@@ -1,7 +1,8 @@
+import 'package:args/command_runner.dart';
+import 'package:flutter/material.dart';
 import 'package:flyer/functions/fiend_unused_package.dart';
 import 'package:flyer/functions/fined_unused_assets.dart';
 import 'package:flyer/functions/fined_unused_file.dart';
-import 'package:args/command_runner.dart';
 
 class FiendCommand extends Command {
   FiendCommand() {
@@ -40,12 +41,12 @@ class FiendCommand extends Command {
       }
 
       if (argResults!.arguments.isEmpty) {
-        print('No arguments found.\nUse: flyer fiend [options]');
-        print(argParser.usage);
+        debugPrint('No arguments found.\nUse: flyer fiend [options]');
+        debugPrint(argParser.usage);
       }
     } else {
-      print('No arguments found.\n Use: flyer fiend [options]');
-      print(argParser.usage);
+      debugPrint('No arguments found.\n Use: flyer fiend [options]');
+      debugPrint(argParser.usage);
     }
   }
 }

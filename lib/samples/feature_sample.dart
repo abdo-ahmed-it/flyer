@@ -1,7 +1,4 @@
-
-
 import '../core/app_helper.dart';
-import '../core/extensions.dart';
 
 String featureSample(String featureName) {
   return '''
