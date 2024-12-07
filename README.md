@@ -34,15 +34,14 @@ dev_dependencies:
   flyer: <latest version>
 ```
 
-OR
-Run the following command to install:
+```bash
+dart pub get
+```
+
+OR Run the following command to install:
 
 ```bash
 dart pub add dev:flyer
-```
-
-```bash
-dart pub get
 ```
 
 ---
