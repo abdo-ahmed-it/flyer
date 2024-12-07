@@ -34,7 +34,12 @@ dev_dependencies:
   flyer: <latest version>
 ```
 
+OR
 Run the following command to install:
+
+```bash
+dart pub add dev:flyer
+```
 
 ```bash
 dart pub get
@@ -50,7 +55,7 @@ The `init` command sets up the basic infrastructure for your Flutter project and
 packages.
 
 ```bash
-dart run flyer init [OPTIONS]
+flyer init [OPTIONS]
 ```
 
 #### Available Options
@@ -62,7 +67,7 @@ dart run flyer init [OPTIONS]
 #### Example
 
 ```bash
-dart run flyer init --lang=en,ar
+flyer init --lang=en,ar
 ```
 
 This command:
@@ -70,6 +75,10 @@ This command:
 - Sets up the basic infrastructure for your Flutter project.
 - Installs essential packages (e.g., `app_features`, `flutter_bloc`, etc.).
 - Adds the specified languages (`en` and `ar`) to the project.
+- Displays Messages and Dialogs and BottomSheet without context.
+- hande app responsive by use responsive_framework package.
+- initialize Call Api by use api_request package.
+- Manage Routes by use go_router package.
 
 ---
 
@@ -79,7 +88,7 @@ The `make` command allows you to create features, pages, models, forms, and mana
 your Flutter project.
 
 ```bash
-dart run flyer make [OPTIONS]
+flyer make [OPTIONS]
 ```
 
 #### Available Options
@@ -97,37 +106,37 @@ dart run flyer make [OPTIONS]
 #### Create a New Feature
 
 ```bash
-dart run flyer make --feature=account
+flyer make --feature=account
 ```
 
 #### Add Multiple Languages
 
 ```bash
-dart run flyer make --lang=en,fr,es
+flyer make --lang=en,fr,es
 ```
 
 #### Generate a Dart Model from JSON Default Path app/models
 
 ```bash
-dart run flyer make --model=User --json='{"name": "John", "age": 30}'
+flyer make --model=User --json='{"name": "John", "age": 30}'
 ```
 
 #### Generate a Dart Model from JSON With Custom Path
 
 ```bash
-dart run flyer make --model=User --json='{"name": "John", "age": 30}' --path=custom_path
+flyer make --model=User --json='{"name": "John", "age": 30}' --path=custom_path
 ```
 
 #### Generate a Page
 
 ```bash
-dart run flyer make --page=login --feature=account
+flyer make --page=login --feature=account
 ```
 
 #### Generate a Form
 
 ```bash
-dart run flyer make --form=login --feature=account --fields=email,password
+flyer make --form=login --feature=account --fields=email,password
 ```
 
 ---
@@ -137,7 +146,7 @@ dart run flyer make --form=login --feature=account --fields=email,password
 The `run` command provides utility tasks like reformatting your project's code.
 
 ```bash
-dart run flyer run [OPTIONS]
+flyer run [OPTIONS]
 ```
 
 #### Available Options
@@ -151,7 +160,7 @@ dart run flyer run [OPTIONS]
 To format your project's code:
 
 ```bash
-dart run flyer run --format
+flyer run --format
 ```
 
 ---
@@ -162,7 +171,7 @@ The `fiend` command helps you identify and optionally delete unused assets, pack
 your Flutter project.
 
 ```bash
-dart run flyer fiend [OPTIONS]
+flyer fiend [OPTIONS]
 ```
 
 #### Available Options
@@ -178,19 +187,19 @@ dart run flyer fiend [OPTIONS]
 #### Find Unused Assets
 
 ```bash
-dart run flyer fiend --unusedAssets
+flyer fiend --unusedAssets
 ```
 
 #### Find Unused Packages
 
 ```bash
-dart run flyer fiend --unusedPackages
+flyer fiend --unusedPackages
 ```
 
 #### Find Unused Files
 
 ```bash
-dart run flyer fiend --unusedFiles
+flyer fiend --unusedFiles
 ```
 
 ## Contributing 🤝
