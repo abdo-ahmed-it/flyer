@@ -30,11 +30,11 @@ class InitCommand extends Command {
         await Creators.addLang(languages: lang);
       }
     }
-    debugPrint('Install Packages\n Loading... ');
+    print('Install Packages\n Loading... ');
     for (var package in PackagesName().initPackages) {
       await installPackage(package);
     }
-    debugPrint(
+    print(
         '${ColorsText.green}Infra Structure created successfully${ColorsText.reset}');
     runPubGet();
   }

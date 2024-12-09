@@ -22,7 +22,7 @@ void generateModelClassFromJsonInFeature() {
     }
     json.writeln(line);
   }
-  debugPrint(json.toString());
+  print(json.toString());
   if (className != null && json.isNotEmpty) {
     ModelGenerator model = ModelGenerator(className);
     try {

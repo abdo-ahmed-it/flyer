@@ -7,7 +7,7 @@ void extractArabicText() {
   Directory libDirectory = Directory('lib');
 
   if (!libDirectory.existsSync()) {
-    debugPrint('lib directory not found!');
+    print('lib directory not found!');
     return;
   }
 
@@ -27,19 +27,19 @@ void extractArabicText() {
 
         if (extractedText != null && extractedText.isNotEmpty) {
           arabicTextsForTranslation.add(extractedText);
-          debugPrint('path ${fileSystemEntity.path}');
+          print('path ${fileSystemEntity.path}');
         }
       }
     }
   });
 
   if (arabicTextsForTranslation.isNotEmpty) {
-    debugPrint('Extracted Arabic texts for translation:');
+    print('Extracted Arabic texts for translation:');
     arabicTextsForTranslation.forEach((text) {
-      debugPrint(text);
+      print(text);
     });
   } else {
-    debugPrint('No Arabic texts found for translation.');
+    print('No Arabic texts found for translation.');
   }
 }
 
@@ -47,7 +47,7 @@ void extractTextFromTextWidgets() {
   Directory libDirectory = Directory('lib');
 
   if (!libDirectory.existsSync()) {
-    debugPrint('lib directory not found!');
+    print('lib directory not found!');
     return;
   }
 
@@ -101,10 +101,10 @@ void extractTextFromTextWidgets() {
     stdout.write(
         '${ColorsText.orange} Extracted texts JSON Format: ${ColorsText.reset}\n');
     texts.forEach((key, value) {
-      debugPrint('''"$key":"$value",''');
+      print('''"$key":"$value",''');
     });
   } else {
-    debugPrint('No texts found');
+    print('No texts found');
   }
 }
 

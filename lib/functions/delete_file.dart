@@ -24,11 +24,11 @@ void _deleteFile(String filePath) {
   if (file.existsSync()) {
     try {
       file.deleteSync();
-      debugPrint('File deleted successfully: $filePath');
+      print('File deleted successfully: $filePath');
     } catch (e) {
-      debugPrint('Error deleting file: $e');
+      print('Error deleting file: $e');
     }
   } else {
-    debugPrint('File not found: $filePath');
+    print('File not found: $filePath');
   }
 }

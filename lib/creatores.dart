@@ -118,7 +118,7 @@ $content''';
       CreatorUtil.editFileContent(
           '$path/features/$featureName/${featureName}_feature.dart', content);
     } else {
-      debugPrint('No brackets found');
+      print('No brackets found');
     }
   }
 

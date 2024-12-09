@@ -8,7 +8,7 @@ void fiendUnusedPackages() {
 
   File pubspecFile = File(pubspecPath);
   if (!pubspecFile.existsSync()) {
-    debugPrint('pubspec.yaml not found!');
+    print('pubspec.yaml not found!');
     return;
   }
 
@@ -55,18 +55,18 @@ void fiendUnusedPackages() {
     }
   }
 
-  debugPrint('Checking dependencies...');
+  print('Checking dependencies...');
   checkUnusedPackages(dependencies);
 
-  debugPrint('Checking dev_dependencies...');
+  print('Checking dev_dependencies...');
   checkUnusedPackages(devDependencies);
 
   if (unusedPackages.isNotEmpty) {
-    debugPrint('Unused packages:');
+    print('Unused packages:');
     for (var package in unusedPackages) {
-      debugPrint('- $package');
+      print('- $package');
     }
   } else {
-    debugPrint('All packages are used.');
+    print('All packages are used.');
   }
 }

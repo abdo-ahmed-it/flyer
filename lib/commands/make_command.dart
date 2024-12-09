@@ -71,13 +71,13 @@ class MakeCommand extends Command {
       } else if (featureName != null) {
         Creators.createFeature(name: featureName);
       } else if (languages?.isNotEmpty == true) {
-        debugPrint('lang: $languages');
+        print('lang: $languages');
         Creators.addLang(languages: languages);
       } else if (model != null && json != null) {
         generateModelClassFromJson(className: model, json: json, path: path);
       } else {
-        debugPrint('Usage: flyer make [options]');
-        debugPrint(argParser.usage);
+        print('Usage: flyer make [options]');
+        print(argParser.usage);
       }
     }
   }

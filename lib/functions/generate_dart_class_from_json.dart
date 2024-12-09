@@ -14,9 +14,9 @@ void generateModelClassFromJson(
     final inputPath = path ?? 'app/models';
 
     // if (className == null || jsonInput == null) {
-    //   debugPrint(
+    //   print(
     //       '${ColorsText.red}Error: Missing required options for model generation.${ColorsText.reset}');
-    //   // debugPrint(parser.usage);
+    //   // print(parser.usage);
     //   return;
     // }
 
@@ -29,9 +29,9 @@ void generateModelClassFromJson(
     CreatorUtil.createFileWithContent(
         '$filePath/${AppHelper.toFileName(className)}.dart', code.code);
 
-    debugPrint(
+    print(
         '${ColorsText.green}Model class generated successfully at $filePath!${ColorsText.reset}');
   } catch (e) {
-    debugPrint("${ColorsText.red}Error: $e${ColorsText.reset}");
+    print("${ColorsText.red}Error: $e${ColorsText.reset}");
   }
 }

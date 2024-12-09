@@ -10,7 +10,7 @@ Future<void> installPackage(String name) async {
   var response =
       await http.get(Uri.parse('https://pub.dev/api/packages/$name'));
   if (response.statusCode == HttpStatus.notFound) {
-    debugPrint(response.body);
+    print(response.body);
   } else if (response.statusCode == 200) {
     Map<String, dynamic> data = json.decode(response.body);
     String latestVersion =
@@ -22,7 +22,7 @@ Future<void> installPackage(String name) async {
         "dependencies:\n  $name: ^$latestVersion\n",
       );
       File('pubspec.yaml').writeAsStringSync(updatedPubspec);
-      debugPrint(
+      print(
           '${ColorsText.green}$name@^$latestVersion installed successfully!${ColorsText.reset}');
     }
     // String pubspecContent = await CreatorUtil.readFileContent('pubspec.yaml');

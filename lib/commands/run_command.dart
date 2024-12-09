@@ -24,11 +24,11 @@ class RunCommand extends Command {
       }
 
       if (argResults!.arguments.isEmpty) {
-        debugPrint(
+        print(
             'No valid options provided. Use --help for usage information.');
       }
     } else {
-      debugPrint('No arguments found. Use --help for usage information.');
+      print('No arguments found. Use --help for usage information.');
     }
   }
 }

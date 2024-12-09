@@ -6,7 +6,7 @@ import '../core/colors_text.dart';
 
 Future<void> runPubGet() async {
   try {
-    debugPrint('${ColorsText.gray}Running pub get... ${ColorsText.reset}');
+    print('${ColorsText.gray}Running pub get... ${ColorsText.reset}');
     final result = await Process.run(
       'dart',
       ['pub', 'get'],
@@ -14,13 +14,13 @@ Future<void> runPubGet() async {
     );
 
     if (result.exitCode == 0) {
-      debugPrint('Pub get completed successfully.');
-      debugPrint(result.stdout);
+      print('Pub get completed successfully.');
+      print(result.stdout);
     } else {
-      debugPrint('Error running pub get:');
-      debugPrint(result.stderr);
+      print('Error running pub get:');
+      print(result.stderr);
     }
   } catch (e) {
-    debugPrint('Failed to run pub get: $e');
+    print('Failed to run pub get: $e');
   }
 }

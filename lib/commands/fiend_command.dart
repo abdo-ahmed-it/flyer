@@ -41,12 +41,12 @@ class FiendCommand extends Command {
       }
 
       if (argResults!.arguments.isEmpty) {
-        debugPrint('No arguments found.\nUse: flyer fiend [options]');
-        debugPrint(argParser.usage);
+        print('No arguments found.\nUse: flyer fiend [options]');
+        print(argParser.usage);
       }
     } else {
-      debugPrint('No arguments found.\n Use: flyer fiend [options]');
-      debugPrint(argParser.usage);
+      print('No arguments found.\n Use: flyer fiend [options]');
+      print(argParser.usage);
     }
   }
 }

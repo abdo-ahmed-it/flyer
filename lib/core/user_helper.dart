@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flyer/core/colors_text.dart';
 
-void debugPrintHelp() {
-  debugPrint(
+void printHelp() {
+  print(
       '${ColorsText.blue}Usage:${ColorsText.reset} dart run fly <command> [options]');
-  debugPrint('${ColorsText.orange}Available Commands:${ColorsText.reset}');
-  debugPrint(
+  print('${ColorsText.orange}Available Commands:${ColorsText.reset}');
+  print(
       '  ${ColorsText.green}init${ColorsText.reset} : Initialize infrastructure.');
-  debugPrint(
+  print(
       '  ${ColorsText.green}make:feature${ColorsText.reset} : Create a new feature.');
-  debugPrint(
+  print(
       '  ${ColorsText.green}make:page${ColorsText.reset} : Add a new page to an existing feature.');
-  debugPrint(
+  print(
       '  ${ColorsText.green}make:form${ColorsText.reset} : Add a form to a feature.');
-  debugPrint(
+  print(
       '  ${ColorsText.green}find-unused-packages${ColorsText.reset} : Find unused packages in the project.');
-  debugPrint(
+  print(
       '  ${ColorsText.green}find-unused-files${ColorsText.reset} : Find unused files in the project.');
-  debugPrint(
+  print(
       '  ${ColorsText.green}find-unused-assets${ColorsText.reset} : Find unused assets in the project.');
-  debugPrint(
+  print(
       '  ${ColorsText.green}extract-text-widgets${ColorsText.reset} : Extract text from Text widgets.');
-  debugPrint(
+  print(
       '  ${ColorsText.green}extract-arabic-text${ColorsText.reset} : Extract Arabic text from the code.');
-  debugPrint(
+  print(
       '  ${ColorsText.green}make:model${ColorsText.reset}  : Generate a Dart model class from JSON.');
-  debugPrint(
+  print(
       '  ${ColorsText.green}make:language${ColorsText.reset}  : Initialize app language setup.');
-  debugPrint(
+  print(
       '  ${ColorsText.green}format-code${ColorsText.reset} : Format all Dart code files.');
 }

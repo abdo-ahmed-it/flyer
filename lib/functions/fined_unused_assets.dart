@@ -27,9 +27,9 @@ void fiendUnusedAssets() {
   }
 
   final unusedAssets = assetFiles.toSet().difference(usedAssets);
-  debugPrint('Unused assets:');
+  print('Unused assets:');
   for (var asset in unusedAssets) {
-    debugPrint(asset);
+    print(asset);
   }
   deleteFiles(unusedAssets.toList());
 }

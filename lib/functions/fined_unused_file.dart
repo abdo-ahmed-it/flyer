@@ -7,7 +7,7 @@ void findUnusedFiles() {
   Directory libDirectory = Directory('lib');
 
   if (!libDirectory.existsSync()) {
-    debugPrint('lib directory not found!');
+    print('lib directory not found!');
     return;
   }
 
@@ -46,12 +46,12 @@ void findUnusedFiles() {
   }
 
   if (unusedFiles.isNotEmpty) {
-    debugPrint('Unused files (${unusedFiles.length}):');
+    print('Unused files (${unusedFiles.length}):');
     for (var filePath in unusedFiles) {
-      debugPrint('- $filePath');
+      print('- $filePath');
     }
     deleteFiles(unusedFiles);
   } else {
-    debugPrint('All files are used.');
+    print('All files are used.');
   }
 }

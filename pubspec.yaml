@@ -3,12 +3,12 @@ description: "A powerful CLI package to speed up Flutter app development by auto
 creating features, pages, forms, and generating Dart model classes from JSON and and reformatting
 code and more. Additionally, it initializes your Flutter project's infrastructure and installs
 essential packages."
-version: 0.0.3
+version: 0.0.4
 homepage: https://github.com/abdo-ahmed-it/flyer
 
 environment:
   sdk: ">=3.5.0 <4.0.0"
-  flutter: ">=3.24.5"
+  flutter: ">=3.22.0"
 executables:
   flyer: flyer
 

@@ -7,7 +7,7 @@ import 'package:flyer/core/creator_util.dart';
 void updateFeaturesInConfigFile(String featureName) {
   final file = File('lib/config/app_config.dart');
   if (!file.existsSync()) {
-    debugPrint('File not found');
+    print('File not found');
     return;
   }
 
@@ -35,7 +35,7 @@ void updateFeaturesInConfigFile(String featureName) {
       if (!features.contains(featureName)) {
         features.add(featureName);
       } else {
-        debugPrint('Feature already exists.');
+        print('Feature already exists.');
         return;
       }
 
@@ -50,11 +50,11 @@ void updateFeaturesInConfigFile(String featureName) {
 
       // Write the updated content back to the file
       CreatorUtil.editFileContent(file.path, content);
-      debugPrint('Feature added successfully.');
+      print('Feature added successfully.');
     } else {
-      debugPrint('No features found.');
+      print('No features found.');
     }
   } else {
-    debugPrint('No AppFeatures.config block found.');
+    print('No AppFeatures.config block found.');
   }
 }
