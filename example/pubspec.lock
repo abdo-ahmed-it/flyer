@@ -261,9 +261,11 @@ packages:
   flyer:
     dependency: "direct main"
     description:
-      path: ".."
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: e49432b40a25b95c81861c3478d81e8b5f5d87ed
+      url: "https://github.com/abdo-ahmed-it/flyer"
+    source: git
     version: "0.0.1"
   get_it:
     dependency: "direct main"
