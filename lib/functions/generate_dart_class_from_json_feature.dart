@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/core/creator_util.dart';
 import 'package:flyer/jsonToDart/model_generator.dart';

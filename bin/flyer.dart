@@ -6,6 +6,7 @@ import 'package:flyer/core/colors_text.dart';
 import 'package:args/command_runner.dart';
 
 void main(List<String> arguments) {
+
   final runner = CommandRunner('tool', 'A command line tool')
     ..addCommand(InitCommand())
     ..addCommand(MakeCommand())

@@ -1,5 +1,4 @@
 import 'package:args/command_runner.dart';
-import 'package:flutter/material.dart';
 import 'package:flyer/functions/fiend_unused_package.dart';
 import 'package:flyer/functions/fined_unused_assets.dart';
 import 'package:flyer/functions/fined_unused_file.dart';

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flyer/core/colors_text.dart';
 
 void extractArabicText() {

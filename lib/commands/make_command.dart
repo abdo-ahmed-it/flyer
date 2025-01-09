@@ -1,5 +1,4 @@
 import 'package:args/command_runner.dart';
-import 'package:flutter/material.dart';
 import 'package:flyer/creatores.dart';
 import 'package:flyer/functions/generate_dart_class_from_json.dart';
 

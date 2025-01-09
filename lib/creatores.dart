@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/core/helpers/updated_features_in_config.dart';
 import 'package:flyer/samples/app_feature_sample.dart';

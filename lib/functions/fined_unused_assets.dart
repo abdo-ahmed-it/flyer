@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flyer/functions/delete_file.dart';
 
 void fiendUnusedAssets() {
