@@ -19,7 +19,6 @@ import 'samples/form_sample.dart';
 import 'samples/main_sample.dart';
 import 'samples/page_sample.dart';
 import 'samples/state_samples.dart';
-
 class Creators {
   static var path = '${Directory.current.path}/lib';
 
