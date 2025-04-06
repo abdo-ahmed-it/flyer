@@ -43,6 +43,10 @@ class MakeCommand extends Command {
       hide: true,
       help: 'Add Languages For App',
     );
+    argParser.addOption('method', hide: true);
+    argParser.addOption('action-name', hide: true);
+    argParser.addOption('api', hide: true);
+    argParser.addOption('baseurl', hide: true);
   }
 
   @override

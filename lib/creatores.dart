@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/core/helpers/updated_features_in_config.dart';
 import 'package:flyer/samples/app_feature_sample.dart';
+import 'package:flyer/samples/extensions/context_extension_sample.dart';
+import 'package:flyer/samples/home_sample.dart';
 import 'package:flyer/samples/splash_feature_sample.dart';
 import 'package:flyer/samples/splash_page_sample.dart';
 import 'package:flyer/samples/utils/notification_util_sample.dart';
@@ -19,10 +21,11 @@ import 'samples/form_sample.dart';
 import 'samples/main_sample.dart';
 import 'samples/page_sample.dart';
 import 'samples/state_samples.dart';
+
 class Creators {
   static var path = '${Directory.current.path}/lib';
 
-  static void createFeature({String? name}) {
+  static void createFeature({String? name, String? pageS}) {
     String? featureName;
     if (name != null) {
       featureName = name;
@@ -42,7 +45,7 @@ class Creators {
         featureSample(featureName!));
     CreatorUtil.createFileWithContent(
         '$path/features/$featureName/${featureName}_page.dart',
-        pageSample(featureName));
+        pageS ?? pageSample(featureName));
     CreatorUtil.createFileWithContent(
         '$path/features/$featureName/bloc/${featureName}_state.dart',
         stateSample(featureName));
@@ -185,13 +188,18 @@ output-localization-file: app_localizations.dart
 
   static void _createCoreFolder() {
     CreatorUtil.createDirectory('$path/core');
+    CreatorUtil.createDirectory('$path/core/extensions');
     CreatorUtil.createFileWithContent(
         '$path/core/app_storage.dart', appStorageSample());
+    CreatorUtil.createFileWithContent(
+        '$path/core/extensions/context_extension.dart', contextExtensionSample());
   }
 
-  static void _createInitFeature() {
+  static void _createInitFeature() async {
     _createSplashFeature();
-    createFeature(name: 'home');
+    String _homeSample = await homeSample();
+
+    createFeature(name: 'home', pageS: _homeSample);
   }
 
   static void init() {
