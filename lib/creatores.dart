@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/core/helpers/updated_features_in_config.dart';
+import 'package:flyer/samples/api_util_sample.dart';
 import 'package:flyer/samples/app_feature_sample.dart';
 import 'package:flyer/samples/extensions/context_extension_sample.dart';
 import 'package:flyer/samples/home_sample.dart';
@@ -186,13 +187,17 @@ output-localization-file: app_localizations.dart
         '$path/config/app_config.dart', appConfigSample());
   }
 
-  static void _createCoreFolder() {
+  static void _createCoreFolder() async{
     CreatorUtil.createDirectory('$path/core');
     CreatorUtil.createDirectory('$path/core/extensions');
+    CreatorUtil.createDirectory('$path/core/utils');
     CreatorUtil.createFileWithContent(
         '$path/core/app_storage.dart', appStorageSample());
     CreatorUtil.createFileWithContent(
         '$path/core/extensions/context_extension.dart', contextExtensionSample());
+    String getApiSample = await apiUtilSample();
+    CreatorUtil.createFileWithContent(
+        '$path/core/utils/api_util.dart', getApiSample);
   }
 
   static void _createInitFeature() async {

@@ -7,4 +7,10 @@ extension ContextExtension on BuildContext {
   double get height => MediaQuery.of(this).size.height;
 
   AppLocalizations get loc => AppLocalizations.of(this)!;
+
+  ColorScheme get colorScheme => Theme.of(this).colorScheme;
+
+  ThemeData get theme => Theme.of(this);
+
+  Locale get locale => Localizations.localeOf(this);
 }

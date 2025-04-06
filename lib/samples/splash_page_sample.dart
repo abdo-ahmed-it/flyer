@@ -2,6 +2,7 @@ String splashPageSample() {
   return '''
 import 'package:app_features/app_features.dart';
 import 'package:flutter/material.dart';
+import '../../core/utils/api_util.dart';
 
 import '../home/home_feature.dart';
 
@@ -16,6 +17,9 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
+     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ApiUtils.init(context);
+    });
 
     Future.delayed(const Duration(seconds: 3), () {
       AppFeatures.get<HomeFeature>().go();

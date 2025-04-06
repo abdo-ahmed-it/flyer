@@ -22,29 +22,6 @@ class AppConfig {
       SplashFeature(),
       HomeFeature(),
     ]);
-    initApiActions();
-  }
-
-  static void initApiActions() {
-    ApiRequestOptions.instance?.config(
-      baseUrl: '',
-      getToken: () => getIt.get<AppStorage>().getToken(),
-      tokenType: ApiRequestOptions.bearer,
-      enableLog: true,
-      unauthenticated: () {
-        //Force logout user form app
-        getIt.get<AppStorage>().setToken(null);
-      },
-      defaultHeaders: {"Content-Language": getIt.get<AppStorage>().getLocale()},
-      onError: (e) {
-        if (e.statusCode == 408) {
-          NotificationUtil.showError('برجاء التحقق من اتصال جهازك بالانترنت');
-        } else {
-          NotificationUtil.showError(e.message);
-        }
-      },
-    );
-  }
-}
+  }}
 ''';
 }
