@@ -1,0 +1,657 @@
+{
+	"info": {
+		"_postman_id": "89787ba5-049d-4df1-bd2a-9682323c4fa7",
+		"name": "Derman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29320853",
+		"_collection_link": "https://code-link-team.postman.co/workspace/Team-Workspace~aadced7b-0b71-474b-88b5-a3f871ac5f26/collection/29320853-89787ba5-049d-4df1-bd2a-9682323c4fa7?action=share&source=collection_link&creator=29320853"
+	},
+	"item": [
+		{
+			"name": "App",
+			"item": [
+				{
+					"name": "Home",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Language",
+								"value": "en",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/home",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"home"
+							],
+							"query": [
+								{
+									"key": "category_id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "خدمة 1",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filter Data",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Language",
+								"value": "en",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/filter/data",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"filter",
+								"data"
+							],
+							"query": [
+								{
+									"key": "category_id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Providers List",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Language",
+								"value": "en",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/providers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers"
+							],
+							"query": [
+								{
+									"key": "category_id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "خدمة 1",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Providere Details",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Language",
+								"value": "en",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/providers/{{provider}}/details",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"providers",
+								"{{provider}}",
+								"details"
+							],
+							"query": [
+								{
+									"key": "category_id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "خدمة 1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reservation",
+			"item": [
+				{
+					"name": "Provider Schedule Slots",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "date",
+									"value": "2025-04-03",
+									"type": "text"
+								},
+								{
+									"key": "services[0]",
+									"value": "{\"id\": 1, \"count\": 1}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/service/{{provider}}/schedules/slot",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"service",
+								"{{provider}}",
+								"schedules",
+								"slot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Provider Schedule Days",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{base_url}}/service/{{provider}}/schedules/days",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"service",
+								"{{provider}}",
+								"schedules",
+								"days"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reserve Appointment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "date",
+									"value": "2025-03-31",
+									"type": "text"
+								},
+								{
+									"key": "time",
+									"value": "18:00",
+									"type": "text"
+								},
+								{
+									"key": "service[0]",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "service[1]",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/service/make/reservation",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"service",
+								"make",
+								"reservation"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Client",
+			"item": [
+				{
+					"name": "Client Appointments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Language",
+								"value": "ar",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/client/reservations/list?status=pending",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"client",
+								"reservations",
+								"list"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "pending",
+									"description": "new|pending|completed"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Verify OTP",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "phone_code",
+							"value": "966",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "123456789",
+							"type": "text"
+						},
+						{
+							"key": "verify_code",
+							"value": "1234",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/auth/verify-otp",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"auth",
+						"verify-otp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Profile Data",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/auth/profile",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"auth",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "1|dvm6LXZD3w66EHKh7485DYoC0e7Ez9g4U9dOfUc08a10636d",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/auth/logout",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "phone_code",
+							"value": "966",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "123456789",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/auth/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Profile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Ahmed",
+							"description": "required",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "client@info.com",
+							"description": "required",
+							"type": "text"
+						},
+						{
+							"key": "avatar",
+							"description": "nullable",
+							"type": "file",
+							"src": []
+						},
+						{
+							"key": "phone",
+							"value": "503649187",
+							"description": "nullable",
+							"type": "text"
+						},
+						{
+							"key": "phone_code",
+							"value": "966",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/auth/profile/update",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"auth",
+						"profile",
+						"update"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://derman.code-link.com/api",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "4|A4wNxAeLxBkXZt0oiHLaHCJ2HE9CHrB9LRpzLaPp029b28ea",
+			"type": "string"
+		},
+		{
+			"key": "provider",
+			"value": "2",
+			"type": "string"
+		}
+	]
+}
