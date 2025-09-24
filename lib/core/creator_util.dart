@@ -20,7 +20,7 @@ class CreatorUtil {
     final file = File(path);
     if (!file.existsSync()) {
       file.writeAsStringSync(
-          canFormated ? DartFormatter().format(content) : content);
+          canFormated ? DartFormatter(languageVersion: DartFormatter.latestLanguageVersion).format(content) : content);
       stdout.write(
           '${ColorsText.yellow}Success Created File: $path${ColorsText.reset}\n');
     }
@@ -44,7 +44,7 @@ class CreatorUtil {
     final file = File(path);
     if (file.existsSync()) {
       file.writeAsStringSync(
-          canFormated ? DartFormatter().format(newContent) : newContent);
+          canFormated ? DartFormatter(languageVersion: DartFormatter.latestLanguageVersion).format(newContent) : newContent);
       if (showLog) {
         stdout.write(
             '${ColorsText.yellow}Updated content written to file: $path${ColorsText.reset}\n');

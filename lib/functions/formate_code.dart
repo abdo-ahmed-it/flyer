@@ -5,7 +5,7 @@ import 'package:flyer/core/creator_util.dart';
 import 'package:dart_style/dart_style.dart';
 
 void formatCode() async {
-  DartFormatter formatter = DartFormatter();
+  DartFormatter formatter = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion);
   Directory lib = Directory('lib');
   // List<String> formatedFile=[];
   lib.listSync(recursive: true).forEach((file) async {

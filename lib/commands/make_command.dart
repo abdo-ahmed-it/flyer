@@ -1,6 +1,5 @@
 import 'package:args/command_runner.dart';
 import 'package:flyer/creatores.dart';
-import 'package:flyer/functions/generate_dart_class_from_json.dart';
 
 class MakeCommand extends Command {
   MakeCommand() {
@@ -60,9 +59,6 @@ class MakeCommand extends Command {
     if (argResults != null) {
       String? featureName = argResults!['feature'];
       List<String>? languages = argResults!['lang'];
-      String? json = argResults!['json'];
-      String? path = argResults!['path'];
-      String? model = argResults!['model'];
       String? page = argResults!['page'];
       String? form = argResults!['form'];
       List<String>? fields = argResults!['fields'];
@@ -76,9 +72,7 @@ class MakeCommand extends Command {
       } else if (languages?.isNotEmpty == true) {
         print('lang: $languages');
         Creators.addLang(languages: languages);
-      } else if (model != null && json != null) {
-        generateModelClassFromJson(className: model, json: json, path: path);
-      } else {
+      }  else {
         print('Usage: flyer make [options]');
         print(argParser.usage);
       }
