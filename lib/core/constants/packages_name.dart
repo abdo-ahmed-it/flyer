@@ -11,4 +11,8 @@ class PackagesName {
     'responsive_framework',
     'app_forms',
   ];
+
+  List<String> dependencyOverrides = [
+    'intl'
+  ];
 }

@@ -37,3 +37,35 @@ Future<void> installPackage(String name) async {
     //     canFormated: false);
   }
 }
+
+Future<void> installPackageAsOverride(String name) async {
+  var response =
+      await http.get(Uri.parse('https://pub.dev/api/packages/$name'));
+  if (response.statusCode == HttpStatus.notFound) {
+    print(response.body);
+  } else if (response.statusCode == 200) {
+    Map<String, dynamic> data = json.decode(response.body);
+    String latestVersion =
+        name == 'responsive_framework' ? '0.2.0' : data['latest']['version'];
+    final pubspec = File('pubspec.yaml').readAsStringSync();
+    if (!pubspec.contains(name)) {
+      String updatedPubspec;
+      if (pubspec.contains('dependency_overrides:')) {
+        // Add to existing dependency_overrides section
+        updatedPubspec = pubspec.replaceFirst(
+          'dependency_overrides:\n',
+          "dependency_overrides:\n  $name: ^$latestVersion\n",
+        );
+      } else {
+        // Create new dependency_overrides section
+        updatedPubspec = pubspec.replaceFirst(
+          'dev_dependencies:',
+          "dependency_overrides:\n  $name: ^$latestVersion\ndev_dependencies:",
+        );
+      }
+      File('pubspec.yaml').writeAsStringSync(updatedPubspec);
+      print(
+          '${ColorsText.green}$name@^$latestVersion installed as dependency override!${ColorsText.reset}');
+    }
+  }
+}

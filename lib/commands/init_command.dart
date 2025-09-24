@@ -33,6 +33,11 @@ class InitCommand extends Command {
     for (var package in PackagesName().initPackages) {
       await installPackage(package);
     }
+    
+    print('Install Dependency Overrides\n Loading... ');
+    for (var package in PackagesName().dependencyOverrides) {
+      await installPackageAsOverride(package);
+    }
     print(
         '${ColorsText.green}Infra Structure created successfully${ColorsText.reset}');
     runPubGet();
