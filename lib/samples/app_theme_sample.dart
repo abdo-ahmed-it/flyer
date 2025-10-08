@@ -1,4 +1,4 @@
-String appThemeSample(){
+String appThemeSample() {
   return '''
 import 'package:flutter/material.dart';
 

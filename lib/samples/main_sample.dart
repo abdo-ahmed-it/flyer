@@ -1,4 +1,3 @@
-
 String mainSample() {
   return '''
 import 'package:app_features/app_features.dart';

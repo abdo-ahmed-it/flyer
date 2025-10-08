@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flyer/core/colors_text.dart';
 import 'package:yaml/yaml.dart';
 
 void fiendUnusedPackages() {
@@ -7,7 +8,7 @@ void fiendUnusedPackages() {
 
   File pubspecFile = File(pubspecPath);
   if (!pubspecFile.existsSync()) {
-    print('pubspec.yaml not found!');
+    print('${ColorsText.red}✗ pubspec.yaml not found!${ColorsText.reset}');
     return;
   }
 
@@ -54,18 +55,20 @@ void fiendUnusedPackages() {
     }
   }
 
-  print('Checking dependencies...');
+  print('${ColorsText.blue}🔍 Checking dependencies...${ColorsText.reset}');
   checkUnusedPackages(dependencies);
 
-  print('Checking dev_dependencies...');
+  print(
+      '${ColorsText.blue}🔍 Checking dev_dependencies...${ColorsText.reset}\n');
   checkUnusedPackages(devDependencies);
 
   if (unusedPackages.isNotEmpty) {
-    print('Unused packages:');
+    print('${ColorsText.yellow}⚠️  Unused packages found:${ColorsText.reset}');
     for (var package in unusedPackages) {
-      print('- $package');
+      print('${ColorsText.gray}  - $package${ColorsText.reset}');
     }
+    print('');
   } else {
-    print('All packages are used.');
+    print('${ColorsText.green}✓ All packages are used.${ColorsText.reset}\n');
   }
 }

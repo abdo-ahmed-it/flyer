@@ -1,4 +1,5 @@
 import 'package:args/command_runner.dart';
+import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/functions/fiend_unused_package.dart';
 import 'package:flyer/functions/fined_unused_assets.dart';
 import 'package:flyer/functions/fined_unused_file.dart';
@@ -28,23 +29,51 @@ class FiendCommand extends Command {
   @override
   void run() {
     if (argResults != null) {
+      bool hasArguments = false;
+
       if (argResults!['unusedAssets'] != null) {
+        hasArguments = true;
+        print(
+            '${ColorsText.cyan}═══════════════════════════════════════════════════════════${ColorsText.reset}');
+        print(
+            '${ColorsText.cyan}          Finding Unused Assets${ColorsText.reset}');
+        print(
+            '${ColorsText.cyan}═══════════════════════════════════════════════════════════${ColorsText.reset}\n');
         fiendUnusedAssets();
       }
 
       if (argResults!['unusedPackages'] != null) {
+        hasArguments = true;
+        print(
+            '${ColorsText.cyan}═══════════════════════════════════════════════════════════${ColorsText.reset}');
+        print(
+            '${ColorsText.cyan}          Finding Unused Packages${ColorsText.reset}');
+        print(
+            '${ColorsText.cyan}═══════════════════════════════════════════════════════════${ColorsText.reset}\n');
         fiendUnusedPackages();
       }
+
       if (argResults!['unusedFiles'] != null) {
+        hasArguments = true;
+        print(
+            '${ColorsText.cyan}═══════════════════════════════════════════════════════════${ColorsText.reset}');
+        print(
+            '${ColorsText.cyan}          Finding Unused Files${ColorsText.reset}');
+        print(
+            '${ColorsText.cyan}═══════════════════════════════════════════════════════════${ColorsText.reset}\n');
         findUnusedFiles();
       }
 
-      if (argResults!.arguments.isEmpty) {
-        print('No arguments found.\nUse: flyer fiend [options]');
+      if (!hasArguments) {
+        print('${ColorsText.yellow}No arguments found.${ColorsText.reset}');
+        print(
+            '${ColorsText.yellow}Use: flyer fiend [options]${ColorsText.reset}\n');
         print(argParser.usage);
       }
     } else {
-      print('No arguments found.\n Use: flyer fiend [options]');
+      print('${ColorsText.yellow}No arguments found.${ColorsText.reset}');
+      print(
+          '${ColorsText.yellow}Use: flyer fiend [options]${ColorsText.reset}\n');
       print(argParser.usage);
     }
   }

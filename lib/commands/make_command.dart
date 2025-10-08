@@ -1,4 +1,5 @@
 import 'package:args/command_runner.dart';
+import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/creatores.dart';
 
 class MakeCommand extends Command {
@@ -62,18 +63,47 @@ class MakeCommand extends Command {
       String? page = argResults!['page'];
       String? form = argResults!['form'];
       List<String>? fields = argResults!['fields'];
+
       if (page != null) {
+        print(
+            '${ColorsText.blue}📄 Creating page: ${ColorsText.cyan}$page${ColorsText.reset}');
+        if (featureName != null) {
+          print(
+              '${ColorsText.gray}   Feature: $featureName${ColorsText.reset}\n');
+        }
         Creators.addPage(routeName: page, featureName: featureName);
+        print(
+            '${ColorsText.green}✓ Page created successfully${ColorsText.reset}');
       } else if (form != null) {
+        print(
+            '${ColorsText.blue}📝 Creating form: ${ColorsText.cyan}$form${ColorsText.reset}');
+        if (featureName != null) {
+          print(
+              '${ColorsText.gray}   Feature: $featureName${ColorsText.reset}');
+        }
+        if (fields != null && fields.isNotEmpty) {
+          print(
+              '${ColorsText.gray}   Fields: ${fields.join(', ')}${ColorsText.reset}\n');
+        }
         Creators.addForm(
             featureName: featureName, formName: form, fields: fields);
+        print(
+            '${ColorsText.green}✓ Form created successfully${ColorsText.reset}');
       } else if (featureName != null) {
+        print(
+            '${ColorsText.blue}🎯 Creating feature: ${ColorsText.cyan}$featureName${ColorsText.reset}\n');
         Creators.createFeature(name: featureName);
+        print(
+            '${ColorsText.green}✓ Feature created successfully${ColorsText.reset}');
       } else if (languages?.isNotEmpty == true) {
-        print('lang: $languages');
+        print(
+            '${ColorsText.blue}🌍 Adding languages: ${ColorsText.cyan}${languages?.join(', ')}${ColorsText.reset}\n');
         Creators.addLang(languages: languages);
-      }  else {
-        print('Usage: flyer make [options]');
+        print(
+            '${ColorsText.green}✓ Languages added successfully${ColorsText.reset}');
+      } else {
+        print(
+            '${ColorsText.yellow}Usage: flyer make [options]${ColorsText.reset}');
         print(argParser.usage);
       }
     }

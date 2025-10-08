@@ -12,7 +12,5 @@ class PackagesName {
     'app_forms',
   ];
 
-  List<String> dependencyOverrides = [
-    'intl'
-  ];
+  List<String> dependencyOverrides = ['intl'];
 }

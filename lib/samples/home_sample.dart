@@ -1,7 +1,7 @@
 import 'package:flyer/functions/get_app_name.dart';
 
-Future<String> homeSample()async{
-  String appName =await getAppName();
+Future<String> homeSample() async {
+  String appName = await getAppName();
   return '''
 import 'package:flutter/material.dart';
 import 'package:$appName/core/extensions/context_extension.dart';

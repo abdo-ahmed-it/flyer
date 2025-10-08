@@ -10,7 +10,7 @@ class CreatorUtil {
     if (!directory.existsSync()) {
       directory.createSync(recursive: true);
       stdout.write(
-          '${ColorsText.yellow}Success Created directory: $path${ColorsText.reset}\n');
+          '${ColorsText.green}  ✓${ColorsText.reset} Created directory: ${ColorsText.cyan}$path${ColorsText.reset}\n');
     }
   }
 
@@ -19,10 +19,12 @@ class CreatorUtil {
       {bool canFormated = true}) {
     final file = File(path);
     if (!file.existsSync()) {
-      file.writeAsStringSync(
-          canFormated ? DartFormatter(languageVersion: DartFormatter.latestLanguageVersion).format(content) : content);
+      file.writeAsStringSync(canFormated
+          ? DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+              .format(content)
+          : content);
       stdout.write(
-          '${ColorsText.yellow}Success Created File: $path${ColorsText.reset}\n');
+          '${ColorsText.green}  ✓${ColorsText.reset} Created file: ${ColorsText.cyan}$path${ColorsText.reset}\n');
     }
   }
 
@@ -34,7 +36,7 @@ class CreatorUtil {
       return content;
     }
     stdout.write(
-        '${ColorsText.red}File does not exist: $path${ColorsText.reset}\n');
+        '${ColorsText.red}  ✗ File does not exist: $path${ColorsText.reset}\n');
     return 'File not exists';
   }
 
@@ -43,16 +45,16 @@ class CreatorUtil {
       {bool canFormated = true, bool showLog = true}) {
     final file = File(path);
     if (file.existsSync()) {
-      file.writeAsStringSync(
-          canFormated ? DartFormatter(languageVersion: DartFormatter.latestLanguageVersion).format(newContent) : newContent);
+      file.writeAsStringSync(canFormated
+          ? DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+              .format(newContent)
+          : newContent);
       if (showLog) {
         stdout.write(
-            '${ColorsText.yellow}Updated content written to file: $path${ColorsText.reset}\n');
+            '${ColorsText.green}  ✓${ColorsText.reset} Updated file: ${ColorsText.cyan}$path${ColorsText.reset}\n');
       }
     } else {
       createFileWithContent(path, newContent);
-      // stdout.write(
-      //     '${ColorsText.red}File does not exist: $path${ColorsText.reset}\n');
     }
   }
 }

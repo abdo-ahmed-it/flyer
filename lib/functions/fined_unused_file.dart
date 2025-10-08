@@ -1,14 +1,17 @@
 import 'dart:io';
 
+import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/functions/delete_file.dart';
 
 void findUnusedFiles() {
   Directory libDirectory = Directory('lib');
 
   if (!libDirectory.existsSync()) {
-    print('lib directory not found!');
+    print('${ColorsText.red}✗ lib directory not found!${ColorsText.reset}');
     return;
   }
+
+  print('${ColorsText.blue}🔍 Scanning Dart files...${ColorsText.reset}');
 
   List<String> unusedFiles = [];
   List<String> excludedFiles = [
@@ -26,6 +29,8 @@ void findUnusedFiles() {
       dartFiles.add(fileSystemEntity);
     }
   });
+
+  print('${ColorsText.blue}🔍 Checking file usage...${ColorsText.reset}\n');
 
   for (var file in dartFiles) {
     bool isUsed = false;
@@ -45,12 +50,14 @@ void findUnusedFiles() {
   }
 
   if (unusedFiles.isNotEmpty) {
-    print('Unused files (${unusedFiles.length}):');
+    print(
+        '${ColorsText.yellow}⚠️  Unused files found (${unusedFiles.length}):${ColorsText.reset}');
     for (var filePath in unusedFiles) {
-      print('- $filePath');
+      print('${ColorsText.gray}  - $filePath${ColorsText.reset}');
     }
+    print('');
     deleteFiles(unusedFiles);
   } else {
-    print('All files are used.');
+    print('${ColorsText.green}✓ All files are used.${ColorsText.reset}\n');
   }
 }

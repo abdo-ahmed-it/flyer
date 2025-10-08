@@ -1,4 +1,4 @@
-String notificationsUtilSample(){
+String notificationsUtilSample() {
   return '''
 import 'package:app_features/app_features.dart';
 import 'package:flutter/material.dart';

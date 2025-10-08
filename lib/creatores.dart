@@ -31,8 +31,7 @@ class Creators {
     if (name != null) {
       featureName = name;
     } else {
-      stdout.write(
-          "${ColorsText.blue}Enter Your Name Feature : ${ColorsText.reset}");
+      stdout.write("${ColorsText.blue}Enter feature name: ${ColorsText.reset}");
       featureName = stdin.readLineSync();
     }
     updateFeaturesInConfigFile(featureName ?? '');
@@ -80,54 +79,99 @@ class Creators {
 
   static void addPage({String? featureName, String? routeName}) async {
     if (featureName == null) {
-      stdout.write(
-          "${ColorsText.blue}Enter Your Name Feature : ${ColorsText.reset}");
+      stdout.write("${ColorsText.blue}Enter feature name: ${ColorsText.reset}");
       featureName = stdin.readLineSync();
     }
     if (routeName == null) {
-      stdout.write(
-          "${ColorsText.blue}Enter Your Name Route : ${ColorsText.reset}");
+      stdout.write("${ColorsText.blue}Enter route name: ${ColorsText.reset}");
       routeName = stdin.readLineSync();
     }
 
     String content = await CreatorUtil.readFileContent(
         '$path/features/$featureName/${featureName}_feature.dart');
-    // Find the position of the opening and closing brackets
-    int startIndex = content.indexOf('[');
-    int endIndex = content.indexOf(']');
 
-    // Extract the content between the brackets
-    if (startIndex != -1 && endIndex != -1) {
+    // Find the routes list using regex
+    final routesRegex = RegExp(
+      r'List<GoRoute>\s+get\s+routes\s*=>\s*\[(.*?)\];',
+      dotAll: true,
+    );
+    final match = routesRegex.firstMatch(content);
+
+    if (match != null) {
       CreatorUtil.createDirectory('$path/features/$featureName/pages');
       CreatorUtil.createFileWithContent(
           '$path/features/$featureName/pages/${routeName}_page.dart',
           pageSample(routeName ?? ''));
-      List<String> oldRoutes =
-          content.substring(startIndex + 1, endIndex).split(',');
 
-      String routeAdded =
-          '''GoRoute(path: '/$routeName', name:  '/$routeName', builder: (_, state) => const ${routeName?.toCapitalized}Page())''';
-      List<String> routes = [];
-      routes.addAll(oldRoutes);
-      routes.add(routeAdded);
-      content = content.replaceRange(
-        startIndex,
-        endIndex + 1,
-        routes.toString(),
+      final existingRoutes = match.group(1)?.trim() ?? '';
+      final routeNameCamelCase = '_$routeName';
+      final routeNameCapitalized = routeName?.toCapitalized ?? '';
+
+      // Create new route with proper formatting
+      String newRoute = '''GoRoute(
+      path: $routeNameCamelCase,
+      name: $routeNameCamelCase,
+      builder: (_, state) => const ${routeNameCapitalized}Page(),
+    )''';
+
+      // Combine routes with proper formatting
+      String updatedRoutes;
+      if (existingRoutes.isEmpty) {
+        updatedRoutes = '\n    $newRoute,\n  ';
+      } else {
+        // Remove trailing comma and whitespace from existing routes
+        String cleanedRoutes = existingRoutes.trimRight();
+        if (!cleanedRoutes.endsWith(',')) {
+          cleanedRoutes += ',';
+        }
+        updatedRoutes = '$cleanedRoutes\n    $newRoute,\n  ';
+      }
+
+      // Replace the routes list
+      content = content.replaceFirst(
+        routesRegex,
+        'List<GoRoute> get routes => [$updatedRoutes];',
       );
-      content = '''import 'pages/${routeName}_page.dart';\n
-$content''';
+
+      // Add private getter after name getter
+      final nameGetterRegex = RegExp(
+        r"(String\s+get\s+name\s*=>\s*'[^']*';)",
+        multiLine: true,
+      );
+      final nameMatch = nameGetterRegex.firstMatch(content);
+
+      if (nameMatch != null) {
+        final insertPosition = nameMatch.end;
+        final privateGetter = "\n\n  String get $routeNameCamelCase => '/$routeName';";
+        content = content.substring(0, insertPosition) +
+                  privateGetter +
+                  content.substring(insertPosition);
+      }
+
+      // Add push function before the closing brace
+      final closingBraceIndex = content.lastIndexOf('}');
+      if (closingBraceIndex != -1) {
+        final pushFunction = "\n\n  void push${routeNameCapitalized}() => push(name: $routeNameCamelCase);\n";
+        content = content.substring(0, closingBraceIndex) +
+                  pushFunction +
+                  content.substring(closingBraceIndex);
+      }
+
+      // Add import at the top
+      content = '''import 'pages/${routeName}_page.dart';\n$content''';
+
       CreatorUtil.editFileContent(
           '$path/features/$featureName/${featureName}_feature.dart', content);
     } else {
-      print('No brackets found');
+      print(
+          '${ColorsText.red}✗ Could not find routes list in feature file${ColorsText.reset}');
     }
   }
 
   static Future<void> addLang({List<String>? languages}) async {
     if (languages == null) {
       stdout.write(
-          "${ColorsText.blue} Enter Your App Languages as Like This ar,en,... : ${ColorsText.reset}");
+          "${ColorsText.blue}Enter app languages (e.g., ar,en): ${ColorsText.reset}");
       languages = stdin.readLineSync()?.split(',') ?? ['ar'];
     }
     String content = await CreatorUtil.readFileContent(
@@ -187,14 +231,15 @@ output-localization-file: app_localizations.dart
         '$path/config/app_config.dart', appConfigSample());
   }
 
-  static void _createCoreFolder() async{
+  static void _createCoreFolder() async {
     CreatorUtil.createDirectory('$path/core');
     CreatorUtil.createDirectory('$path/core/extensions');
     CreatorUtil.createDirectory('$path/core/utils');
     CreatorUtil.createFileWithContent(
         '$path/core/app_storage.dart', appStorageSample());
     CreatorUtil.createFileWithContent(
-        '$path/core/extensions/context_extension.dart', contextExtensionSample());
+        '$path/core/extensions/context_extension.dart',
+        contextExtensionSample());
     String getApiSample = await apiUtilSample();
     CreatorUtil.createFileWithContent(
         '$path/core/utils/api_util.dart', getApiSample);
@@ -222,19 +267,17 @@ output-localization-file: app_localizations.dart
     String? formName,
   }) {
     if (featureName == null) {
-      stdout.write(
-          "${ColorsText.blue}Enter Your Name Feature : ${ColorsText.reset}");
+      stdout.write("${ColorsText.blue}Enter feature name: ${ColorsText.reset}");
       featureName = stdin.readLineSync();
     }
 
     if (formName == null) {
-      stdout.write(
-          "${ColorsText.blue}Enter Your Name Form : ${ColorsText.reset}");
+      stdout.write("${ColorsText.blue}Enter form name: ${ColorsText.reset}");
       formName = stdin.readLineSync();
     }
     if (fields == null) {
       stdout.write(
-          "${ColorsText.blue}Enter Your Form Fields : ${ColorsText.reset}");
+          "${ColorsText.blue}Enter form fields (comma-separated): ${ColorsText.reset}");
       fields = stdin.readLineSync()?.split(',');
     }
     CreatorUtil.createDirectory('$path/features/$featureName/forms');
@@ -244,14 +287,12 @@ output-localization-file: app_localizations.dart
   }
 
   static void addAction() {
-    stdout.write(
-        "${ColorsText.blue}Enter Your Name Feature : ${ColorsText.reset}");
+    stdout.write("${ColorsText.blue}Enter feature name: ${ColorsText.reset}");
     String? featureName = stdin.readLineSync();
-    stdout.write(
-        "${ColorsText.blue}Enter Your Name Action : ${ColorsText.reset}");
+    stdout.write("${ColorsText.blue}Enter action name: ${ColorsText.reset}");
     String? formName = stdin.readLineSync();
     stdout.write(
-        "${ColorsText.blue}Enter Your Action Data : ${ColorsText.reset}");
+        "${ColorsText.blue}Enter action data (comma-separated): ${ColorsText.reset}");
     List<String>? fields = stdin.readLineSync()?.split(',');
     CreatorUtil.createDirectory('$path/features/$featureName/forms');
     CreatorUtil.createFileWithContent(

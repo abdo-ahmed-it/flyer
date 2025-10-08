@@ -9,7 +9,8 @@ Future<void> installPackage(String name) async {
   var response =
       await http.get(Uri.parse('https://pub.dev/api/packages/$name'));
   if (response.statusCode == HttpStatus.notFound) {
-    print(response.body);
+    print('${ColorsText.red}  ✗ Package not found: $name${ColorsText.reset}');
+    print('${ColorsText.gray}    ${response.body}${ColorsText.reset}');
   } else if (response.statusCode == 200) {
     Map<String, dynamic> data = json.decode(response.body);
     String latestVersion =
@@ -22,19 +23,11 @@ Future<void> installPackage(String name) async {
       );
       File('pubspec.yaml').writeAsStringSync(updatedPubspec);
       print(
-          '${ColorsText.green}$name@^$latestVersion installed successfully!${ColorsText.reset}');
+          '${ColorsText.green}  ✓${ColorsText.reset} Installed: ${ColorsText.cyan}$name${ColorsText.reset} ${ColorsText.gray}^$latestVersion${ColorsText.reset}');
+    } else {
+      print(
+          '${ColorsText.gray}  - Already installed: $name${ColorsText.reset}');
     }
-    // String pubspecContent = await CreatorUtil.readFileContent('pubspec.yaml');
-    // var yamlMap = loadYaml(pubspecContent);
-    // var _dependencies = yamlMap['dependencies'] as Map;
-    // Map<String, dynamic> dependencies = Map.from(_dependencies);
-    // if (dependencies.containsKey(name)) {
-    //   dependencies[name] = latestVersion;
-    // } else {
-    //   dependencies[name] = latestVersion;
-    // }
-    // CreatorUtil.editFileContent('pubspec.yaml', pubspecContent,
-    //     canFormated: false);
   }
 }
 
@@ -42,7 +35,8 @@ Future<void> installPackageAsOverride(String name) async {
   var response =
       await http.get(Uri.parse('https://pub.dev/api/packages/$name'));
   if (response.statusCode == HttpStatus.notFound) {
-    print(response.body);
+    print('${ColorsText.red}  ✗ Package not found: $name${ColorsText.reset}');
+    print('${ColorsText.gray}    ${response.body}${ColorsText.reset}');
   } else if (response.statusCode == 200) {
     Map<String, dynamic> data = json.decode(response.body);
     String latestVersion =
@@ -65,7 +59,10 @@ Future<void> installPackageAsOverride(String name) async {
       }
       File('pubspec.yaml').writeAsStringSync(updatedPubspec);
       print(
-          '${ColorsText.green}$name@^$latestVersion installed as dependency override!${ColorsText.reset}');
+          '${ColorsText.green}  ✓${ColorsText.reset} Installed override: ${ColorsText.cyan}$name${ColorsText.reset} ${ColorsText.gray}^$latestVersion${ColorsText.reset}');
+    } else {
+      print(
+          '${ColorsText.gray}  - Already installed: $name${ColorsText.reset}');
     }
   }
 }

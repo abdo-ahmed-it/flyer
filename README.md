@@ -19,6 +19,7 @@ on building your app's core features.
 - **Model Generation**: Generate Dart classes directly from JSON data.
 - **Page Generation**: Add pages to specific features.
 - **Form Generation**: Generate forms with custom fields.
+- **Deep Linking**: Generate complete deep link system with automatic Android/iOS configuration.
 - **Code Formatting**: Reformat your code for consistency.
 - **Unused Resources Finder**: Identify and optionally delete unused assets, packages, and files.
 
@@ -160,6 +161,62 @@ To format your project's code:
 ```bash
 flyer run --format
 ```
+
+---
+
+### Deep Linking
+
+The `deeplink` command generates a complete deep linking system for your Flutter app, including automatic configuration for both Android and iOS platforms.
+
+```bash
+flyer deeplink
+```
+
+#### What It Does
+
+- Creates `DeepLinkHandler` for managing deep links
+- Creates `DeepLinkRoutes` for parsing URLs
+- Creates `DeepLinkConfig` for storing configuration
+- Automatically updates `AndroidManifest.xml` with intent filters
+- Automatically updates iOS `Info.plist` with URL schemes
+- Adds initialization code to your app
+
+#### Interactive Setup
+
+When you run the command, you'll be prompted for:
+
+1. **Scheme**: Your app's custom URL scheme (e.g., `myapp`)
+2. **Host**: Your domain or app identifier (e.g., `example.com`)
+
+#### Example
+
+```bash
+flyer deeplink
+# Enter scheme: myapp
+# Enter host: shop.com
+```
+
+This creates deep links like:
+- `myapp://shop.com/product/123`
+- `myapp://shop.com/cart`
+- `myapp://shop.com/checkout`
+
+#### Testing Deep Links
+
+**Android:**
+```bash
+adb shell am start -W -a android.intent.action.VIEW -d "myapp://shop.com/product/123"
+```
+
+**iOS:**
+```bash
+xcrun simctl openurl booted "myapp://shop.com/product/123"
+```
+
+#### Full Documentation
+
+For complete setup instructions, testing, and advanced features (including Universal Links), see:
+- [DEEPLINK_GUIDE.md](DEEPLINK_GUIDE.md) - Comprehensive deep linking documentation
 
 ---
 

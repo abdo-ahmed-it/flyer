@@ -1,3 +1,4 @@
+import 'package:flyer/commands/deeplink_command.dart';
 import 'package:flyer/commands/fiend_command.dart';
 import 'package:flyer/commands/init_command.dart';
 import 'package:flyer/commands/make_command.dart';
@@ -11,7 +12,7 @@ void main(List<String> arguments) {
     ..addCommand(MakeCommand())
     ..addCommand(FiendCommand())
     ..addCommand(RunCommand())
-    ;
+    ..addCommand(DeeplinkCommand());
 
   runner.run(arguments).catchError((error) {
     print('${ColorsText.red}Error: $error${ColorsText.reset}');

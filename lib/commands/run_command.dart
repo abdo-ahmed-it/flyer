@@ -1,4 +1,5 @@
 import 'package:args/command_runner.dart';
+import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/functions/formate_code.dart';
 
 class RunCommand extends Command {
@@ -19,15 +20,24 @@ class RunCommand extends Command {
   void run() {
     if (argResults != null) {
       if (argResults!['format'] != null) {
+        print(
+            '${ColorsText.cyan}═══════════════════════════════════════════════════════════${ColorsText.reset}');
+        print('${ColorsText.cyan}          Formatting Code${ColorsText.reset}');
+        print(
+            '${ColorsText.cyan}═══════════════════════════════════════════════════════════${ColorsText.reset}\n');
         formatCode();
       }
 
       if (argResults!.arguments.isEmpty) {
         print(
-            'No valid options provided. Use --help for usage information.');
+            '${ColorsText.yellow}No valid options provided.${ColorsText.reset}');
+        print(
+            '${ColorsText.yellow}Use --help for usage information.${ColorsText.reset}');
       }
     } else {
-      print('No arguments found. Use --help for usage information.');
+      print('${ColorsText.yellow}No arguments found.${ColorsText.reset}');
+      print(
+          '${ColorsText.yellow}Use --help for usage information.${ColorsText.reset}');
     }
   }
 }

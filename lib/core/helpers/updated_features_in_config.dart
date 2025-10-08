@@ -1,22 +1,26 @@
 import 'dart:io';
 
 import 'package:flyer/core/app_helper.dart';
+import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/core/creator_util.dart';
 
 void updateFeaturesInConfigFile(String featureName) {
   final file = File('lib/config/app_config.dart');
   if (!file.existsSync()) {
-    print('File not found');
+    print(
+        '${ColorsText.red}✗ app_config.dart file not found${ColorsText.reset}');
     return;
   }
 
   String content = file.readAsStringSync();
-  content = '''
-  import '../features/$featureName/${featureName}_feature.dart';$content
-''';
+  content = '''import '../features/$featureName/${featureName}_feature.dart';
+$content''';
+
   featureName = '${AppHelper.toClassName(featureName)}Feature()';
+
+  // Updated regex to handle both single-line and multi-line format
   final featureRegex = RegExp(
-    r'AppFeatures\.config\(\s*features:\s*\[(.*?)\]\s*\)',
+    r'AppFeatures\.config\(\s*features:\s*\[(.*?)\]\s*[,\)]',
     dotAll: true,
   );
   final match = featureRegex.firstMatch(content);
@@ -34,26 +38,32 @@ void updateFeaturesInConfigFile(String featureName) {
       if (!features.contains(featureName)) {
         features.add(featureName);
       } else {
-        print('Feature already exists.');
+        print(
+            '${ColorsText.yellow}⚠ Feature already exists in config${ColorsText.reset}');
         return;
       }
 
-      // Create the updated feature string
+      // Create the updated feature string (multi-line format)
       final updatedFeatures = features.join(', ');
 
       // Replace the old features list with the new one
-      content = content.replaceFirst(
-        featureRegex,
-        'AppFeatures.config(features: [$updatedFeatures])',
+      final originalMatch = match.group(0)!;
+      final newMatch = originalMatch.replaceFirst(
+        RegExp(r'\[(.*?)\]', dotAll: true),
+        '[$updatedFeatures]',
       );
 
+      content = content.replaceFirst(originalMatch, newMatch);
+
       // Write the updated content back to the file
-      CreatorUtil.editFileContent(file.path, content);
-      print('Feature added successfully.');
+      CreatorUtil.editFileContent(file.path, content, canFormated: true);
     } else {
-      print('No features found.');
+      print('${ColorsText.yellow}⚠ No features found${ColorsText.reset}');
     }
   } else {
-    print('No AppFeatures.config block found.');
+    print(
+        '${ColorsText.red}✗ No AppFeatures.config block found${ColorsText.reset}');
+    print(
+        '${ColorsText.gray}Make sure your app_config.dart has AppFeatures.config() call${ColorsText.reset}');
   }
 }
