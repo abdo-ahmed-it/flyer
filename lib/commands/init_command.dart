@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:args/command_runner.dart';
 import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/core/constants/packages_name.dart';
@@ -10,7 +12,7 @@ class InitCommand extends Command {
     argParser.addMultiOption(
       'lang',
       help: 'Set the language for initialization',
-      // defaultsTo: ['en'],
+      defaultsTo: ['en', 'ar'],
     );
   }
 
@@ -53,8 +55,13 @@ class InitCommand extends Command {
       await installPackageAsOverride(package);
     }
 
-    print('\n${ColorsText.blue}🔄 Running pub get...${ColorsText.reset}');
-    runPubGet();
+   await runPubGet();
+    await Process.run(
+      'flutter',
+      ['gen-l10n'],
+      workingDirectory: Directory.current.path,
+    );
+
 
     print(
         '\n${ColorsText.green}═══════════════════════════════════════════════════════════${ColorsText.reset}');

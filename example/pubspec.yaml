@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  requests_inspector: ^5.3.0
   app_forms: ^0.7.1
   responsive_framework: ^0.2.0
   toastification: ^3.0.3

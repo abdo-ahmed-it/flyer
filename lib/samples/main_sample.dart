@@ -2,6 +2,7 @@ String mainSample() {
   return '''
 import 'package:app_features/app_features.dart';
 import 'package:requests_inspector/requests_inspector.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -15,7 +16,7 @@ import 'theme/app_theme.dart';
 void main() async {
   await AppConfig.init();
   runApp(const RequestsInspector(
-    enable: kDebugMode,
+    enabled: kDebugMode,
     child: MyApp(),
   ));
 }

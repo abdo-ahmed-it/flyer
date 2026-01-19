@@ -10,6 +10,7 @@ class PackagesName {
     'toastification',
     'responsive_framework',
     'app_forms',
+    'requests_inspector'
   ];
 
   List<String> dependencyOverrides = ['intl'];
