@@ -4,6 +4,8 @@ Future<String> apiUtilSample() async {
   String appName = await getAppName();
   return '''
 import 'package:api_request/api_request.dart';
+import 'package:requests_inspector/requests_inspector.dart';
+
 import 'package:$appName/app/utils/notification_util.dart';
 import 'package:$appName/config/app_config.dart';
 import 'package:$appName/core/app_storage.dart';
@@ -13,8 +15,9 @@ import 'package:flutter/widgets.dart';
 class ApiUtils {
   ApiUtils.init(BuildContext context) {
     ApiRequestOptions.instance?.config(
-      baseUrl: 'https://derman.code-link.com/api/',
+      baseUrl: 'BASE_URL_HERE',
       getToken: () => getIt.get<AppStorage>().getToken(),
+      interceptors: [RequestsInspectorInterceptor()],
       tokenType: ApiRequestOptions.bearer,
       enableLog: true,
       onError: (error) {

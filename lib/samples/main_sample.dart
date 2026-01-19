@@ -1,6 +1,7 @@
 String mainSample() {
   return '''
 import 'package:app_features/app_features.dart';
+import 'package:requests_inspector/requests_inspector.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -13,7 +14,10 @@ import '../core/app_storage.dart';
 import 'theme/app_theme.dart';
 void main() async {
   await AppConfig.init();
-  runApp(const MyApp());
+  runApp(const RequestsInspector(
+    enable: kDebugMode,
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
