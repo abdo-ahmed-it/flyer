@@ -3,6 +3,7 @@ import 'package:flyer/commands/fiend_command.dart';
 import 'package:flyer/commands/init_command.dart';
 import 'package:flyer/commands/make_command.dart';
 import 'package:flyer/commands/run_command.dart';
+import 'package:flyer/commands/watch_command.dart';
 import 'package:flyer/core/colors_text.dart';
 import 'package:args/command_runner.dart';
 
@@ -12,6 +13,7 @@ void main(List<String> arguments) {
     ..addCommand(MakeCommand())
     ..addCommand(FiendCommand())
     ..addCommand(RunCommand())
+    ..addCommand(WatchCommand())
     ..addCommand(DeeplinkCommand());
 
   runner.run(arguments).catchError((error) {
