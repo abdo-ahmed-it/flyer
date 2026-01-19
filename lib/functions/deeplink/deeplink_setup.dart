@@ -88,12 +88,16 @@ Future<void> setupDeeplink({
     fileChanges.add('     └─ New file with Team ID & Bundle ID');
   }
 
+  // iOS Info.plist - always modified
+  fileChanges.add('');
+  fileChanges
+      .add('  4. ${ColorsText.cyan}ios/Runner/Info.plist${ColorsText.reset}');
+  final infoPlistChanges = <String>[];
+  infoPlistChanges.add('Set FlutterDeepLinkingEnabled=false (prevents Safari opening)');
   if (scheme != null) {
-    fileChanges.add('');
-    fileChanges
-        .add('  4. ${ColorsText.cyan}ios/Runner/Info.plist${ColorsText.reset}');
-    fileChanges.add('     └─ Add CFBundleURLSchemes for: $scheme');
+    infoPlistChanges.add('Add CFBundleURLSchemes: $scheme://');
   }
+  fileChanges.add('     └─ ${infoPlistChanges.join(', ')}');
 
   // Code changes
   fileChanges.add('');
@@ -170,9 +174,8 @@ Future<void> setupDeeplink({
   }
 
   // 4. Update Info.plist
-  if (scheme != null) {
-    await _updateInfoPlist(scheme: scheme);
-  }
+  // Always update to add FlutterDeepLinkingEnabled=false (prevents Safari from opening)
+  await _updateInfoPlist(scheme: scheme);
 
   // 5. Create deeplink_handler.dart
   await _createDeeplinkHandler();
@@ -290,7 +293,7 @@ Future<void> _createAppleAppSiteAssociation({
   }
 }
 
-Future<void> _updateInfoPlist({required String scheme}) async {
+Future<void> _updateInfoPlist({String? scheme}) async {
   print('${ColorsText.blue}🍎 Updating Info.plist...${ColorsText.reset}');
 
   final infoPlistFile = File('ios/Runner/Info.plist');
@@ -301,25 +304,47 @@ Future<void> _updateInfoPlist({required String scheme}) async {
 
   String content = await infoPlistFile.readAsString();
 
-  // Check if CFBundleURLTypes already exists
-  if (content.contains('CFBundleURLTypes')) {
+  // Check if FlutterDeepLinkingEnabled already exists
+  if (content.contains('FlutterDeepLinkingEnabled')) {
     print(
-        '${ColorsText.yellow}  ⚠ CFBundleURLTypes already exists in Info.plist${ColorsText.reset}');
-    print(
-        '${ColorsText.yellow}    Please add the scheme manually if needed${ColorsText.reset}');
+        '${ColorsText.yellow}  ⚠ FlutterDeepLinkingEnabled already exists in Info.plist${ColorsText.reset}');
+  }
+
+  // Build the content to add
+  String contentToAdd = '';
+
+  // Always add FlutterDeepLinkingEnabled = false to prevent Safari from opening
+  if (!content.contains('FlutterDeepLinkingEnabled')) {
+    contentToAdd += infoPlistFlutterDeepLinkingSetting();
+  }
+
+  // Add URL schemes if scheme is provided and not already exists
+  if (scheme != null && scheme.isNotEmpty) {
+    if (content.contains('CFBundleURLTypes')) {
+      print(
+          '${ColorsText.yellow}  ⚠ CFBundleURLTypes already exists in Info.plist${ColorsText.reset}');
+      print(
+          '${ColorsText.yellow}    Please add the scheme manually if needed${ColorsText.reset}');
+    } else {
+      if (contentToAdd.isNotEmpty) contentToAdd += '\n';
+      contentToAdd += infoPlistUrlSchemesSample(scheme: scheme);
+    }
+  }
+
+  // If there's nothing to add, return
+  if (contentToAdd.isEmpty) {
+    print('${ColorsText.green}  ✓ Info.plist already up to date${ColorsText.reset}');
     return;
   }
 
-  final urlSchemes = infoPlistUrlSchemesSample(scheme: scheme);
-
-  // Find </dict> before </plist> and add URL schemes
+  // Find </dict> before </plist> and add content
   final dictEndRegex = RegExp(r'</dict>\s*</plist>');
   final match = dictEndRegex.firstMatch(content);
 
   if (match != null) {
     final insertPosition = match.start;
     content = content.substring(0, insertPosition) +
-        urlSchemes +
+        contentToAdd +
         '\n' +
         content.substring(insertPosition);
 
@@ -362,8 +387,11 @@ void _showCompletionInstructions(
   }
 
   print('\n${ColorsText.blue}🍎 iOS Configuration:${ColorsText.reset}');
+  print(
+      '  ${ColorsText.green}✓${ColorsText.reset} Info.plist updated (FlutterDeepLinkingEnabled=false to prevent Safari opening)');
   if (scheme != null) {
-    print('  ${ColorsText.green}✓${ColorsText.reset} Info.plist updated');
+    print(
+        '  ${ColorsText.green}✓${ColorsText.reset} Custom URL scheme added: $scheme://');
   }
   if (domain != null) {
     print(

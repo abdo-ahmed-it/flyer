@@ -90,10 +90,18 @@ String infoPlistUrlSchemesSample({required String scheme}) {
 	</array>''';
 }
 
+/// Sample for Info.plist FlutterDeepLinkingEnabled setting
+/// This prevents iOS from opening Safari after the app when handling universal links
+String infoPlistFlutterDeepLinkingSetting() {
+  return '''	<key>FlutterDeepLinkingEnabled</key>
+	<false/>''';
+}
+
 /// Sample for deeplink_handler.dart utility class
 String deeplinkHandlerSample() {
   return '''import 'package:app_links/app_links.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class DeeplinkHandler {
   static final DeeplinkHandler _instance = DeeplinkHandler._internal();
@@ -104,35 +112,59 @@ class DeeplinkHandler {
   Function(Uri)? _onLinkReceived;
 
   /// Initialize deep link handling
+  /// Primary method: Uses platformDispatcher.defaultRouteName for initial deep links (iOS workaround)
+  /// Secondary: Uses app_links for runtime deep links while app is running
   Future<void> initialize({required Function(Uri) onLinkReceived}) async {
     _onLinkReceived = onLinkReceived;
 
     // Handle initial link if app was opened from a deep link
-    try {
-      final initialUri = await _appLinks.getInitialLink();
-      if (initialUri != null) {
+    // This will be called after the first frame is rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        // PRIMARY METHOD: Get the initial URI from platform dispatcher
+        // This is the main solution for iOS with FlutterDeepLinkingEnabled=false
+        final initialRoute = WidgetsBinding.instance.platformDispatcher.defaultRouteName;
+
         if (kDebugMode) {
-          print('Initial deep link: \$initialUri');
+          print('Platform dispatcher initial route: \$initialRoute');
         }
-        _onLinkReceived?.call(initialUri);
+
+        if (initialRoute != '/' && initialRoute.isNotEmpty) {
+          try {
+            final uri = Uri.parse(initialRoute);
+            if (kDebugMode) {
+              print('✅ Initial deep link detected from platform dispatcher: \$uri');
+            }
+            _onLinkReceived?.call(uri);
+          } catch (parseError) {
+            if (kDebugMode) {
+              print('❌ Error parsing initial route: \$parseError');
+            }
+          }
+        } else {
+          if (kDebugMode) {
+            print('ℹ️ No initial deep link detected (normal app launch)');
+          }
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('❌ Error getting initial link from platform dispatcher: \$e');
+        }
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error getting initial link: \$e');
-      }
-    }
+    });
 
     // Listen for subsequent deep links while app is running
+    // This handles new deep links that arrive after the app is already open
     _appLinks.uriLinkStream.listen(
       (uri) {
         if (kDebugMode) {
-          print('Received deep link: \$uri');
+          print('🔗 Runtime deep link received: \$uri');
         }
         _onLinkReceived?.call(uri);
       },
       onError: (err) {
         if (kDebugMode) {
-          print('Error listening to deep links: \$err');
+          print('❌ Error listening to deep links stream: \$err');
         }
       },
     );
