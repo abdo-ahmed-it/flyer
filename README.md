@@ -13,13 +13,14 @@ on building your app's core features.
 ## Features 🚀
 
 - **Project Initialization**: Set up the infrastructure of your Flutter project and install
-  essential packages.
+  essential packages with Arabic and English localization by default.
 - **Feature Generation**: Generate fully-structured Flutter features.
 - **Language Support**: Add multiple languages to your app with ease.
 - **Model Generation**: Generate Dart classes directly from JSON data.
 - **Page Generation**: Add pages to specific features.
 - **Form Generation**: Generate forms with custom fields.
 - **Deep Linking**: Generate complete deep link system with automatic Android/iOS configuration.
+- **Watch Mode**: Automatically monitor project files and regenerate code on changes.
 - **Code Formatting**: Reformat your code for consistency.
 - **Unused Resources Finder**: Identify and optionally delete unused assets, packages, and files.
 
@@ -66,17 +67,19 @@ flyer init [OPTIONS]
 #### Example
 
 ```bash
-flyer init --lang=en,ar
+flyer init --lang=en,ar,de
 ```
 
 This command:
 
 - Sets up the basic infrastructure for your Flutter project.
 - Installs essential packages (e.g., `app_features`, `flutter_bloc`, etc.).
-- Adds the specified languages (`en` and `ar`) to the project.
+- **Automatically adds Arabic (`ar`) and English (`en`) languages by default**.
+- **Automatically installs `request_inspector` package for API debugging**.
+- Adds any additional languages specified with `--lang` option.
 - Displays Messages and Dialogs and BottomSheet without context.
-- hande app responsive by use responsive_framework package.
-- initialize Call Api by use api_request package.
+- Handle app responsive by use responsive_framework package.
+- Initialize Call Api by use api_request package.
 - Manage Routes by use go_router package.
 
 ---
@@ -161,6 +164,18 @@ To format your project's code:
 ```bash
 flyer run --format
 ```
+
+---
+
+### Watch Mode
+
+The `watch` command monitors your Flutter project for file changes and automatically regenerates code or performs specified actions.
+
+```bash
+flyer watch
+```
+
+This command continuously watches your project files and triggers automatic rebuilds or code generation when changes are detected, improving development workflow efficiency.
 
 ---
 

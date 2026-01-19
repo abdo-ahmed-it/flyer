@@ -1,3 +1,15 @@
+## 1.2.0
+* **NEW FEATURE**: Watch Command - Automatically monitor project files and regenerate code on changes
+  - Improves development workflow with automatic code generation
+  - Watches for file changes and triggers appropriate actions
+* **IMPROVEMENT**: Init Command Enhancements
+  - Now automatically adds Arabic (`ar`) and English (`en`) languages by default
+  - Automatically installs `request_inspector` package for API debugging
+  - Better default configuration for new projects
+* **FIX**: Fixed various issues and improved stability
+  - Resolved diagnostic warnings
+  - Enhanced code quality and formatting
+
 ## 1.1.0
 * **NEW FEATURE**: Deep Linking - Generate complete deep link system for your Flutter app
   - Auto-generates DeepLinkHandler, DeepLinkRoutes, and DeepLinkConfig
