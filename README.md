@@ -58,14 +58,21 @@ flyer init [OPTIONS]
 
 #### Available Options
 
-| Option   | Description                          | Example Usage     |
-|----------|--------------------------------------|-------------------|
-| `--lang` | Add languages during initialization (defaults to `en,ar`). | `--lang=en,ar,fr` |
+| Option       | Description                          | Example Usage     |
+|--------------|--------------------------------------|-------------------|
+| `--lang`     | Add languages during initialization (defaults to `en,ar`). | `--lang=en,ar,fr` |
+| `--firebase` | Setup Firebase (installs `firebase_core` and runs `flutterfire configure`). | `--firebase` |
 
-#### Example
+#### Examples
 
 ```bash
 flyer init --lang=en,ar,de
+```
+
+With Firebase:
+
+```bash
+flyer init --firebase
 ```
 
 This command:
@@ -79,6 +86,7 @@ This command:
 - Handles app responsiveness using `responsive_framework` package.
 - Initializes API configuration using `api_request` package.
 - Manages Routes using `go_router` package (via `app_features`).
+- **With `--firebase`**: Installs `firebase_core`, adds `Firebase.initializeApp()` to `main.dart`, and runs `flutterfire configure` interactively.
 
 ---
 
@@ -116,6 +124,17 @@ lib/features/account/
   bloc/account_bloc.dart
   bloc/account_state.dart
   actions/
+```
+
+Each generated feature includes quick access getters:
+
+```dart
+// Access feature anywhere
+AccountFeature.to.go();
+AccountFeature.to.push();
+
+// Access bloc anywhere
+AccountBloc.to.login(data);
 ```
 
 #### Add Multiple Languages
