@@ -19,6 +19,11 @@ class InitCommand extends Command {
       help: 'Setup Firebase (installs firebase_core and runs flutterfire configure)',
       negatable: false,
     );
+    argParser.addFlag(
+      'onboarding',
+      help: 'Add onboarding feature with intro screens',
+      negatable: false,
+    );
   }
 
   @override
@@ -37,10 +42,11 @@ class InitCommand extends Command {
         '${ColorsText.cyan}═══════════════════════════════════════════════════════════${ColorsText.reset}\n');
 
     bool useFirebase = argResults?['firebase'] ?? false;
+    bool useOnboarding = argResults?['onboarding'] ?? false;
 
     print(
         '${ColorsText.blue}📁 Creating project structure...${ColorsText.reset}\n');
-    await Creators.init(firebase: useFirebase);
+    await Creators.init(firebase: useFirebase, onboarding: useOnboarding);
 
     if (argResults != null) {
       List<String> lang = argResults!['lang'];
@@ -66,6 +72,7 @@ class InitCommand extends Command {
       print(
           '\n${ColorsText.blue}🔥 Setting up Firebase...${ColorsText.reset}');
       await installPackage('firebase_core');
+      await installPackage('firebase_messaging');
     }
 
     await runPubGet();

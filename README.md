@@ -58,10 +58,11 @@ flyer init [OPTIONS]
 
 #### Available Options
 
-| Option       | Description                          | Example Usage     |
-|--------------|--------------------------------------|-------------------|
-| `--lang`     | Add languages during initialization (defaults to `en,ar`). | `--lang=en,ar,fr` |
-| `--firebase` | Setup Firebase (installs `firebase_core` and runs `flutterfire configure`). | `--firebase` |
+| Option         | Description                          | Example Usage     |
+|----------------|--------------------------------------|-------------------|
+| `--lang`       | Add languages during initialization (defaults to `en,ar`). | `--lang=en,ar,fr` |
+| `--firebase`   | Setup Firebase (installs `firebase_core` and runs `flutterfire configure`). | `--firebase` |
+| `--onboarding` | Add onboarding feature with intro screens. | `--onboarding` |
 
 #### Examples
 
@@ -69,15 +70,20 @@ flyer init [OPTIONS]
 flyer init --lang=en,ar,de
 ```
 
-With Firebase:
+With Firebase and Onboarding:
 
 ```bash
-flyer init --firebase
+flyer init --firebase --onboarding
 ```
 
 This command:
 
 - Sets up the basic infrastructure for your Flutter project with three default features: `splash`, `home`, and `account`.
+- Generates a **MasterPage** with a modern floating bottom navigation bar (animated, dark mode support, haptic feedback).
+- Generates **AppBloc/AppState** with tab navigation management.
+- Generates **BottomNavData** and **BottomNavItemModel** for easy tab configuration.
+- Generates **AppStyles** with full text style system (thin, light, regular, medium, semibold, bold) using Almarai font.
+- Copies **Almarai font files** to `assets/fonts/` and configures them in `pubspec.yaml`.
 - Installs essential packages (`app_features`, `api_request`, `equatable`, `hive_flutter`, `get_it`, `flutter_bloc`, `flutter_easyloading`, `toastification`, `responsive_framework`, `app_forms`, `requests_inspector`).
 - **Automatically adds Arabic (`ar`) and English (`en`) languages by default**.
 - **Automatically installs `requests_inspector` package for API debugging**.
@@ -87,6 +93,43 @@ This command:
 - Initializes API configuration using `api_request` package.
 - Manages Routes using `go_router` package (via `app_features`).
 - **With `--firebase`**: Installs `firebase_core`, adds `Firebase.initializeApp()` to `main.dart`, and runs `flutterfire configure` interactively.
+- **With `--onboarding`**: Adds an onboarding feature with PageView intro screens, dot indicators, and skip/next navigation. Shown only on first launch.
+
+#### Generated Structure
+
+```
+lib/
+├── app/
+│   ├── app_feature.dart          # AppFeature with MasterPage route
+│   ├── master_page.dart          # Floating bottom nav bar with IndexedStack
+│   ├── bloc/
+│   │   ├── app_bloc.dart         # Tab index management
+│   │   └── app_state.dart        # App state with currentIndex
+│   ├── data/
+│   │   └── bottom_nav_data.dart  # Tab items configuration
+│   ├── models/
+│   │   └── bottom_nav_item_model.dart
+│   └── utils/
+│       └── notification_util.dart
+├── config/app_config.dart
+├── core/
+│   ├── app_storage.dart          # Hive-based storage
+│   ├── extensions/
+│   └── utils/api_util.dart
+├── theme/
+│   ├── app_theme.dart
+│   ├── app_colors.dart
+│   └── app_styles.dart           # Full text style system
+├── features/
+│   ├── splash/                   # Splash -> MasterPage (or Onboarding)
+│   ├── home/
+│   ├── account/
+│   └── on_boarding/              # (with --onboarding flag)
+├── l10n/
+└── main.dart
+assets/
+└── fonts/                        # Almarai font files
+```
 
 ---
 

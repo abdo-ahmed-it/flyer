@@ -1,7 +1,7 @@
 # Flyer Package - Full Review
 
 > **Reviewed on:** 2026-04-16
-> **Version:** 1.2.0
+> **Version:** 1.3.0
 > **SDK:** Dart ^3.5.4
 
 ---

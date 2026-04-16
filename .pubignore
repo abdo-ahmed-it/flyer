@@ -1,0 +1,11 @@
+android/
+ios/
+web/
+windows/
+linux/
+macos/
+test/
+example/
+.claude/
+CLAUDE.md
+*.iml

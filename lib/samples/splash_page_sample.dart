@@ -1,10 +1,21 @@
-String splashPageSample() {
+String splashPageSample({bool onboarding = false}) {
+  String onboardingImport = onboarding
+      ? "import '../on_boarding/on_boarding_feature.dart';\nimport '../../config/app_config.dart';\nimport '../../core/app_storage.dart';\n"
+      : '';
+  String navigateLogic = onboarding
+      ? '''
+      if (getIt.get<AppStorage>().getShowOnboarding()) {
+        OnBoardingFeature.to.go();
+      } else {
+        AppFeature.to.go();
+      }'''
+      : '      AppFeature.to.go();';
+
   return '''
-import 'package:app_features/app_features.dart';
 import 'package:flutter/material.dart';
 import '../../core/utils/api_util.dart';
-
-import '../home/home_feature.dart';
+import '../../app/app_feature.dart';
+$onboardingImport
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -17,12 +28,12 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ApiUtils.init(context);
     });
 
     Future.delayed(const Duration(seconds: 3), () {
-      AppFeatures.get<HomeFeature>().go();
+$navigateLogic
     });
   }
 

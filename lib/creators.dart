@@ -21,6 +21,16 @@ import 'samples/feature_sample.dart';
 import 'samples/form_sample.dart';
 import 'samples/main_sample.dart';
 import 'samples/page_sample.dart';
+import 'samples/app_bloc_sample.dart';
+import 'samples/bottom_nav_data_sample.dart';
+import 'samples/bottom_nav_item_model_sample.dart';
+import 'samples/master_page_sample.dart';
+import 'samples/onboarding/onboarding_data_sample.dart';
+import 'samples/onboarding/onboarding_feature_sample.dart';
+import 'samples/onboarding/onboarding_model_sample.dart';
+import 'samples/onboarding/onboarding_page_sample.dart';
+import 'samples/app_notifications_sample.dart';
+import 'samples/app_styles_sample.dart';
 import 'samples/state_samples.dart';
 
 class Creators {
@@ -54,7 +64,7 @@ class Creators {
         cubitSample(featureName));
   }
 
-  static void _createSplashFeature() {
+  static void _createSplashFeature({bool onboarding = false}) {
     String? featureName = 'splash';
 
     updateFeaturesInConfigFile(featureName);
@@ -68,7 +78,7 @@ class Creators {
         splashFeatureSample());
     CreatorUtil.createFileWithContent(
         '$path/features/$featureName/${featureName}_page.dart',
-        splashPageSample());
+        splashPageSample(onboarding: onboarding));
     CreatorUtil.createFileWithContent(
         '$path/features/$featureName/bloc/${featureName}_state.dart',
         stateSample(featureName));
@@ -201,7 +211,7 @@ output-localization-file: app_localizations.dart
         canFormated: false);
   }
 
-  static void _createAppFolder() {
+  static Future<void> _createAppFolder({bool firebase = false}) async {
     CreatorUtil.createDirectory('$path/app');
     CreatorUtil.createDirectory('$path/app/utils');
     CreatorUtil.createFileWithContent(
@@ -212,9 +222,18 @@ output-localization-file: app_localizations.dart
     CreatorUtil.createFileWithContent(
         '$path/app/app_feature.dart', appFeatureSample());
     CreatorUtil.createFileWithContent(
-        '$path/app/bloc/app_bloc.dart', cubitSample('app'));
+        '$path/app/bloc/app_bloc.dart', appBlocSample(firebase: firebase));
     CreatorUtil.createFileWithContent(
-        '$path/app/bloc/app_state.dart', stateSample('app'));
+        '$path/app/bloc/app_state.dart', appStateSample());
+    CreatorUtil.createFileWithContent(
+        '$path/app/models/bottom_nav_item_model.dart',
+        bottomNavItemModelSample());
+    String navData = await bottomNavDataSample();
+    CreatorUtil.createFileWithContent(
+        '$path/app/data/bottom_nav_data.dart', navData);
+    String masterPage = await masterPageSample();
+    CreatorUtil.createFileWithContent(
+        '$path/app/master_page.dart', masterPage);
   }
 
   static void _createThemeFolder() {
@@ -223,6 +242,8 @@ output-localization-file: app_localizations.dart
         '$path/theme/app_theme.dart', appThemeSample());
     CreatorUtil.createFileWithContent(
         '$path/theme/app_colors.dart', appColorsSample());
+    CreatorUtil.createFileWithContent(
+        '$path/theme/app_styles.dart', appStylesSample());
   }
 
   static void _createConfigFolder() {
@@ -231,7 +252,7 @@ output-localization-file: app_localizations.dart
         '$path/config/app_config.dart', appConfigSample());
   }
 
-  static Future<void> _createCoreFolder() async {
+  static Future<void> _createCoreFolder({bool firebase = false}) async {
     CreatorUtil.createDirectory('$path/core');
     CreatorUtil.createDirectory('$path/core/extensions');
     CreatorUtil.createDirectory('$path/core/utils');
@@ -243,22 +264,124 @@ output-localization-file: app_localizations.dart
     String getApiSample = await apiUtilSample();
     CreatorUtil.createFileWithContent(
         '$path/core/utils/api_util.dart', getApiSample);
+    if (firebase) {
+      CreatorUtil.createFileWithContent(
+          '$path/core/app_notifications.dart', appNotificationsSample());
+    }
   }
 
-  static Future<void> _createInitFeature() async {
-    _createSplashFeature();
+  static Future<void> _createOnboardingFeature() async {
+    String featureName = 'on_boarding';
+    updateFeaturesInConfigFile(featureName);
+
+    CreatorUtil.createDirectory('$path/features/$featureName');
+    CreatorUtil.createDirectory('$path/features/$featureName/model');
+    CreatorUtil.createFileWithContent(
+        '$path/features/$featureName/on_boarding_feature.dart',
+        onboardingFeatureSample());
+    String onboardingPage = await onboardingPageSample();
+    CreatorUtil.createFileWithContent(
+        '$path/features/$featureName/onboarding_page.dart', onboardingPage);
+    CreatorUtil.createFileWithContent(
+        '$path/features/$featureName/model/onboarding_model.dart',
+        onboardingModelSample());
+    CreatorUtil.createFileWithContent(
+        '$path/features/$featureName/model/onboarding_data.dart',
+        onboardingDataSample());
+  }
+
+  static Future<void> _createInitFeature({bool onboarding = false}) async {
+    _createSplashFeature(onboarding: onboarding);
     String homeSampleContent = await homeSample();
 
     createFeature(name: 'home', pageS: homeSampleContent);
     createFeature(name: 'account');
+
+    if (onboarding) {
+      await _createOnboardingFeature();
+    }
   }
 
-  static Future<void> init({bool firebase = false}) async {
-    _createAppFolder();
+  static void _copyFonts() {
+    final projectRoot = Directory.current.path;
+    final fontsDir = Directory('$projectRoot/assets/fonts');
+    CreatorUtil.createDirectory(fontsDir.path);
+
+    // Find the flyer package path from package_config.json
+    final packageConfigFile =
+        File('$projectRoot/.dart_tool/package_config.json');
+    if (!packageConfigFile.existsSync()) return;
+
+    final content = packageConfigFile.readAsStringSync();
+    // Match the flyer package entry
+    final flyerRegex = RegExp(
+      r'"name":\s*"flyer"[^}]*"rootUri":\s*"([^"]*)"',
+      dotAll: true,
+    );
+    final match = flyerRegex.firstMatch(content);
+    if (match == null) return;
+
+    var rootUri = match.group(1)!;
+    String flyerPath;
+    if (rootUri.startsWith('file://')) {
+      flyerPath = Uri.parse(rootUri).toFilePath();
+    } else {
+      // Relative path - resolve from .dart_tool directory
+      flyerPath = File('$projectRoot/.dart_tool/$rootUri')
+          .resolveSymbolicLinksSync();
+    }
+
+    final sourceFontsDir = Directory('$flyerPath/lib/assets/fonts');
+    if (sourceFontsDir.existsSync()) {
+      for (var font in sourceFontsDir.listSync()) {
+        if (font is File && font.path.endsWith('.ttf')) {
+          final destFile =
+              File('${fontsDir.path}/${font.path.split('/').last}');
+          if (!destFile.existsSync()) {
+            font.copySync(destFile.path);
+            print(
+                '${ColorsText.green}  \u2713${ColorsText.reset} Copied font: ${ColorsText.cyan}${destFile.path}${ColorsText.reset}');
+          }
+        }
+      }
+    }
+
+  }
+
+  static Future<void> _addFontsToPublicSpec() async {
+    final pubspecPath = '${Directory.current.path}/pubspec.yaml';
+    String content = await CreatorUtil.readFileContent(pubspecPath);
+
+    if (!content.contains('family: Almarai')) {
+      final fontsConfig = '''
+  fonts:
+    - family: Almarai
+      fonts:
+        - asset: assets/fonts/Almarai-Light.ttf
+          weight: 100
+        - asset: assets/fonts/Almarai-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Almarai-Bold.ttf
+          weight: 600
+  assets:
+    - assets/fonts/''';
+
+      content = content.replaceFirst(
+        'uses-material-design: true',
+        'uses-material-design: true\n$fontsConfig',
+      );
+      CreatorUtil.editFileContent(pubspecPath, content, canFormated: false);
+    }
+  }
+
+  static Future<void> init({bool firebase = false, bool onboarding = false}) async {
+    await _createAppFolder(firebase: firebase);
     _createThemeFolder();
     _createConfigFolder();
-    await _createCoreFolder();
-    await _createInitFeature();
+    await _createCoreFolder(firebase: firebase);
+    await _createInitFeature(onboarding: onboarding);
+    _copyFonts();
+    await _addFontsToPublicSpec();
     CreatorUtil.editFileContent(
         '$path/main.dart', mainSample(firebase: firebase));
   }

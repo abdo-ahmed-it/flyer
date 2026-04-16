@@ -4,8 +4,12 @@ import 'package:app_features/app_features.dart';
 import '../config/app_config.dart';
 import '../core/app_storage.dart';
 import 'bloc/app_bloc.dart';
+import 'master_page.dart';
 
 class AppFeature extends Feature {
+
+  static AppFeature get to => AppFeatures.get();
+
   @override
   void get dependencies => {
         getIt.registerLazySingleton(() => AppBloc()),
@@ -16,7 +20,9 @@ class AppFeature extends Feature {
   String get name => '/app';
 
   @override
-  List<GoRoute> get routes => [];
+  List<GoRoute> get routes => [
+    GoRoute(name: name, path: name, builder: (_, state) => const MasterPage()),
+  ];
 }
 
   ''';

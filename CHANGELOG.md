@@ -1,3 +1,37 @@
+## 1.3.0
+* **NEW FEATURE**: Firebase Integration (`--firebase` flag)
+  - Installs `firebase_core` and `firebase_messaging`
+  - Adds `Firebase.initializeApp()` to `main.dart`
+  - Generates `AppNotifications` class for FCM push notifications (permissions, listeners, token management)
+  - Runs `flutterfire configure` interactively
+  - AppBloc auto-initializes notifications with `initNotification()` and `setFcmToken()`
+* **NEW FEATURE**: Onboarding (`--onboarding` flag)
+  - Generates onboarding feature with PageView intro screens
+  - Dot indicators, skip/next navigation
+  - Shown only on first launch via `AppStorage.getShowOnboarding()`
+* **NEW FEATURE**: MasterPage with Floating Bottom Navigation Bar
+  - Modern floating pill-shape design with animated transitions
+  - Bounce animation, haptic feedback, dark mode support
+  - `IndexedStack` for preserving tab states
+  - `AppBloc` manages tab index with `changeIndex()`
+  - `BottomNavData` and `BottomNavItemModel` for easy tab configuration
+* **NEW FEATURE**: AppStyles text style system
+  - Full text style set (thin, light, regular, medium, semibold, bold) at multiple sizes
+  - Bundled Almarai font files auto-copied to `assets/fonts/`
+  - Font configuration auto-added to `pubspec.yaml`
+* **NEW FEATURE**: Default `account` feature generated alongside `splash` and `home`
+* **IMPROVEMENT**: Static access getters on all generated features and blocs
+  - `AccountFeature.to.go()`, `AccountBloc.to.emit()`
+* **IMPROVEMENT**: Splash navigates to MasterPage (AppFeature) instead of HomeFeature directly
+* **FIX**: Renamed files with typos (`creatores.dart` -> `creators.dart`, `formate_code.dart` -> `format_code.dart`, `fined_unused_*` -> `find_unused_*`)
+* **FIX**: Fixed async/sync mismatch in `Creators.init()`
+* **FIX**: `readFileContent()` now throws `FileSystemException` instead of returning error string
+* **FIX**: Removed hardcoded `responsive_framework` version
+* **FIX**: Updated `responsive_framework` API to v1.5+ (`ResponsiveBreakpoints`/`Breakpoint`)
+* **FIX**: Removed deprecated `enableLog` in favor of `logLevel: ApiLogLevel.info`
+* **FIX**: Removed dead action code and unused imports
+* **FIX**: Fixed help text typos (`Fiend` -> `Find`)
+
 ## 1.2.0
 * **NEW FEATURE**: Watch Command - Automatically monitor project files and regenerate code on changes
   - Improves development workflow with automatic code generation

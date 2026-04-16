@@ -70,6 +70,16 @@ class AppStorage {
   String? getPassword() {
     return _appBox.get(_password);
   }
+
+  static const _showOnboarding = 'show_onboarding';
+
+  void setShowOnboarding(bool value) {
+    _appBox.put(_showOnboarding, value);
+  }
+
+  bool getShowOnboarding() {
+    return _appBox.get(_showOnboarding, defaultValue: true);
+  }
 }
   ''';
 }
