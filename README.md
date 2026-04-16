@@ -1,32 +1,30 @@
-# flyer 🛠️
+# flyer
 
 A powerful CLI package to speed up Flutter app development by automating repetitive tasks like
-creating features, pages, forms, and generating Dart model classes from JSON and and reformatting
-code and more. Additionally, it initializes your Flutter project's infrastructure and installs
-essential packages.
+creating features, pages, forms, and reformatting code and more. Additionally, it initializes
+your Flutter project's infrastructure and installs essential packages.
 
 With `flyer`, you can streamline your development process, reduce boilerplate code, and focus
 on building your app's core features.
 
 ---
 
-## Features 🚀
+## Features
 
 - **Project Initialization**: Set up the infrastructure of your Flutter project and install
   essential packages with Arabic and English localization by default.
 - **Feature Generation**: Generate fully-structured Flutter features.
 - **Language Support**: Add multiple languages to your app with ease.
-- **Model Generation**: Generate Dart classes directly from JSON data.
 - **Page Generation**: Add pages to specific features.
 - **Form Generation**: Generate forms with custom fields.
-- **Deep Linking**: Generate complete deep link system with automatic Android/iOS configuration.
-- **Watch Mode**: Automatically monitor project files and regenerate code on changes.
+- **Deep Linking**: Setup and test deep linking with automatic Android/iOS configuration.
+- **Watch Mode**: Automatically monitor localization keys and add missing ones.
 - **Code Formatting**: Reformat your code for consistency.
 - **Unused Resources Finder**: Identify and optionally delete unused assets, packages, and files.
 
 ---
 
-## Installation 📦
+## Installation
 
 Add the following dependency to your `pubspec.yaml`:
 
@@ -47,7 +45,7 @@ dart pub add dev:flyer
 
 ---
 
-## Usage 📝
+## Usage
 
 ### Init Command
 
@@ -62,7 +60,7 @@ flyer init [OPTIONS]
 
 | Option   | Description                          | Example Usage     |
 |----------|--------------------------------------|-------------------|
-| `--lang` | Add languages during initialization. | `--lang=en,ar,fr` |
+| `--lang` | Add languages during initialization (defaults to `en,ar`). | `--lang=en,ar,fr` |
 
 #### Example
 
@@ -73,20 +71,20 @@ flyer init --lang=en,ar,de
 This command:
 
 - Sets up the basic infrastructure for your Flutter project.
-- Installs essential packages (e.g., `app_features`, `flutter_bloc`, etc.).
+- Installs essential packages (`app_features`, `api_request`, `equatable`, `hive_flutter`, `get_it`, `flutter_bloc`, `flutter_easyloading`, `toastification`, `responsive_framework`, `app_forms`, `requests_inspector`).
 - **Automatically adds Arabic (`ar`) and English (`en`) languages by default**.
-- **Automatically installs `request_inspector` package for API debugging**.
+- **Automatically installs `requests_inspector` package for API debugging**.
 - Adds any additional languages specified with `--lang` option.
-- Displays Messages and Dialogs and BottomSheet without context.
-- Handle app responsive by use responsive_framework package.
-- Initialize Call Api by use api_request package.
-- Manage Routes by use go_router package.
+- Displays Messages, Dialogs, and BottomSheet without context.
+- Handles app responsiveness using `responsive_framework` package.
+- Initializes API configuration using `api_request` package.
+- Manages Routes using `go_router` package (via `app_features`).
 
 ---
 
 ### Make Command
 
-The `make` command allows you to create features, pages, models, forms, and manage languages for
+The `make` command allows you to create features, pages, forms, and manage languages for
 your Flutter project.
 
 ```bash
@@ -95,13 +93,12 @@ flyer make [OPTIONS]
 
 #### Available Options
 
-| Option          | Description                             | Example Usage                                  |
-|-----------------|-----------------------------------------|------------------------------------------------|
-| `--feature, -f` | Create a new feature.                   | `--feature=myFeature`                          |
-| `--lang`        | Add multiple languages to the app.      | `--lang=en,ar`                                 |
-| `--model, -m`   | Generate a Dart class from JSON.        | `--model=UserModel --json='{"name": "ahmed"}'` |
-| `--page`        | Create a page within a feature.         | `--page=homePage --feature=myFeature`          |
-| `--form`        | Create a form with fields in a feature. | `--form=login --fields=password,email`         |
+| Option          | Description                             | Example Usage                                          |
+|-----------------|-----------------------------------------|--------------------------------------------------------|
+| `--feature, -f` | Create a new feature.                   | `--feature=myFeature`                                  |
+| `--lang`        | Add multiple languages to the app.      | `--lang=en,ar`                                         |
+| `--page`        | Create a page within a feature.         | `--page=login --feature=account`                       |
+| `--form`        | Create a form with fields in a feature. | `--form=login --feature=account --fields=email,password` |
 
 ### Examples
 
@@ -111,22 +108,20 @@ flyer make [OPTIONS]
 flyer make --feature=account
 ```
 
+This creates:
+```
+lib/features/account/
+  account_feature.dart
+  account_page.dart
+  bloc/account_bloc.dart
+  bloc/account_state.dart
+  actions/
+```
+
 #### Add Multiple Languages
 
 ```bash
 flyer make --lang=en,fr,es
-```
-
-#### Generate a Dart Model from JSON Default Path app/models
-
-```bash
-flyer make --model=User --json='{"name": "John", "age": 30}'
-```
-
-#### Generate a Dart Model from JSON With Custom Path
-
-```bash
-flyer make --model=User --json='{"name": "John", "age": 30}' --path=custom_path
 ```
 
 #### Generate a Page
@@ -134,6 +129,8 @@ flyer make --model=User --json='{"name": "John", "age": 30}' --path=custom_path
 ```bash
 flyer make --page=login --feature=account
 ```
+
+This adds a new page to the `account` feature, updates the feature's routes, and adds a `pushLogin()` navigation method.
 
 #### Generate a Form
 
@@ -153,79 +150,111 @@ flyer run [OPTIONS]
 
 #### Available Options
 
-| Option     | Description                  | Example Usage |
-|------------|------------------------------|---------------|
-| `--format` | Reformat the project's code. | `--format`    |
+| Option     | Description                  | Example Usage   |
+|------------|------------------------------|-----------------|
+| `--format` | Reformat the project's code. | `--format=.`    |
 
 #### Example
 
 To format your project's code:
 
 ```bash
-flyer run --format
+flyer run --format=.
 ```
 
 ---
 
 ### Watch Mode
 
-The `watch` command monitors your Flutter project for file changes and automatically regenerates code or performs specified actions.
+The `watch` command monitors your Flutter project for localization changes and automatically adds missing keys to `.arb` files.
 
 ```bash
-flyer watch
+flyer watch --loc [OPTIONS]
 ```
 
-This command continuously watches your project files and triggers automatic rebuilds or code generation when changes are detected, improving development workflow efficiency.
+#### Available Options
+
+| Option       | Description                                     | Default |
+|--------------|-------------------------------------------------|---------|
+| `--loc`      | Watch for missing localization keys and auto-add them (required). | `false` |
+| `--debounce` | Debounce time in seconds.                       | `2`     |
+| `--verbose, -v` | Show detailed logs.                          | `false` |
+
+#### Example
+
+```bash
+flyer watch --loc
+```
+
+With verbose logging and custom debounce:
+
+```bash
+flyer watch --loc --verbose --debounce=5
+```
+
+This command:
+- Watches `lib/` directory for `.dart` file changes.
+- Runs `dart analyze` to detect missing `AppLocalizations` getters.
+- Adds missing keys to all `.arb` files with language-appropriate defaults.
+- Runs `flutter gen-l10n` to regenerate localization files.
 
 ---
 
 ### Deep Linking
 
-The `deeplink` command generates a complete deep linking system for your Flutter app, including automatic configuration for both Android and iOS platforms.
+The `deeplink` command sets up and tests deep linking for your Flutter app on both Android and iOS platforms.
+
+#### Setup
 
 ```bash
-flyer deeplink
+flyer deeplink [OPTIONS]
 ```
 
-#### What It Does
+##### Available Options
 
-- Creates `DeepLinkHandler` for managing deep links
-- Creates `DeepLinkRoutes` for parsing URLs
-- Creates `DeepLinkConfig` for storing configuration
-- Automatically updates `AndroidManifest.xml` with intent filters
-- Automatically updates iOS `Info.plist` with URL schemes
-- Adds initialization code to your app
+| Option          | Description                                              | Example Usage          |
+|-----------------|----------------------------------------------------------|------------------------|
+| `--domain, -d`  | Domain for App Links and Universal Links.                | `--domain=example.com` |
+| `--scheme, -s`  | Custom URL scheme.                                       | `--scheme=myapp`       |
+| `--dry-run`     | Show what will be done without making any changes.       |                        |
 
-#### Interactive Setup
+You must specify at least one of `--domain` or `--scheme`.
 
-When you run the command, you'll be prompted for:
-
-1. **Scheme**: Your app's custom URL scheme (e.g., `myapp`)
-2. **Host**: Your domain or app identifier (e.g., `example.com`)
-
-#### Example
+##### Example
 
 ```bash
-flyer deeplink
-# Enter scheme: myapp
-# Enter host: shop.com
+flyer deeplink --domain=example.com --scheme=myapp
 ```
 
-This creates deep links like:
-- `myapp://shop.com/product/123`
-- `myapp://shop.com/cart`
-- `myapp://shop.com/checkout`
+This command:
+- Extracts project info (Android package name, iOS bundle ID, Team ID, SHA256 fingerprint).
+- Updates `AndroidManifest.xml` with intent filters.
+- Creates `assetlinks.json` for Android App Links verification.
+- Creates `apple-app-site-association` for iOS Universal Links.
+- Updates iOS `Info.plist` with URL schemes and deep linking settings.
+- Generates `DeeplinkHandler` utility class (singleton) for handling deep links.
+- Installs `app_links` package.
 
 #### Testing Deep Links
 
-**Android:**
 ```bash
-adb shell am start -W -a android.intent.action.VIEW -d "myapp://shop.com/product/123"
+flyer deeplink --test [OPTIONS]
 ```
 
-**iOS:**
+##### Test Options
+
+| Option      | Description                              | Example Usage                                  |
+|-------------|------------------------------------------|------------------------------------------------|
+| `--test`    | Enable test mode.                        |                                                |
+| `--url`     | URL to test.                             | `--url=https://example.com/path`               |
+| `--scheme`  | Custom URL scheme for test.              | `--scheme=myapp`                               |
+| `--android` | Test on Android only.                    |                                                |
+| `--ios`     | Show iOS test instructions.             |                                                |
+
+##### Example
+
 ```bash
-xcrun simctl openurl booted "myapp://shop.com/product/123"
+flyer deeplink --test --url=myapp://example.com/product/123 --android
 ```
 
 #### Full Documentation
@@ -246,33 +275,37 @@ flyer fiend [OPTIONS]
 
 #### Available Options
 
-| Option             | Description                           | Example Usage       |
-|--------------------|---------------------------------------|---------------------|
-| `--unusedAssets`   | Find unused assets in your project.   | ` --unusedAssets`   |
-| `--unusedPackages` | Find unused packages in your project. | ` --unusedPackages` |
-| `--unusedFiles`    | Find unused files in your project.    | ` --unusedPackages` |
+| Option             | Description                           | Example Usage         |
+|--------------------|---------------------------------------|-----------------------|
+| `--unusedAssets`   | Find unused assets in your project.   | `--unusedAssets=.`    |
+| `--unusedPackages` | Find unused packages in your project. | `--unusedPackages=.`  |
+| `--unusedFiles`    | Find unused files in your project.    | `--unusedFiles=.`     |
+
+> **Note:** These options require a value (e.g., `--unusedAssets=.`).
 
 ### Example Usage
 
 #### Find Unused Assets
 
 ```bash
-flyer fiend --unusedAssets
+flyer fiend --unusedAssets=.
 ```
 
 #### Find Unused Packages
 
 ```bash
-flyer fiend --unusedPackages
+flyer fiend --unusedPackages=.
 ```
 
 #### Find Unused Files
 
 ```bash
-flyer fiend --unusedFiles
+flyer fiend --unusedFiles=.
 ```
 
-## Contributing 🤝
+---
+
+## Contributing
 
 Contributions are welcome! Here's how you can get involved:
 
@@ -286,19 +319,13 @@ Feel free to file issues or feature requests on the GitHub repository.
 
 ---
 
-## License 📄
+## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
-## Additional Information 📚
+## Additional Information
 
 For more details, visit the [official Dart documentation](https://dart.dev/guides)
 and [Flutter CLI documentation](https://flutter.dev/docs).
-
----
-
-Happy coding! 😊
-
-```

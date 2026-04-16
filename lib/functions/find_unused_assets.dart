@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/functions/delete_file.dart';
 
-void fiendUnusedAssets() {
+void findUnusedAssets() {
   final assetDir = Directory('assets');
 
   if (!assetDir.existsSync()) {

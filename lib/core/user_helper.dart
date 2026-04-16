@@ -2,7 +2,7 @@ import 'package:flyer/core/colors_text.dart';
 
 void printHelp() {
   print(
-      '${ColorsText.blue}Usage:${ColorsText.reset} dart run fly <command> [options]');
+      '${ColorsText.blue}Usage:${ColorsText.reset} flyer <command> [options]');
   print('${ColorsText.orange}Available Commands:${ColorsText.reset}');
   print(
       '  ${ColorsText.green}init${ColorsText.reset} : Initialize infrastructure.');

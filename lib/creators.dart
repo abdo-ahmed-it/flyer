@@ -77,7 +77,7 @@ class Creators {
         cubitSample(featureName));
   }
 
-  static void addPage({String? featureName, String? routeName}) async {
+  static Future<void> addPage({String? featureName, String? routeName}) async {
     if (featureName == null) {
       stdout.write("${ColorsText.blue}Enter feature name: ${ColorsText.reset}");
       featureName = stdin.readLineSync();
@@ -231,7 +231,7 @@ output-localization-file: app_localizations.dart
         '$path/config/app_config.dart', appConfigSample());
   }
 
-  static void _createCoreFolder() async {
+  static Future<void> _createCoreFolder() async {
     CreatorUtil.createDirectory('$path/core');
     CreatorUtil.createDirectory('$path/core/extensions');
     CreatorUtil.createDirectory('$path/core/utils');
@@ -245,19 +245,19 @@ output-localization-file: app_localizations.dart
         '$path/core/utils/api_util.dart', getApiSample);
   }
 
-  static void _createInitFeature() async {
+  static Future<void> _createInitFeature() async {
     _createSplashFeature();
-    String _homeSample = await homeSample();
+    String homeSampleContent = await homeSample();
 
-    createFeature(name: 'home', pageS: _homeSample);
+    createFeature(name: 'home', pageS: homeSampleContent);
   }
 
-  static void init() {
+  static Future<void> init() async {
     _createAppFolder();
     _createThemeFolder();
     _createConfigFolder();
-    _createCoreFolder();
-    _createInitFeature();
+    await _createCoreFolder();
+    await _createInitFeature();
     CreatorUtil.editFileContent('$path/main.dart', mainSample());
   }
 
@@ -280,20 +280,6 @@ output-localization-file: app_localizations.dart
           "${ColorsText.blue}Enter form fields (comma-separated): ${ColorsText.reset}");
       fields = stdin.readLineSync()?.split(',');
     }
-    CreatorUtil.createDirectory('$path/features/$featureName/forms');
-    CreatorUtil.createFileWithContent(
-        '$path/features/$featureName/forms/${formName}_form.dart',
-        formSample(formName ?? 'A', fields ?? []));
-  }
-
-  static void addAction() {
-    stdout.write("${ColorsText.blue}Enter feature name: ${ColorsText.reset}");
-    String? featureName = stdin.readLineSync();
-    stdout.write("${ColorsText.blue}Enter action name: ${ColorsText.reset}");
-    String? formName = stdin.readLineSync();
-    stdout.write(
-        "${ColorsText.blue}Enter action data (comma-separated): ${ColorsText.reset}");
-    List<String>? fields = stdin.readLineSync()?.split(',');
     CreatorUtil.createDirectory('$path/features/$featureName/forms');
     CreatorUtil.createFileWithContent(
         '$path/features/$featureName/forms/${formName}_form.dart',

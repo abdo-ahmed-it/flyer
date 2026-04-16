@@ -1,6 +1,6 @@
 import 'package:args/command_runner.dart';
 import 'package:flyer/core/colors_text.dart';
-import 'package:flyer/creatores.dart';
+import 'package:flyer/creators.dart';
 
 class MakeCommand extends Command {
   MakeCommand() {
@@ -41,12 +41,8 @@ class MakeCommand extends Command {
     argParser.addMultiOption(
       'fields',
       hide: true,
-      help: 'Add Languages For App',
+      help: 'Add Fields For Form',
     );
-    argParser.addOption('method', hide: true);
-    argParser.addOption('action-name', hide: true);
-    argParser.addOption('api', hide: true);
-    argParser.addOption('baseurl', hide: true);
   }
 
   @override

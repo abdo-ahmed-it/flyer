@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flyer/core/colors_text.dart';
 import 'package:yaml/yaml.dart';
 
-void fiendUnusedPackages() {
+void findUnusedPackages() {
   var pubspecPath = 'pubspec.yaml';
 
   File pubspecFile = File(pubspecPath);

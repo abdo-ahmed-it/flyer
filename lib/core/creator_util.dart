@@ -37,7 +37,7 @@ class CreatorUtil {
     }
     stdout.write(
         '${ColorsText.red}  ✗ File does not exist: $path${ColorsText.reset}\n');
-    return 'File not exists';
+    throw FileSystemException('File does not exist', path);
   }
 
   // Function to edit file content

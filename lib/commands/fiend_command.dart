@@ -1,27 +1,27 @@
 import 'package:args/command_runner.dart';
 import 'package:flyer/core/colors_text.dart';
-import 'package:flyer/functions/fiend_unused_package.dart';
-import 'package:flyer/functions/fined_unused_assets.dart';
-import 'package:flyer/functions/fined_unused_file.dart';
+import 'package:flyer/functions/find_unused_package.dart';
+import 'package:flyer/functions/find_unused_assets.dart';
+import 'package:flyer/functions/find_unused_file.dart';
 
 class FiendCommand extends Command {
   FiendCommand() {
     argParser.addOption(
       'unusedAssets',
-      help: 'Fiend unused assets and can be deleted',
+      help: 'Find unused assets and can be deleted',
     );
     argParser.addOption(
       'unusedPackages',
-      help: 'Fiend unused packages and can be deleted',
+      help: 'Find unused packages and can be deleted',
     );
     argParser.addOption(
       'unusedFiles',
-      help: 'Fiend unused files and can be deleted',
+      help: 'Find unused files and can be deleted',
     );
   }
 
   @override
-  String get description => 'Fiend unused assets and packages in the project.';
+  String get description => 'Find unused assets and packages in the project.';
 
   @override
   String get name => 'fiend';
@@ -39,7 +39,7 @@ class FiendCommand extends Command {
             '${ColorsText.cyan}          Finding Unused Assets${ColorsText.reset}');
         print(
             '${ColorsText.cyan}═══════════════════════════════════════════════════════════${ColorsText.reset}\n');
-        fiendUnusedAssets();
+        findUnusedAssets();
       }
 
       if (argResults!['unusedPackages'] != null) {
@@ -50,7 +50,7 @@ class FiendCommand extends Command {
             '${ColorsText.cyan}          Finding Unused Packages${ColorsText.reset}');
         print(
             '${ColorsText.cyan}═══════════════════════════════════════════════════════════${ColorsText.reset}\n');
-        fiendUnusedPackages();
+        findUnusedPackages();
       }
 
       if (argResults!['unusedFiles'] != null) {

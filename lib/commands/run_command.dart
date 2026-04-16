@@ -1,6 +1,6 @@
 import 'package:args/command_runner.dart';
 import 'package:flyer/core/colors_text.dart';
-import 'package:flyer/functions/formate_code.dart';
+import 'package:flyer/functions/format_code.dart';
 
 class RunCommand extends Command {
   RunCommand() {

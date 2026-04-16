@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:flyer/core/colors_text.dart';
 import 'package:flyer/core/constants/packages_name.dart';
-import 'package:flyer/creatores.dart';
+import 'package:flyer/creators.dart';
 import 'package:flyer/functions/install_package.dart';
 import 'package:flyer/functions/run_pub_get.dart';
 
@@ -33,7 +33,7 @@ class InitCommand extends Command {
 
     print(
         '${ColorsText.blue}📁 Creating project structure...${ColorsText.reset}\n');
-    Creators.init();
+    await Creators.init();
 
     if (argResults != null) {
       List<String> lang = argResults!['lang'];

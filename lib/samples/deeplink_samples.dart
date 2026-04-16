@@ -65,8 +65,7 @@ String appleAppSiteAssociationSample({
         "appIDs": ["$teamId.$bundleId"],
         "components": [
           {
-            "/": "/*",
-            "comment": "Matches all paths"
+            "/": "/*"
           }
         ]
       }
@@ -101,90 +100,82 @@ String infoPlistFlutterDeepLinkingSetting() {
 String deeplinkHandlerSample() {
   return '''import 'package:app_links/app_links.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+
+enum DeeplinkSource {
+  /// (Cold Start)
+  coldStart,
+
+  /// (Warm Start)
+  background,
+}
 
 class DeeplinkHandler {
   static final DeeplinkHandler _instance = DeeplinkHandler._internal();
+
   factory DeeplinkHandler() => _instance;
+
   DeeplinkHandler._internal();
 
   final AppLinks _appLinks = AppLinks();
-  Function(Uri)? _onLinkReceived;
+  Function(Uri, DeeplinkSource)? _onLinkReceived;
+  Uri? _lastHandledInitialLink;
+  bool _initialized = false;
 
-  /// Initialize deep link handling
-  /// Primary method: Uses platformDispatcher.defaultRouteName for initial deep links (iOS workaround)
-  /// Secondary: Uses app_links for runtime deep links while app is running
-  Future<void> initialize({required Function(Uri) onLinkReceived}) async {
+  Future<void> initialize({
+    required Function(Uri, DeeplinkSource) onLinkReceived,
+  }) async {
+    if (_initialized) {
+      if (kDebugMode) {
+        print('DeeplinkHandler already initialized, skipping...');
+      }
+      return;
+    }
+
+    _initialized = true;
     _onLinkReceived = onLinkReceived;
 
-    // Handle initial link if app was opened from a deep link
-    // This will be called after the first frame is rendered
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        // PRIMARY METHOD: Get the initial URI from platform dispatcher
-        // This is the main solution for iOS with FlutterDeepLinkingEnabled=false
-        final initialRoute = WidgetsBinding.instance.platformDispatcher.defaultRouteName;
-
-        if (kDebugMode) {
-          print('Platform dispatcher initial route: \$initialRoute');
-        }
-
-        if (initialRoute != '/' && initialRoute.isNotEmpty) {
-          try {
-            final uri = Uri.parse(initialRoute);
-            if (kDebugMode) {
-              print('✅ Initial deep link detected from platform dispatcher: \$uri');
-            }
-            _onLinkReceived?.call(uri);
-          } catch (parseError) {
-            if (kDebugMode) {
-              print('❌ Error parsing initial route: \$parseError');
-            }
-          }
-        } else {
-          if (kDebugMode) {
-            print('ℹ️ No initial deep link detected (normal app launch)');
-          }
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          print('❌ Error getting initial link from platform dispatcher: \$e');
-        }
+    // PRIMARY: Check for initial link (Cold Start only)
+    try {
+      final initialLink = await _appLinks.getInitialLink();
+      if (initialLink != null) {
+        _lastHandledInitialLink = initialLink;
+        _onLinkReceived?.call(initialLink, DeeplinkSource.coldStart);
       }
-    });
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting initial link: \$e');
+      }
+    }
 
-    // Listen for subsequent deep links while app is running
-    // This handles new deep links that arrive after the app is already open
-    _appLinks.uriLinkStream.listen(
-      (uri) {
-        if (kDebugMode) {
-          print('🔗 Runtime deep link received: \$uri');
-        }
-        _onLinkReceived?.call(uri);
-      },
-      onError: (err) {
-        if (kDebugMode) {
-          print('❌ Error listening to deep links stream: \$err');
-        }
-      },
-    );
+    // SECONDARY: Listen to link stream for background/foreground links
+    _appLinks.uriLinkStream.listen((uri) {
+      // تجاهل الـ link لو هو نفسه اللي اتعالج كـ initial link
+      if (_lastHandledInitialLink != null && uri == _lastHandledInitialLink) {
+        _lastHandledInitialLink = null;
+        return;
+      }
+      _onLinkReceived?.call(uri, DeeplinkSource.background);
+    });
   }
 
   /// Handle deep link navigation
-  void handleDeepLink(Uri uri) {
+  void handleDeepLink(
+    Uri uri, {
+    DeeplinkSource source = DeeplinkSource.background,
+  }) {
     if (kDebugMode) {
       print('Handling deep link: \$uri');
+      print('Source: \${source.name}');
       print('Scheme: \${uri.scheme}');
       print('Host: \${uri.host}');
       print('Path: \${uri.path}');
       print('Query Parameters: \${uri.queryParameters}');
     }
 
-    // Your custom deep link handling logic here
-    // Example: Navigate to specific screens based on path
-    _onLinkReceived?.call(uri);
+    _onLinkReceived?.call(uri, source);
   }
 }
+
 ''';
 }
 
