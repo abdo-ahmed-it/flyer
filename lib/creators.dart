@@ -252,13 +252,14 @@ output-localization-file: app_localizations.dart
     createFeature(name: 'home', pageS: homeSampleContent);
   }
 
-  static Future<void> init() async {
+  static Future<void> init({bool firebase = false}) async {
     _createAppFolder();
     _createThemeFolder();
     _createConfigFolder();
     await _createCoreFolder();
     await _createInitFeature();
-    CreatorUtil.editFileContent('$path/main.dart', mainSample());
+    CreatorUtil.editFileContent(
+        '$path/main.dart', mainSample(firebase: firebase));
   }
 
   static void addForm({

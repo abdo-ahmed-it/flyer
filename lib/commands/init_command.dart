@@ -14,6 +14,11 @@ class InitCommand extends Command {
       help: 'Set the language for initialization',
       defaultsTo: ['en', 'ar'],
     );
+    argParser.addFlag(
+      'firebase',
+      help: 'Setup Firebase (installs firebase_core and runs flutterfire configure)',
+      negatable: false,
+    );
   }
 
   @override
@@ -31,9 +36,11 @@ class InitCommand extends Command {
     print(
         '${ColorsText.cyan}═══════════════════════════════════════════════════════════${ColorsText.reset}\n');
 
+    bool useFirebase = argResults?['firebase'] ?? false;
+
     print(
         '${ColorsText.blue}📁 Creating project structure...${ColorsText.reset}\n');
-    await Creators.init();
+    await Creators.init(firebase: useFirebase);
 
     if (argResults != null) {
       List<String> lang = argResults!['lang'];
@@ -55,13 +62,30 @@ class InitCommand extends Command {
       await installPackageAsOverride(package);
     }
 
-   await runPubGet();
+    if (useFirebase) {
+      print(
+          '\n${ColorsText.blue}🔥 Setting up Firebase...${ColorsText.reset}');
+      await installPackage('firebase_core');
+    }
+
+    await runPubGet();
     await Process.run(
       'flutter',
       ['gen-l10n'],
       workingDirectory: Directory.current.path,
     );
 
+    if (useFirebase) {
+      print(
+          '\n${ColorsText.blue}🔥 Running flutterfire configure...${ColorsText.reset}\n');
+      var result = await Process.start(
+        'flutterfire',
+        ['configure'],
+        workingDirectory: Directory.current.path,
+        mode: ProcessStartMode.inheritStdio,
+      );
+      await result.exitCode;
+    }
 
     print(
         '\n${ColorsText.green}═══════════════════════════════════════════════════════════${ColorsText.reset}');

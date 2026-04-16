@@ -1,9 +1,15 @@
-String mainSample() {
+String mainSample({bool firebase = false}) {
+  String firebaseImport = firebase
+      ? "import 'package:firebase_core/firebase_core.dart';\nimport 'firebase_options.dart';\n"
+      : '';
+  String firebaseInit = firebase
+      ? "\n  await Firebase.initializeApp(\n    options: DefaultFirebaseOptions.currentPlatform,\n  );"
+      : '';
   return '''
 import 'package:app_features/app_features.dart';
 import 'package:requests_inspector/requests_inspector.dart';
 import 'package:flutter/foundation.dart';
-
+${firebaseImport}
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'l10n/app_localizations.dart';
@@ -14,7 +20,7 @@ import '../config/app_config.dart';
 import '../core/app_storage.dart';
 import 'theme/app_theme.dart';
 void main() async {
-  await AppConfig.init();
+  await AppConfig.init();${firebaseInit}
   runApp(const RequestsInspector(
     enabled: kDebugMode,
     child: MyApp(),
@@ -36,19 +42,14 @@ class MyApp extends StatelessWidget {
             return MaterialApp.router(
               debugShowCheckedModeBanner: false,
               builder: EasyLoading.init(
-                builder: (_, c) => ResponsiveWrapper.builder(
-                  ClampingScrollWrapper.builder(context, c!),
+                builder: (_, c) => ResponsiveBreakpoints(
                   breakpoints: const [
-                    ResponsiveBreakpoint.resize(200,
-                        name: PHONE, scaleFactor: 0.8),
-                    ResponsiveBreakpoint.resize(350,
-                        name: MOBILE, scaleFactor: 1),
-                    ResponsiveBreakpoint.autoScale(600,
-                        name: TABLET, scaleFactor: 1.2),
-                    ResponsiveBreakpoint.resize(800,
-                        name: DESKTOP, scaleFactor: 1.4),
-                    ResponsiveBreakpoint.autoScale(1700, name: 'XL'),
+                    Breakpoint(start: 0, end: 450, name: MOBILE),
+                    Breakpoint(start: 451, end: 800, name: TABLET),
+                    Breakpoint(start: 801, end: 1920, name: DESKTOP),
+                    Breakpoint(start: 1921, end: double.infinity, name: '4K'),
                   ],
+                  child: c!,
                 ),
               ),
 

@@ -9,7 +9,9 @@ String featureSample(String featureName) {
 
   
   class ${AppHelper.toClassName(featureName)}Feature extends Feature {
-  
+
+  static ${AppHelper.toClassName(featureName)}Feature get to => AppFeatures.get();
+
   @override
   void get dependencies => {
         getIt.registerLazySingleton(() => ${AppHelper.toClassName(featureName)}Bloc()),
