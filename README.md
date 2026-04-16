@@ -77,7 +77,7 @@ flyer init --firebase
 
 This command:
 
-- Sets up the basic infrastructure for your Flutter project.
+- Sets up the basic infrastructure for your Flutter project with three default features: `splash`, `home`, and `account`.
 - Installs essential packages (`app_features`, `api_request`, `equatable`, `hive_flutter`, `get_it`, `flutter_bloc`, `flutter_easyloading`, `toastification`, `responsive_framework`, `app_forms`, `requests_inspector`).
 - **Automatically adds Arabic (`ar`) and English (`en`) languages by default**.
 - **Automatically installs `requests_inspector` package for API debugging**.

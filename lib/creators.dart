@@ -250,6 +250,7 @@ output-localization-file: app_localizations.dart
     String homeSampleContent = await homeSample();
 
     createFeature(name: 'home', pageS: homeSampleContent);
+    createFeature(name: 'account');
   }
 
   static Future<void> init({bool firebase = false}) async {
