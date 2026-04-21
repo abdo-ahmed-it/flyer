@@ -1,3 +1,4 @@
+import 'package:flyer/commands/ci_command.dart';
 import 'package:flyer/commands/deeplink_command.dart';
 import 'package:flyer/commands/fiend_command.dart';
 import 'package:flyer/commands/init_command.dart';
@@ -14,7 +15,8 @@ void main(List<String> arguments) {
     ..addCommand(FiendCommand())
     ..addCommand(RunCommand())
     ..addCommand(WatchCommand())
-    ..addCommand(DeeplinkCommand());
+    ..addCommand(DeeplinkCommand())
+    ..addCommand(CiCommand());
 
   runner.run(arguments).catchError((error) {
     print('${ColorsText.red}Error: $error${ColorsText.reset}');

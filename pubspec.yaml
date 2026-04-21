@@ -1,6 +1,6 @@
 name: flyer
 description: "A CLI tool to speed up Flutter development by automating feature creation, project initialization, deep linking, localization, and code generation."
-version: 1.3.0
+version: 1.4.0
 homepage: https://github.com/abdo-ahmed-it/flyer
 
 environment:

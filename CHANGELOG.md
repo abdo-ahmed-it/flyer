@@ -1,3 +1,20 @@
+## 1.4.0
+* **NEW COMMAND**: `flyer ci ios` — Scaffolds a full GitHub Actions + Fastlane
+  pipeline that ships your iOS app to TestFlight (macos-26 runner, Xcode 26.1.1,
+  iOS 26 SDK for Apple's April 2026 deadline).
+  - Auto-detects **Bundle ID** and **Team ID** from `ios/Runner.xcodeproj`
+    (falls back to `--bundle-id` / `--team-id` overrides)
+  - Generates: `.github/workflows/deploy.yml`, `Fastfile`, `Appfile`, `Matchfile`,
+    `ExportOptions.plist`, `Gemfile`, and patches `Podfile` + `.gitignore`
+  - `--shorebird` flag: runs `shorebird init` if needed, adds `Pluginfile`,
+    generates `release_shorebird` / `patch_shorebird` lanes, and patches
+    `AndroidManifest.xml` with the `INTERNET` permission required by Shorebird
+  - `--match-git-url` (prompted if omitted) wires the shared Fastlane match
+    certificates repo
+  - `--dry-run` previews all changes without writing
+  - Prints a next-steps checklist (App Store Connect setup, first `match`
+    run, and the 7-8 GitHub Secrets to add)
+
 ## 1.3.0
 * **NEW FEATURE**: Firebase Integration (`--firebase` flag)
   - Installs `firebase_core` and `firebase_messaging`

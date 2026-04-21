@@ -18,6 +18,8 @@ on building your app's core features.
 - **Page Generation**: Add pages to specific features.
 - **Form Generation**: Generate forms with custom fields.
 - **Deep Linking**: Setup and test deep linking with automatic Android/iOS configuration.
+- **CI/CD for iOS**: One-command scaffolding of GitHub Actions + Fastlane pipeline
+  that ships your app to TestFlight (with optional Shorebird code push).
 - **Watch Mode**: Automatically monitor localization keys and add missing ones.
 - **Code Formatting**: Reformat your code for consistency.
 - **Unused Resources Finder**: Identify and optionally delete unused assets, packages, and files.
@@ -323,6 +325,70 @@ flyer deeplink --test --url=myapp://example.com/product/123 --android
 
 For complete setup instructions, testing, and advanced features (including Universal Links), see:
 - [DEEPLINK_GUIDE.md](DEEPLINK_GUIDE.md) - Comprehensive deep linking documentation
+
+---
+
+### iOS CI/CD (TestFlight via GitHub Actions + Fastlane)
+
+The `ci ios` command scaffolds a complete deployment pipeline that ships your
+Flutter iOS app to TestFlight on every `workflow_dispatch`. It auto-detects
+your **Bundle ID** and **Team ID** from `ios/Runner.xcodeproj` and generates
+the GitHub Actions workflow + Fastlane config so you don't have to copy-paste
+files between projects.
+
+```bash
+# Native deploy (Fastlane match + build_app + pilot)
+flyer ci ios --match-git-url https://github.com/you/ios_cer.git
+
+# Same + Shorebird code push (runs `shorebird init` if needed)
+flyer ci ios --shorebird --match-git-url https://github.com/you/ios_cer.git
+
+# Preview changes without writing anything
+flyer ci ios --dry-run --shorebird
+```
+
+#### What it generates
+
+| File                                      | Purpose                                     |
+| ----------------------------------------- | ------------------------------------------- |
+| `.github/workflows/deploy.yml`            | macos-26 + Xcode 26.1.1, iOS 26 SDK-ready   |
+| `ios/fastlane/Fastfile`                   | `deploy`, `release_shorebird`, `patch_shorebird` lanes |
+| `ios/fastlane/Appfile`                    | Bundle identifier                            |
+| `ios/fastlane/Matchfile`                  | Points at your shared certificates repo      |
+| `ios/fastlane/Pluginfile` *(--shorebird)* | `fastlane-plugin-shorebird`                  |
+| `ios/ExportOptions.plist`                 | Manual signing config for the IPA export     |
+| `ios/Gemfile`                             | `fastlane` + `cocoapods` + Pluginfile eval   |
+
+It also patches `ios/Podfile` (post_install block tuned for Flutter +
+Firebase + Xcode 16/26), appends Fastlane artifacts to `.gitignore`, and —
+when `--shorebird` is set — adds the `INTERNET` permission to
+`android/app/src/main/AndroidManifest.xml`.
+
+#### Flags
+
+| Flag                 | Purpose                                                     |
+| -------------------- | ----------------------------------------------------------- |
+| `--shorebird`        | Enable Shorebird code push (runs `shorebird init` if needed)|
+| `--match-git-url`    | Fastlane match certificates repo (prompted if omitted)      |
+| `--bundle-id`        | Override the auto-detected bundle identifier                |
+| `--team-id`          | Override the auto-detected Apple Developer Team ID          |
+| `--dry-run`          | Show planned changes without writing files                  |
+| `-y`, `--yes`        | Skip the confirmation prompt                                |
+
+#### After running, set these GitHub Secrets
+
+- `APP_STORE_CONNECT_API_KEY_ID`
+- `APP_STORE_CONNECT_API_ISSUER_ID`
+- `APP_STORE_CONNECT_API_KEY_CONTENT` (base64 of your `.p8`)
+- `MATCH_PASSWORD`
+- `MATCH_GIT_URL`
+- `MATCH_GIT_BASIC_AUTHORIZATION` (base64 of `user:PAT`)
+- `KEYCHAIN_PASSWORD` (any random string)
+- `SHOREBIRD_TOKEN` *(if you used `--shorebird`)*
+
+Projects sharing the same Apple Developer Team can reuse the same match repo
+and the same `MATCH_PASSWORD`, so these secrets only need to be created once
+per Apple Team.
 
 ---
 
