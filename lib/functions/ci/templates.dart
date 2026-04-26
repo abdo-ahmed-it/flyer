@@ -13,6 +13,14 @@ class CiTemplates {
   /// GitHub Actions workflow. Shorebird lane options are always present so the
   /// workflow keeps working whether or not Shorebird was set up — the setup
   /// step is gated on the `lane` input.
+  ///
+  /// Optimizations applied:
+  /// - SHA-pinned actions (Dependabot keeps them updated; see dependabot.yml)
+  /// - permissions: {} at workflow level + least-privilege per job
+  /// - concurrency group prevents parallel build_number races
+  /// - skips Xcode/Pods/IPA upload when running shorebird patch (no native build)
+  /// - Xcode DerivedData cache (irgaly/xcode-cache) shaves 3–8 min on warm runs
+  /// - cache keys include FLUTTER_VERSION so a Flutter upgrade invalidates Pods
   static const workflow = r'''name: Deploy iOS to TestFlight
 
 on:
@@ -27,33 +35,51 @@ on:
           - release_shorebird
           - patch_shorebird
           - deploy
+          - sync_profile
+          - upload_only
+      flavor:
+        description: "Flutter entry point (lib/main_<flavor>.dart)"
+        required: true
+        default: "prod"
+        type: choice
+        options:
+          - prod
+          - dev
 
 env:
   FLUTTER_VERSION: "{{FLUTTER_VERSION}}"
   RUBY_VERSION: "3.2"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
+permissions: {}
+
+concurrency:
+  group: deploy-ios-${{ inputs.lane }}-${{ inputs.flavor }}
+  cancel-in-progress: false
+
 jobs:
   deploy_ios:
-    name: Deploy iOS to TestFlight (${{ inputs.lane }})
+    name: Deploy iOS to TestFlight (${{ inputs.lane }} / ${{ inputs.flavor }})
     runs-on: macos-26
     timeout-minutes: 60
+    permissions:
+      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Restore mtime for xcode-cache
+        if: inputs.lane != 'patch_shorebird'
+        uses: chetan/git-restore-mtime-action@6365eabac94ee2b7a747f96998927a6a6e1994c4 # v2
 
       - name: Select Xcode
-        uses: maxim-lobanov/setup-xcode@v1
+        if: inputs.lane != 'patch_shorebird'
+        uses: maxim-lobanov/setup-xcode@1242409711ff5721add51979e9e11e23ebb7e5a4 # v1
         with:
           xcode-version: "26.1.1"
 
-      - name: Ensure iOS simulator runtime is installed
-        run: |
-          xcodebuild -version
-          sudo xcodebuild -downloadPlatform iOS
-
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
@@ -61,44 +87,51 @@ jobs:
 
       - name: Set up Shorebird
         if: inputs.lane == 'release_shorebird' || inputs.lane == 'patch_shorebird'
-        uses: shorebirdtech/setup-shorebird@v1
+        uses: shorebirdtech/setup-shorebird@4dd9d7dc2d7930bfeadb053b6e94b5110779d1e5 # v1
         with:
           cache: true
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@ff740bc00a01b3a50fffc55a1071b1060eeae9dc # v1.180.0
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
           bundler-cache: true
           working-directory: ios
 
       - name: Cache CocoaPods
-        uses: actions/cache@v4
+        if: inputs.lane != 'patch_shorebird'
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
             ios/Pods
             ~/Library/Caches/CocoaPods
             ~/.cocoapods
-          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+          key: ${{ runner.os }}-pods-${{ env.FLUTTER_VERSION }}-${{ hashFiles('ios/Podfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-pods-
+            ${{ runner.os }}-pods-${{ env.FLUTTER_VERSION }}-
 
       - name: Cache Flutter pub
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
             ~/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}
+          key: ${{ runner.os }}-pub-${{ env.FLUTTER_VERSION }}-${{ hashFiles('pubspec.lock') }}
           restore-keys: |
-            ${{ runner.os }}-pub-
+            ${{ runner.os }}-pub-${{ env.FLUTTER_VERSION }}-
+
+      - name: Cache Xcode DerivedData
+        if: inputs.lane != 'patch_shorebird'
+        uses: irgaly/xcode-cache@282e57619a58eb57a2374be91df1798d46703bfd # v1
+        with:
+          key: xcode-deriveddata-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('ios/Podfile.lock', 'ios/Runner.xcodeproj/**', 'pubspec.lock') }}
+          restore-keys: |
+            xcode-deriveddata-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-
 
       - name: Install Flutter dependencies
         run: flutter pub get
 
-      - name: Precache iOS artifacts
-        run: flutter precache --ios
-
       - name: Install CocoaPods
+        if: inputs.lane != 'patch_shorebird'
         working-directory: ios
         run: bundle exec pod install
 
@@ -113,20 +146,20 @@ jobs:
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
-        run: bundle exec fastlane ${{ inputs.lane }}
+        run: bundle exec fastlane ${{ inputs.lane }} flavor:${{ inputs.flavor }}
 
       - name: Upload IPA artifact
-        if: success()
-        uses: actions/upload-artifact@v4
+        if: success() && inputs.lane != 'patch_shorebird'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: ios-ipa
+          name: ios-ipa-${{ inputs.flavor }}-${{ github.run_number }}
           path: build/ios/ipa/*.ipa
           if-no-files-found: warn
           retention-days: 14
 
       - name: Upload Fastlane logs on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: fastlane-logs
           path: |
@@ -136,7 +169,7 @@ jobs:
           retention-days: 7
 
       - name: Notify Lark
-        if: always() && env.LARK_WEBHOOK != ''
+        if: always()
         env:
           LARK_WEBHOOK: ${{ secrets.LARK_WEBHOOK }}
           JOB_STATUS: ${{ job.status }}
@@ -148,7 +181,13 @@ jobs:
           BRANCH: ${{ github.ref_name }}
           ACTOR: ${{ github.actor }}
           LANE: ${{ inputs.lane }}
+          FLAVOR: ${{ inputs.flavor }}
         run: |
+          if [ -z "$LARK_WEBHOOK" ]; then
+            echo "LARK_WEBHOOK not set — skipping notification"
+            exit 0
+          fi
+
           if [ "$JOB_STATUS" = "success" ]; then
             TEMPLATE="green"
             TITLE="✅ iOS Deploy to TestFlight — SUCCESS"
@@ -169,6 +208,7 @@ jobs:
             --arg repo "$REPO" \
             --arg branch "$BRANCH" \
             --arg lane "$LANE" \
+            --arg flavor "$FLAVOR" \
             --arg actor "$ACTOR" \
             --arg short_sha "$SHORT_SHA" \
             --arg commit_msg "$FIRST_LINE_MSG" \
@@ -189,6 +229,7 @@ jobs:
                       { is_short: true, text: { tag: "lark_md", content: ("**Repository:**\n" + $repo) } },
                       { is_short: true, text: { tag: "lark_md", content: ("**Branch:**\n" + $branch) } },
                       { is_short: true, text: { tag: "lark_md", content: ("**Lane:**\n" + $lane) } },
+                      { is_short: true, text: { tag: "lark_md", content: ("**Flavor:**\n" + $flavor) } },
                       { is_short: true, text: { tag: "lark_md", content: ("**Actor:**\n" + $actor) } }
                     ]
                   },
@@ -217,6 +258,16 @@ jobs:
             -d "$PAYLOAD"
 ''';
 
+  /// Fastfile. Differs from a stock Flutter project in three ways:
+  ///   1. resolve_target maps a `flavor:` lane option to lib/main_<flavor>.dart
+  ///      and runs `flutter build ios --config-only -t ...` so xcode_backend.sh
+  ///      picks up the right entry point via Generated.xcconfig.
+  ///   2. build_app passes -skipPackagePluginValidation/-skipMacroValidation
+  ///      and skip_package_dependencies_resolution to bypass simulator probes
+  ///      that Xcode 26 triggers from SPM resolution on a runner with no
+  ///      iOS simulator runtime installed.
+  ///   3. setup_ci uses provider "circleci" (fastlane's recommended provider on
+  ///      GitHub Actions; "travis" is deprecated).
   static const fastfile = r'''default_platform(:ios)
 
 APP_IDENTIFIER = "{{BUNDLE_ID}}"
@@ -228,7 +279,7 @@ platform :ios do
   # build number, and forces manual signing on Runner/RunnerTests. Returns the
   # api_key so callers can reuse it for uploads.
   def prepare_signing
-    setup_ci(provider: "travis")
+    setup_ci(provider: "circleci")
 
     api_key = app_store_connect_api_key(
       key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
@@ -279,9 +330,62 @@ platform :ios do
     api_key
   end
 
+  desc "One-time: create/sync provisioning profile for this app_identifier"
+  lane :sync_profile do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_content: ENV["APP_STORE_CONNECT_API_KEY_CONTENT"],
+      is_key_content_base64: true,
+      in_house: false
+    )
+
+    match(
+      type: "appstore",
+      app_identifier: APP_IDENTIFIER,
+      readonly: false,
+      api_key: api_key
+    )
+  end
+
+  desc "Upload an already-built IPA to TestFlight (useful after network failure)"
+  lane :upload_only do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_content: ENV["APP_STORE_CONNECT_API_KEY_CONTENT"],
+      is_key_content_base64: true,
+      in_house: false
+    )
+
+    upload_to_testflight(
+      api_key: api_key,
+      skip_waiting_for_build_processing: true,
+      reject_build_waiting_for_review: true,
+      app_identifier: APP_IDENTIFIER,
+      ipa: "../build/ios/ipa/Runner.ipa"
+    )
+  end
+
+  # Maps the requested flavor (prod/dev) to its Flutter entry point and
+  # validates the file exists, so CI fails fast on a typo. __dir__ here is
+  # ios/fastlane, so the repo root is two levels up.
+  def resolve_target(options)
+    flavor = (options[:flavor] || "prod").to_s
+    target = "lib/main_#{flavor}.dart"
+    UI.user_error!("Flutter entry point not found: #{target}") unless File.exist?(File.expand_path("../../#{target}", __dir__))
+    target
+  end
+
   desc "Push a new native-only beta build to TestFlight (no Shorebird)"
-  lane :deploy do
+  lane :deploy do |options|
+    target = resolve_target(options)
     api_key = prepare_signing
+
+    # Update Generated.xcconfig with the right FLUTTER_TARGET so xcode_backend.sh
+    # picks up main_<flavor>.dart (running gym from ios/ would otherwise build
+    # whatever target was last cached in Generated.xcconfig).
+    sh("cd .. && flutter build ios --release --config-only --no-codesign -t #{target}")
 
     build_app(
       workspace: "Runner.xcworkspace",
@@ -290,7 +394,12 @@ platform :ios do
       configuration: "Release",
       output_directory: "../build/ios/ipa",
       clean: true,
-      xcargs: "-allowProvisioningUpdates",
+      skip_package_dependencies_resolution: true,
+      disable_package_automatic_updates: true,
+      xcargs: "-skipPackagePluginValidation " \
+              "-skipMacroValidation " \
+              "-onlyUsePackageVersionsFromResolvedFile " \
+              "-allowProvisioningUpdates",
       export_options: {
         method: "app-store",
         signingStyle: "manual",
@@ -304,31 +413,36 @@ platform :ios do
     upload_to_testflight(
       api_key: api_key,
       skip_waiting_for_build_processing: true,
+      reject_build_waiting_for_review: true,
       app_identifier: APP_IDENTIFIER
     )
   end
 
   desc "Push a new Shorebird release to TestFlight (enables future code pushes)"
-  lane :release_shorebird do
+  lane :release_shorebird do |options|
+    target = resolve_target(options)
     api_key = prepare_signing
 
     shorebird_release(
       platform: "ios",
-      args: "-- --export-options-plist=#{File.expand_path('../ExportOptions.plist', __dir__)}"
+      args: "-t #{target} -- --export-options-plist=#{File.expand_path('../ExportOptions.plist', __dir__)}"
     )
 
     upload_to_testflight(
       api_key: api_key,
       skip_waiting_for_build_processing: true,
+      reject_build_waiting_for_review: true,
       app_identifier: APP_IDENTIFIER,
       ipa: lane_context[SharedValues::IPA_OUTPUT_PATH]
     )
   end
 
   desc "Ship a Shorebird code push patch to existing users (no App Store review)"
-  lane :patch_shorebird do
+  lane :patch_shorebird do |options|
+    target = resolve_target(options)
     shorebird_patch(
-      platform: "ios"
+      platform: "ios",
+      args: "-t #{target}"
     )
   end
 end
@@ -384,6 +498,39 @@ eval_gemfile(plugins_path) if File.exist?(plugins_path)
 </plist>
 ''';
 
+  /// Dependabot config — keeps the SHA-pinned actions in deploy.yml updated
+  /// weekly via grouped PRs.
+  static const dependabot = r'''version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
+    groups:
+      actions:
+        patterns:
+          - "*"
+''';
+
+  /// Local fastlane env stub. Committed as `.env.example` only — the real
+  /// `.env` is gitignored and filled in by the developer for local runs of
+  /// `fastlane sync_profile` etc.
+  static const fastlaneEnvExample = r'''# Copy to ios/fastlane/.env and fill in. The real file must NOT be committed.
+# Mirror these values into GitHub Secrets for CI.
+
+APP_STORE_CONNECT_API_KEY_ID=
+APP_STORE_CONNECT_API_ISSUER_ID=
+# Base64 of the .p8 file (one line, no quotes):
+APP_STORE_CONNECT_API_KEY_CONTENT=
+
+MATCH_PASSWORD=
+MATCH_GIT_URL=
+# Optional, only for private match repos. Base64 of "user:PAT":
+# MATCH_GIT_BASIC_AUTHORIZATION=
+''';
+
   /// Podfile post_install block — applied as an edit, not a full file replace.
   static const podfilePostInstall = r'''post_install do |installer|
   installer.pods_project.targets.each do |target|
@@ -402,6 +549,9 @@ end''';
 
   /// .gitignore entries that should be added for iOS CI.
   static const gitignoreEntries = [
+    'ios/fastlane/.env',
+    'ios/fastlane/.env.*',
+    '!ios/fastlane/.env.example',
     'ios/fastlane/api_key.json',
     'ios/fastlane/report.xml',
     'ios/fastlane/Preview.html',

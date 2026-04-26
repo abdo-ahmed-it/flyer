@@ -330,11 +330,11 @@ For complete setup instructions, testing, and advanced features (including Unive
 
 ### iOS CI/CD (TestFlight via GitHub Actions + Fastlane)
 
-The `ci ios` command scaffolds a complete deployment pipeline that ships your
-Flutter iOS app to TestFlight on every `workflow_dispatch`. It auto-detects
-your **Bundle ID** and **Team ID** from `ios/Runner.xcodeproj` and generates
-the GitHub Actions workflow + Fastlane config so you don't have to copy-paste
-files between projects.
+The `ci ios` command scaffolds a **production-ready** deployment pipeline
+that ships your Flutter iOS app to TestFlight on demand. It auto-detects
+your **Bundle ID** and **Team ID** from `ios/Runner.xcodeproj`, then writes
+the GitHub Actions workflow, Fastlane config, and a few project-level
+patches so you can `Run workflow` from GitHub on day one.
 
 ```bash
 # Native deploy (Fastlane match + build_app + pilot)
@@ -349,46 +349,147 @@ flyer ci ios --dry-run --shorebird
 
 #### What it generates
 
-| File                                      | Purpose                                     |
-| ----------------------------------------- | ------------------------------------------- |
-| `.github/workflows/deploy.yml`            | macos-26 + Xcode 26.1.1, iOS 26 SDK-ready   |
-| `ios/fastlane/Fastfile`                   | `deploy`, `release_shorebird`, `patch_shorebird` lanes |
-| `ios/fastlane/Appfile`                    | Bundle identifier                            |
-| `ios/fastlane/Matchfile`                  | Points at your shared certificates repo      |
-| `ios/fastlane/Pluginfile` *(--shorebird)* | `fastlane-plugin-shorebird`                  |
-| `ios/ExportOptions.plist`                 | Manual signing config for the IPA export     |
-| `ios/Gemfile`                             | `fastlane` + `cocoapods` + Pluginfile eval   |
+| File                                          | Purpose                                                       |
+| --------------------------------------------- | ------------------------------------------------------------- |
+| `.github/workflows/deploy.yml`                | macos-26 + Xcode 26.1.1, hardened, SHA-pinned actions         |
+| `.github/dependabot.yml`                      | Weekly grouped PRs to keep action SHAs current                |
+| `ios/fastlane/Fastfile`                       | 5 lanes (see below) with flavor support                       |
+| `ios/fastlane/Appfile`                        | Bundle identifier                                              |
+| `ios/fastlane/Matchfile`                      | Points at your shared certificates repo                        |
+| `ios/fastlane/.env.example`                   | Stub for local lane runs (real `.env` is gitignored)          |
+| `ios/fastlane/Pluginfile` *(`--shorebird`)*   | `fastlane-plugin-shorebird`                                    |
+| `ios/ExportOptions.plist`                     | Manual signing config for the IPA export                       |
+| `ios/Gemfile`                                 | `fastlane` + `cocoapods` + Pluginfile eval                     |
 
-It also patches `ios/Podfile` (post_install block tuned for Flutter +
-Firebase + Xcode 16/26), appends Fastlane artifacts to `.gitignore`, and —
-when `--shorebird` is set — adds the `INTERNET` permission to
-`android/app/src/main/AndroidManifest.xml`.
+It also patches the project in place:
+- `ios/Podfile` — `post_install` block tuned for Flutter + Firebase + Xcode 16/26.
+- `ios/Runner/Info.plist` — adds `ITSAppUsesNonExemptEncryption=false`
+  so TestFlight stops asking the export-compliance question on every build.
+- `ios/Runner.xcodeproj/.../Runner.xcscheme` — empties `<Testables>` and sets
+  `buildForTesting="NO"` so `xcodebuild archive` doesn't probe a missing
+  iOS simulator runtime on macos-26 (which causes "Unable to connect to
+  simulator" / exit 70).
+- `.gitignore` — appends Fastlane artifacts and `ios/fastlane/.env*`.
+- `android/app/src/main/AndroidManifest.xml` *(`--shorebird` only)* — adds
+  `INTERNET` permission required by the Shorebird updater.
+
+#### Workflow inputs
+
+The generated workflow runs only on `workflow_dispatch` (manual trigger).
+Two inputs:
+
+| Input    | Choices                                                                | Notes                                                                                |
+| -------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `lane`   | `release_shorebird`, `patch_shorebird`, `deploy`, `sync_profile`, `upload_only` | Default = `release_shorebird` if `--shorebird`, else `deploy`.            |
+| `flavor` | `prod`, `dev`                                                          | Picks the entry point: `lib/main_<flavor>.dart`. `prod` is the default.              |
+
+#### Fastlane lanes
+
+| Lane                | What it does                                                                                              |
+| ------------------- | --------------------------------------------------------------------------------------------------------- |
+| `deploy`            | Native build via Fastlane `gym` → upload to TestFlight. Runs `flutter build ios --config-only -t main_<flavor>.dart` first so `xcode_backend.sh` picks up the right entry point. |
+| `release_shorebird` | Shorebird release (signed IPA + Shorebird patch baseline) → upload to TestFlight. Required before `patch_shorebird` works. |
+| `patch_shorebird`   | Ships a Dart-only OTA patch to existing users — **no App Store review, no native rebuild**. ~2 min.       |
+| `sync_profile`      | One-shot lane: creates/refreshes the cert + provisioning profile in your match repo. Run this **once** per new bundle id, then never again. |
+| `upload_only`       | Re-upload a previously built `Runner.ipa` to TestFlight. Useful for retrying a flaky network upload without rebuilding. |
+
+#### Workflow optimizations baked in
+
+- **`permissions: {}`** at workflow level + `contents: read` per job (least-privilege).
+- **SHA-pinned** action references (`actions/checkout@<sha> # v6`, etc.) — Dependabot keeps them updated.
+- **Concurrency group** prevents two runs racing on the TestFlight build number.
+- **Skips Xcode setup, Pod install, and IPA upload** when running `patch_shorebird` — that lane is Dart-only.
+- **Caches**: pub, CocoaPods, **Xcode DerivedData** (`irgaly/xcode-cache` saves 3–8 min on warm runs), Bundler.
+- **Cache keys include `FLUTTER_VERSION`** so a Flutter upgrade automatically invalidates the Pods cache.
+- **TestFlight upload** uses `reject_build_waiting_for_review: true` so a stuck pending-review build doesn't block the new one.
+- **Lark notifications** ship with the workflow — set `LARK_WEBHOOK` in secrets to enable, leave unset to skip silently.
 
 #### Flags
 
-| Flag                 | Purpose                                                     |
-| -------------------- | ----------------------------------------------------------- |
-| `--shorebird`        | Enable Shorebird code push (runs `shorebird init` if needed)|
-| `--match-git-url`    | Fastlane match certificates repo (prompted if omitted)      |
-| `--bundle-id`        | Override the auto-detected bundle identifier                |
-| `--team-id`          | Override the auto-detected Apple Developer Team ID          |
-| `--dry-run`          | Show planned changes without writing files                  |
-| `-y`, `--yes`        | Skip the confirmation prompt                                |
+| Flag                 | Purpose                                                       |
+| -------------------- | ------------------------------------------------------------- |
+| `--shorebird`        | Enable Shorebird code push (runs `shorebird init` if needed). |
+| `--match-git-url`    | Fastlane match certificates repo (prompted if omitted).       |
+| `--bundle-id`        | Override the auto-detected bundle identifier.                 |
+| `--team-id`          | Override the auto-detected Apple Developer Team ID.           |
+| `--dry-run`          | Show planned changes without writing files.                   |
+| `-y`, `--yes`        | Skip the confirmation prompt.                                 |
 
-#### After running, set these GitHub Secrets
+#### Setup (after running `flyer ci ios`)
 
-- `APP_STORE_CONNECT_API_KEY_ID`
-- `APP_STORE_CONNECT_API_ISSUER_ID`
-- `APP_STORE_CONNECT_API_KEY_CONTENT` (base64 of your `.p8`)
-- `MATCH_PASSWORD`
-- `MATCH_GIT_URL`
-- `MATCH_GIT_BASIC_AUTHORIZATION` (base64 of `user:PAT`)
-- `KEYCHAIN_PASSWORD` (any random string)
-- `SHOREBIRD_TOKEN` *(if you used `--shorebird`)*
+**1. One-time Apple Developer setup**
 
-Projects sharing the same Apple Developer Team can reuse the same match repo
-and the same `MATCH_PASSWORD`, so these secrets only need to be created once
-per Apple Team.
+- Register the bundle id in [Apple Developer → Identifiers](https://developer.apple.com/account/resources/identifiers/list).
+- Create the app in [App Store Connect](https://appstoreconnect.apple.com).
+- Generate an [App Store Connect API key (`.p8`)](https://appstoreconnect.apple.com/access/api) — keep the file safe; it's shown only once.
+
+**2. Add GitHub Secrets** (Settings → Secrets and variables → Actions)
+
+| Secret                              | Required | Notes                                                                       |
+| ----------------------------------- | :------: | --------------------------------------------------------------------------- |
+| `APP_STORE_CONNECT_API_KEY_ID`      |    ✅    |                                                                             |
+| `APP_STORE_CONNECT_API_ISSUER_ID`   |    ✅    |                                                                             |
+| `APP_STORE_CONNECT_API_KEY_CONTENT` |    ✅    | **base64 of your `.p8`** — `base64 -i AuthKey_XXX.p8 \| pbcopy`             |
+| `MATCH_PASSWORD`                    |    ✅    | Any strong password; used to encrypt the match repo. Reuse across projects. |
+| `MATCH_GIT_URL`                     |    ✅    | URL of your match certificates repo (e.g. `https://github.com/you/ios_cer.git`). |
+| `MATCH_GIT_BASIC_AUTHORIZATION`     |    ⚙️    | Only if the match repo is private. **base64 of `user:PAT`**.                |
+| `KEYCHAIN_PASSWORD`                 |    ✅    | Any random string. Used for the temporary CI keychain.                      |
+| `SHOREBIRD_TOKEN`                   |    ⚙️    | Only with `--shorebird`. From [Shorebird Console → API Keys](https://console.shorebird.dev). |
+| `LARK_WEBHOOK`                      |    ⚙️    | Optional. URL of a Lark/Feishu bot incoming webhook for build notifications. |
+
+> Projects sharing the same Apple Developer Team can reuse the same match
+> repo + `MATCH_PASSWORD`, so most of these secrets only need to be created
+> **once per Apple Team**, not per project.
+
+**3. Create the cert + provisioning profile (one-shot)**
+
+Two paths — pick whichever is easier:
+
+- **From CI** (recommended for fresh bundle ids):
+  GitHub → Actions → "Deploy iOS to TestFlight" → Run workflow →
+  `lane: sync_profile`. This generates the Apple Distribution cert and
+  the App Store provisioning profile, then commits them encrypted to your
+  match repo. Subsequent runs use them in `readonly` mode.
+
+- **Locally**: copy `ios/fastlane/.env.example` to `ios/fastlane/.env`,
+  fill in the same values you put in GitHub Secrets, then:
+  ```bash
+  cd ios
+  bundle install
+  bundle exec fastlane sync_profile
+  ```
+
+**4. Ship a build**
+
+GitHub → Actions → "Deploy iOS to TestFlight" → Run workflow:
+
+| Lane                | When to use                                                         |
+| ------------------- | ------------------------------------------------------------------- |
+| `release_shorebird` | Default. Native build + Shorebird baseline. Required after any native change (Pods, Info.plist, native code). |
+| `patch_shorebird`   | Only after `release_shorebird` succeeded. Dart-only changes — ~2 min. |
+| `deploy`            | Native build without Shorebird. Use if you don't have Shorebird set up. |
+
+#### Cost / runner notes
+
+- macOS runners cost **10×** the minutes of Linux runners on private repos.
+  GitHub Free tier (2,000 minutes/month) ≈ **200 macOS minutes** ≈ **~30
+  warm-cache `release_shorebird` runs** or **~80 `patch_shorebird` runs**.
+- Public repos get unlimited minutes — no quota.
+- `patch_shorebird` is the cheapest lane by ~3× because it skips the iOS native build entirely.
+
+#### Troubleshooting
+
+- **"No matching provisioning profiles found"** — your match repo doesn't
+  have a profile for this bundle id yet. Run `lane: sync_profile` once.
+- **"Unable to connect to simulator" / exit 70** — should not happen on a
+  freshly-scaffolded project; the scheme patch handles it. If it reappears
+  after a `flutter create` overwrite, re-run `flyer ci ios` to re-apply the
+  patch.
+- **`Gemfile.lock` "frozen mode" error in Set up Ruby** — run
+  `cd ios && bundle install` locally and commit the regenerated `Gemfile.lock`.
+- **Build hangs at "Waiting for build processing"** — already mitigated via
+  `skip_waiting_for_build_processing: true`. If it happens anyway, use
+  `lane: upload_only` to retry the upload of an existing `Runner.ipa`.
 
 ---
 
